@@ -1,6 +1,7 @@
 """`gapscan.py merge RUN --phase PHASE`: validate agent outputs and fold them into the run's
 ledgers. Agents never edit ledgers directly; merges are the only writers."""
 
+import json
 import os
 import re
 
@@ -238,18 +239,32 @@ def _norm_quote(q):
     return re.sub(r"\s+", " ", q.strip().casefold())
 
 
-def merge_evidence(run):
+def _snapshot_id(run, sid):
+    """Full snapshot id for `sid`; a unique prefix of >= 12 hex chars resolves to the full sha256 name."""
+    if not sid or os.path.exists(p(run, "snapshots", sid + ".meta.json")):
+        return sid
+    if len(sid) >= 12 and re.fullmatch(r"[0-9a-f]+", sid):
+        hits = [f[:-len(".meta.json")] for f in os.listdir(p(run, "snapshots"))
+                if f.startswith(sid) and f.endswith(".meta.json")]
+        if len(hits) == 1:
+            return hits[0]
+    return sid
+
+
+def merge_evidence(run, retry=False):
     st = load_state(run)
     ev = st["evidence"]
     r = ev["round"]
     g = _group(st, "evidence-R%02d" % r)
-    if g.get("merged"):
-        raise CliError("evidence round %d already merged" % r)
+    if g.get("merged") and not retry:
+        raise CliError("evidence round %d already merged (after fixing rejected records, use --retry)" % r)
     ps = psl(run)
     led = read_jsonl(p(run, "evidence", "ledger.jsonl"))[0]
     seen = set((x["url"], _norm_quote(x["quote"])) for x in led)
+    _wn_key = lambda x: json.dumps({k: v for k, v in x.items() if k not in ("id", "miner", "round")}, sort_keys=True)
+    wn_seen = set(_wn_key(x) for x in read_jsonl(p(run, "evidence", "why-now.jsonl"))[0])
     amap = alias_map(run)
-    report = {"round": r, "accepted": 0, "duplicates": 0, "rejected": [], "why_now": 0}
+    report = {"round": r, "accepted": 0, "duplicates": 0, "rejected": [], "why_now": 0, "retry": bool(retry)}
     for a, o in _outputs(run, g):
         recs, errs = read_jsonl(p(run, o["path"]))
         report["rejected"] += ["%s line %d: invalid JSON" % (o["path"], n) for n, _m in errs]
@@ -260,9 +275,14 @@ def merge_evidence(run):
                 if e:
                     report["rejected"].append("%s: %s" % (where, "; ".join(e[:2])))
                     continue
+                rec["snapshot"] = _snapshot_id(run, rec["snapshot"])
                 if not os.path.exists(p(run, "snapshots", rec["snapshot"] + ".raw")):
                     report["rejected"].append("%s: snapshot %s does not exist" % (where, rec["snapshot"]))
                     continue
+                if _wn_key(rec) in wn_seen:
+                    report["duplicates"] += 1
+                    continue
+                wn_seen.add(_wn_key(rec))
                 ev["why_now_seq"] = ev.get("why_now_seq", 0) + 1
                 rec = dict(rec, id="WN-%03d" % ev["why_now_seq"], miner=a.get("scout_id"), round=r)
                 append_jsonl(p(run, "evidence", "why-now.jsonl"), rec)
@@ -286,6 +306,7 @@ def merge_evidence(run):
             if reason:
                 report["rejected"].append("%s: excluded source (%s)" % (where, reason))
                 continue
+            rec["snapshot"] = _snapshot_id(run, rec["snapshot"])
             meta = read_json(p(run, "snapshots", rec["snapshot"] + ".meta.json"))
             if not meta:
                 report["rejected"].append("%s: snapshot %s was not created by gapscan" % (where, rec["snapshot"]))
@@ -311,7 +332,13 @@ def merge_evidence(run):
             led.append(rec)
             report["accepted"] += 1
     write_jsonl(p(run, "evidence", "ledger.jsonl"), led)
-    write_json(p(run, "evidence", "round-%02d" % r, "merge.json"), report)
+    name = "merge.json"
+    if retry and os.path.exists(p(run, "evidence", "round-%02d" % r, name)):
+        k = 1
+        while os.path.exists(p(run, "evidence", "round-%02d" % r, "merge-retry-%d.json" % k)):
+            k += 1
+        name = "merge-retry-%d.json" % k
+    write_json(p(run, "evidence", "round-%02d" % r, name), report)
     g["merged"] = True
     ev["merged"] = r
     state.touch(st, "evidence_merge")
@@ -466,7 +493,9 @@ def cmd_merge(args):
     if ph == "mapping":
         return merge_mapping(run)
     if ph == "evidence":
-        return merge_evidence(run)
+        return merge_evidence(run, retry=getattr(args, "retry", False))
+    if getattr(args, "retry", False):
+        raise CliError("--retry applies only to --phase evidence")
     if ph == "coding":
         return merge_coding(run)
     if ph == "supply":

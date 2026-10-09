@@ -94,7 +94,7 @@ The lines after the first start with `NOTE`: the phase, the methodological reaso
 - `assign RUN --phase PHASE [--units K] [--batch N] [--revise]`: seeded assignment files.
   - PHASE: lexicon, press, landscape, probe, snowball, screen, mapping, evidence, coding-open, coding-closed, coding-reliability, supply, synthesis, redteam, sizing, writer.
   - Fails with exit 3 when `budget.subagents_max` would be exceeded.
-- `merge RUN --phase PHASE`: validate agent outputs against their schemas, then fold them into the ledgers.
+- `merge RUN --phase PHASE`: validate agent outputs against their schemas, then fold them into the ledgers. `--retry` (evidence only) merges the current round again after rejected records were fixed; the retry report is `merge-retry-N.json`, and PRISMA counts its accepted records as `accepted_on_retry`. A unique snapshot-id prefix of 12 or more hex characters resolves to the full hash.
   - PHASE: lexicon, landscape, probe, snowball, screen, mapping, evidence, coding, supply, redteam.
   - Evidence records are rejected (and listed) when they have: a raw author field, a username in the quote, an excluded source, a snapshot not made by gapscan, a quote over 280 characters, or a schema error.
 - `lexicon apply-press RUN`, `entities verify RUN [--limit N]`, `codebook freeze RUN`.

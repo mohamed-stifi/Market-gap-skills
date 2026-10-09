@@ -101,7 +101,7 @@ Each card in `references/methods/` gives one method as a procedure: origin, when
 ## When blocked or surprised
 - **Exit 2 on a fetch or snapshot:** the source refused (excluded, robots.txt, 401/403/429) or the network failed. Do not retry around it. Continue with other sources; the gap is already in `coverage-gaps.jsonl` and will appear in the limitations.
 - **Exit 3:** the budget is exhausted. Tell the user; raising it is a protocol amendment they decide.
-- **A merge rejects records:** read the listed reasons. Re-spawn the subagent with that list, or fix the outputs yourself if the fixes are mechanical.
+- **A merge rejects records:** read the listed reasons. Re-spawn the subagent with that list, or fix the outputs yourself if the fixes are mechanical. For evidence, then run `merge RUN --phase evidence --retry`; records already in the ledger count as duplicates.
 - **STOP_UNSATURATED, correlated scouts, low α or unsaturated themes:** these are findings, not failures. They lower certainty and must appear in the dossier.
 - **No gap passes the thresholds:** that is a valid, honest result. The writer reports it, and the handoff lists no opportunities.
 

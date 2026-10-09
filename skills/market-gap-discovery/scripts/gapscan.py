@@ -79,6 +79,9 @@ def build_parser():
     s.add_argument("run")
     s.add_argument("--phase", required=True, choices=["lexicon", "landscape", "probe", "snowball", "screen", "mapping",
                                                        "evidence", "coding", "supply", "redteam"])
+    s.add_argument("--retry", action="store_true",
+                   help="evidence only: merge the current round again after fixing rejected records; "
+                        "records already in the ledger count as duplicates")
     s.set_defaults(func=merge.cmd_merge)
 
     s = sub.add_parser("lexicon", help="lexicon utilities")
