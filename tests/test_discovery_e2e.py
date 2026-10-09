@@ -435,6 +435,21 @@ class DiscoveryE2E(unittest.TestCase):
         self.assertEqual(agr["strength_vs_miner"]["kappa"], 1.0)
         code, out_ = gs("validate", run)
         self.assertEqual(code, 0, out_)
+        # Supply records the codebook it was mapped under; a newer codebook makes `next` re-map it in
+        # update mode (a live run revised the codebook after supply and new jobs looked unserved).
+        st = read_json(os.path.join(run, "state.json"))
+        self.assertEqual(st["groups"]["supply"]["codebook_version"], 2)
+        st["groups"]["supply"]["codebook_version"] = 1
+        write_json(os.path.join(run, "state.json"), st)
+        with self.assertRaises(flow.Act) as cm:
+            flow.decide(run)
+        self.assertEqual(cm.exception.verdict, "RUN")
+        self.assertIn("--phase supply", cm.exception.argline)
+        self.assertEqual(gs("assign", run, "--phase", "supply")[0], 0)
+        sa = read_json(os.path.join(run, "analysis", "supply-assign.json"))
+        self.assertEqual(sa["inputs"]["previous_codebook_version"], 1)
+        self.assertEqual(sa["inputs"]["previous_supply"], "analysis/supply.jsonl")
+        self.assertTrue(any("Update mode" in r for r in sa["rules"]))
 
 
 if __name__ == "__main__":

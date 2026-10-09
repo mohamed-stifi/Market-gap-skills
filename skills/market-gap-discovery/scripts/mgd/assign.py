@@ -606,15 +606,39 @@ def assign_supply(run, st, c, args):
     ents = [e for e in included_verified(entities(run)) if e["kind"] == "product"]
     v = st["coding"]["version"]
     rel_path = "analysis/supply-assign.json"
+    inputs = {"codebook": "coding/codebook.v%d.json" % v, "classification": "landscape/classification.json",
+              "entities": [{"entity_id": e["entity_id"], "names": e.get("names", []), "urls": e.get("urls", []),
+                            "attributes": attrs.get(e["entity_id"]), "snapshot": (e.get("verified") or {}).get("snapshot")} for e in ents]}
+    rules = []
+    prev_v = (st.get("groups", {}).get("supply") or {}).get("codebook_version")
+    if prev_v is None and (st.get("groups", {}).get("supply") or {}).get("merged"):
+        # Runs merged before codebook_version was recorded: the old assignment names its codebook.
+        m = re.search(r"codebook\.v(\d+)\.json", str(((read_json(p(run, rel_path), {}) or {}).get("inputs") or {}).get("codebook")))
+        prev_v = int(m.group(1)) if m else None
+    if prev_v and prev_v != v and os.path.exists(p(run, "analysis", "supply.jsonl")):
+        # Update mode after a codebook revision: keep the previous mapping, re-judge only changed codes.
+        def jobs(n):
+            book = read_json(p(run, "coding", "codebook.v%d.json" % n), {}) or {}
+            return {c["id"]: c for c in book.get("codes", []) if c.get("type") in ("job", "outcome")}
+        old, new = jobs(prev_v), jobs(v)
+        changed = sorted(k for k in new if k not in old or {f: new[k].get(f) for f in ("definition", "include", "exclude")}
+                         != {f: old[k].get(f) for f in ("definition", "include", "exclude")})
+        removed = sorted(k for k in old if k not in new)
+        inputs.update({"previous_supply": "analysis/supply.jsonl", "previous_codebook_version": prev_v,
+                       "changed_codes": changed, "removed_codes": removed})
+        rules.append("Update mode: start from previous_supply. Remove removed_codes from jobs_served, and judge every "
+                     "entity again only for changed_codes (new or redefined). Keep all other judgments and factor levels; "
+                     "write the full file to the same output path.")
     path = _write(run, rel_path, {
-        "assignment_id": "SUP-1", "phase": "synthesis", "round": None, "role": "synthesizer", "mode": "supply",
+        "assignment_id": "SUP-%d" % v, "phase": "synthesis", "round": None, "role": "synthesizer", "mode": "supply",
         "read": ["agents/synthesizer.md", GLOSSARY] + card_paths("D15"),
-        "inputs": {"codebook": "coding/codebook.v%d.json" % v, "classification": "landscape/classification.json",
-                   "entities": [{"entity_id": e["entity_id"], "names": e.get("names", []), "urls": e.get("urls", []),
-                                 "attributes": attrs.get(e["entity_id"]), "snapshot": (e.get("verified") or {}).get("snapshot")} for e in ents]},
+        "inputs": inputs,
         "outputs": [{"path": "analysis/supply.jsonl", "schema": "supply", "format": "jsonl"}],
-        "limits": {"max_tool_calls": 2 * len(ents) + 10}, "rules": []})
+        "limits": {"max_tool_calls": 2 * len(ents) + 10}, "rules": rules})
+    old_g = st.get("groups", {}).get("supply") or {}
     _group(st, "supply", "supply", "synthesizer", [path])
+    if old_g.get("codebook_version"):
+        st["groups"]["supply"]["previous_codebook_version"] = old_g["codebook_version"]
     return [path]
 
 

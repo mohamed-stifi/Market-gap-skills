@@ -442,6 +442,7 @@ def merge_supply(run):
     if problems:
         raise CliError("supply.jsonl needs fixing:\n  " + "\n  ".join(problems[:15]))
     g["merged"] = True
+    g["codebook_version"] = st["coding"]["version"]
     state.touch(st, "supply")
     save_state(run, st)
     out("Supply merged: %d entities mapped to jobs." % len(recs))

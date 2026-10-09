@@ -222,6 +222,16 @@ def decide(run):
     s = _handle(run, st, "supply", "synthesizer", "merge %s --phase supply" % run, "P4")
     if s is None:
         RUN("assign %s --phase supply" % run, "map which jobs each product serves (D15)", phase="P4")
+    sup_g = st.get("groups", {}).get("supply", {})
+    sup_v = sup_g.get("codebook_version")
+    if sup_v is None:
+        m = re.search(r"codebook\.v(\d+)\.json", str(((read_json(p(run, "analysis", "supply-assign.json"), {}) or {}).get("inputs") or {}).get("codebook")))
+        sup_v = int(m.group(1)) if m else cd["version"]
+    if sup_g.get("merged") and sup_v != cd["version"]:
+        # A revised codebook can add or drop jobs; supply mapped under the old one would show new
+        # jobs as unserved (false absolute gaps). Re-map, updating only the changed codes.
+        RUN("assign %s --phase supply" % run, "supply was mapped under codebook v%s, now v%d: update it for changed codes (D15)" % (
+            sup_v if sup_v is not None else "?", cd["version"]), phase="P4")
     if _stale(st, "matrix", ["supply", "mapping", "coding_merge", "verify"]):
         RUN("matrix %s" % run, phase="P4")
     if _stale(st, "gapmap", ["matrix", "coding_merge", "verify"]):
