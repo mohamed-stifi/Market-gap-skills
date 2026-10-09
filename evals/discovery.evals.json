@@ -1,0 +1,43 @@
+{
+  "skill_name": "market-gap-discovery",
+  "baseline": "Run each prompt once with the skill and once without it (same model), then compare: share of quotes that verify verbatim against a page, gaps with a full evidence trail (>=5 records, >=3 domains), whether coverage limits are stated, and whether any excluded source (G2, Capterra, Reddit .json, Upwork) was fetched.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Find market gaps in invoicing and payment follow-up tools for freelance translators. I want something I could build as a small SaaS.",
+      "expected_output": "A completed run folder with a dossier ranking evidence-backed gaps, certainty labels, coverage limits and a handoff.json for validation.",
+      "expectations": [
+        "The agent created a run with `gapscan.py init` and froze protocol.json before any search (protocol.lock.json exists).",
+        "landscape/saturation.json exists and the dossier reports its verdict as a lower bound (wording such as 'at least').",
+        "At least 95% of evidence records in evidence/ledger.jsonl have verification.status = verified.",
+        "Every EV id cited in output/dossier.md and output/handoff.json exists in the ledger and is verified (output/report-check.json ok = true).",
+        "Each ranked opportunity shows pain certainty, demand certainty and demand strength 'weak' exactly as in gaps/certainty.json.",
+        "No snapshot URL in cache/snapshot-index.jsonl belongs to an excluded domain (g2.com, capterra.com, reddit.com, upwork.com, indiehackers.com).",
+        "output/prisma.md exists and the dossier has coverage and limitations sections."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I want to approve each step. Look for underserved needs in appointment scheduling software for small dental clinics in Europe, gated mode please.",
+      "expected_output": "A gated run that stops for human approval at the protocol, landscape and shortlist, recording approvals in human-tasks.json.",
+      "expectations": [
+        "protocol.json has autonomy = gated.",
+        "The agent stopped at a BLOCKED human task before freezing the protocol and did not freeze it until the task was marked done.",
+        "human-tasks.json contains judgment tasks with gates protocol#N, landscape#N and shortlist#N.",
+        "Human directives given in conversation were recorded with `gapscan.py protocol amend` (amendments in protocol.lock.json)."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Which opportunities are underserved in inventory and stock apps for small Shopify merchants? Give me ranked opportunities with the evidence.",
+      "expected_output": "Ranked opportunities from marketplace and community evidence with independent scouts, reliability-checked coding and a red team per gap.",
+      "expectations": [
+        "landscape/units.json lists sampling units from at least 3 different channel families.",
+        "coding/agreement.json exists with per-code Krippendorff alpha and a verdict.",
+        "Every ranked gap has a gaps/redteam/GAP-NNN.json with at least 3 logged searches.",
+        "gaps/ranking.json reports p_top3 for every ranked gap.",
+        "The agent did not post, message, create accounts or log in anywhere."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+[
+  {"query": "find market gaps in project management software for small architecture firms", "should_trigger": true},
+  {"query": "what SaaS opportunities exist for independent dental clinics? I want evidence, not guesses", "should_trigger": true},
+  {"query": "look for underserved segments in invoicing tools and rank them", "should_trigger": true},
+  {"query": "give me evidence-backed startup ideas in HR software for companies under 50 people", "should_trigger": true},
+  {"query": "map the competitor landscape for Shopify review apps and tell me where the gaps are", "should_trigger": true},
+  {"query": "I want to build a micro-SaaS. Systematically find a niche with real unmet demand", "should_trigger": true},
+  {"query": "which jobs are poorly served by current email marketing tools for solo creators?", "should_trigger": true},
+  {"query": "scan reviews and forums to find pain points nobody solves in bookkeeping apps for freelancers", "should_trigger": true},
+  {"query": "write a research report on the history of SaaS pricing models", "should_trigger": false},
+  {"query": "do a literature review of capture-recapture methods in ecology", "should_trigger": false},
+  {"query": "validate my SaaS idea with a landing page smoke test", "should_trigger": false},
+  {"query": "fix the failing unit test in my Python project", "should_trigger": false},
+  {"query": "summarize this PDF about market sizing", "should_trigger": false},
+  {"query": "explain what jobs-to-be-done means", "should_trigger": false},
+  {"query": "build the backend for my invoicing app", "should_trigger": false},
+  {"query": "compare the features of Notion and Obsidian for me", "should_trigger": false}
+]

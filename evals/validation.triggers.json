@@ -1,0 +1,15 @@
+[
+  {"query": "validate my SaaS idea before I build it", "should_trigger": true},
+  {"query": "help me run a smoke test with a waitlist landing page for my product idea", "should_trigger": true},
+  {"query": "design a Van Westendorp pricing survey for my B2B tool", "should_trigger": true},
+  {"query": "should I build this? test demand for an AI note taker for therapists", "should_trigger": true},
+  {"query": "set up Mom Test customer interviews for my startup idea and analyse them", "should_trigger": true},
+  {"query": "run a fake door test and tell me if the result is significant", "should_trigger": true},
+  {"query": "test willingness to pay with pre-sales and letters of intent", "should_trigger": true},
+  {"query": "find market gaps in invoicing tools for translators", "should_trigger": false},
+  {"query": "A/B test the colour of the checkout button on my live store", "should_trigger": false},
+  {"query": "write unit tests for my payment module", "should_trigger": false},
+  {"query": "build the MVP for my validated idea", "should_trigger": false},
+  {"query": "run a t-test on this CSV of conversion rates", "should_trigger": false},
+  {"query": "write a blog post about product-market fit", "should_trigger": false}
+]
