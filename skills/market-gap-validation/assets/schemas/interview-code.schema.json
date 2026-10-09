@@ -1,0 +1,14 @@
+{
+  "$id": "interview-code",
+  "description": "One coded interview record per line (method card V05). Records are IV-NNNNNN ids created by `gapval.py ingest --kind interviews`; codes come from validation/codebook.json (a copy of the discovery codebook when one exists).",
+  "type": "object",
+  "required": ["record_id", "coder", "codes"],
+  "properties": {
+    "record_id": {"type": "string", "pattern": "^IV-[0-9]{6}$"},
+    "coder": {"enum": ["A", "B"]},
+    "codes": {"type": "array", "items": {"type": "string"}},
+    "quotes": {"type": "array", "items": {"type": "string", "maxLength": 280}},
+    "forces": {"type": "object"},
+    "note": {"type": "string", "maxLength": 300}
+  }
+}

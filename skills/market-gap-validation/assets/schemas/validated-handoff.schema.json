@@ -1,0 +1,134 @@
+{
+  "$id": "validated-handoff",
+  "description": "Validated handoff for build, launch and monitor skills (method card V10).",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "gap_id",
+    "source_handoff_sha256",
+    "verdict",
+    "assumptions",
+    "experiments",
+    "demand_strength",
+    "validated_icp",
+    "price",
+    "channels",
+    "next_steps",
+    "watchlist"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "gap_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_handoff_sha256": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "verdict": {
+      "enum": [
+        "GO",
+        "ITERATE",
+        "PIVOT",
+        "KILL"
+      ]
+    },
+    "verdict_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "validated",
+              "supported",
+              "invalidated",
+              "inconclusive",
+              "untested"
+            ]
+          },
+          "experiments": {
+            "type": "array"
+          }
+        }
+      }
+    },
+    "experiments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "result"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "INCONCLUSIVE",
+              "TAMPERED",
+              "NOT_RUN"
+            ]
+          },
+          "stats": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "demand_strength": {
+      "enum": [
+        "weak",
+        "moderate",
+        "strong"
+      ]
+    },
+    "validated_icp": {
+      "type": "object"
+    },
+    "price": {
+      "type": "object"
+    },
+    "channels": {
+      "type": "array"
+    },
+    "mvp": {
+      "type": "object"
+    },
+    "next_steps": {
+      "type": "array",
+      "minItems": 1
+    },
+    "watchlist": {
+      "type": "object"
+    }
+  }
+}

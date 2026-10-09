@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>{{HEADLINE}}</title>
+<!--
+  Smoke-test / fake-door landing page template (market-gap-validation, card V07).
+  Fill only the {{PLACEHOLDERS}}. Keep every honesty element:
+    - #disclosure is shown right after any call-to-action click (and stays visible without JavaScript)
+    - the email form has a required, unticked consent checkbox (#consent)
+    - the privacy notice is linked
+    - no payment form, no testimonials, no customer logos, no user counts or ratings
+  No external scripts, fonts or images are loaded. If the human adds privacy-friendly analytics,
+  they paste its snippet where marked below.
+-->
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a1a; --muted: #4a4a4a; --accent: #1d4ed8; --accent-fg: #ffffff;
+    --panel: #f3f4f6; --border: #d1d5db; --focus: #f59e0b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111318; --fg: #f3f4f6; --muted: #c7c9cf; --accent: #93b4ff; --accent-fg: #0b1020; --panel: #1c1f26; --border: #3a3f4b; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 18px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main, header, footer { max-width: 44rem; margin: 0 auto; padding: 1.25rem 1rem; }
+  h1 { font-size: clamp(1.7rem, 5vw, 2.4rem); line-height: 1.2; margin: 1.5rem 0 0.5rem; }
+  h2 { font-size: 1.3rem; margin: 2rem 0 0.75rem; }
+  p.sub { color: var(--muted); font-size: 1.1rem; margin-top: 0; }
+  ul.benefits { padding-left: 1.2rem; }
+  ul.benefits li { margin: 0.4rem 0; }
+  .tiers { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+  .tier { border: 1px solid var(--border); border-radius: 0.6rem; padding: 1rem; background: var(--panel); }
+  .tier h3 { margin: 0 0 0.25rem; font-size: 1.1rem; }
+  .price { font-size: 1.4rem; font-weight: 700; margin: 0.25rem 0 0.75rem; }
+  button, .button { display: inline-block; min-height: 44px; padding: 0.7rem 1.2rem; border: 0; border-radius: 0.5rem;
+    background: var(--accent); color: var(--accent-fg); font: inherit; font-weight: 600; cursor: pointer; text-decoration: none; }
+  button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  #disclosure { margin-top: 2rem; border: 2px solid var(--accent); border-radius: 0.75rem; padding: 1.25rem; background: var(--panel); }
+  #disclosure[hidden] { display: none; }
+  label { display: block; font-weight: 600; margin-top: 1rem; }
+  input[type="email"] { width: 100%; min-height: 44px; margin-top: 0.35rem; padding: 0.6rem; font: inherit;
+    border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg); color: var(--fg); }
+  .consent { display: flex; gap: 0.6rem; align-items: flex-start; font-weight: 400; }
+  .consent input { width: 1.3rem; height: 1.3rem; margin-top: 0.2rem; flex: none; }
+  footer { color: var(--muted); font-size: 0.95rem; border-top: 1px solid var(--border); margin-top: 2rem; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+<!-- Analytics (optional): the human pastes a privacy-friendly analytics snippet here. -->
+</head>
+<body data-experiment="{{EXPERIMENT_ID}}">
+<header>
+  <h1>{{HEADLINE}}</h1>
+  <p class="sub">{{SUBHEAD}}</p>
+  <p><button type="button" class="cta" data-cta="hero">Get early access</button></p>
+</header>
+
+<main>
+  <section aria-labelledby="benefits-title">
+    <h2 id="benefits-title">What it will do for you</h2>
+    <ul class="benefits">
+      {{BENEFITS}}
+      <!-- One <li> per benefit, each mapped to a desired outcome. Example:
+           <li>See which invoices are unpaid in one place, in every currency you bill in.</li> -->
+    </ul>
+  </section>
+
+  <section aria-labelledby="pricing-title">
+    <h2 id="pricing-title">Planned pricing</h2>
+    <div class="tiers">
+      {{PRICE_TIERS}}
+      <!-- One block per planned tier; the button opens the disclosure, never a payment page. Example:
+      <div class="tier">
+        <h3>Solo</h3>
+        <p class="price">€19 / month</p>
+        <p>For one freelancer, up to 50 invoices a month.</p>
+        <button type="button" class="cta" data-cta="tier-solo">Choose Solo</button>
+      </div> -->
+    </div>
+  </section>
+
+  <section id="disclosure" role="region" aria-labelledby="disclosure-title" tabindex="-1">
+    <h2 id="disclosure-title">We are not live yet</h2>
+    <p>This product does not exist yet. We are checking whether it is worth building, and nothing has been charged or booked.
+       If you would like it, join the waitlist: we will email you when it is ready, and only about this product.</p>
+    <form action="{{FORM_ACTION}}" method="post">
+      <input type="hidden" name="experiment" value="{{EXPERIMENT_ID}}">
+      <input type="hidden" name="utm_source" value="">
+      <input type="hidden" name="utm_medium" value="">
+      <input type="hidden" name="utm_campaign" value="">
+      <input type="hidden" name="cta" value="">
+      <label for="email">Email address</label>
+      <input id="email" name="email" type="email" autocomplete="email" required>
+      <label class="consent" for="consent">
+        <input id="consent" name="consent" type="checkbox" value="yes" required>
+        <span>I agree to receive emails about this product's launch. I can unsubscribe at any time.
+              See the <a href="{{PRIVACY_URL}}">privacy notice</a>.</span>
+      </label>
+      <p><button type="submit">Join the waitlist</button></p>
+    </form>
+  </section>
+</main>
+
+<footer>
+  <p><a href="{{PRIVACY_URL}}">Privacy notice</a> · This page is a pre-launch test.</p>
+</footer>
+
+<script>
+  (function () {
+    var disclosure = document.getElementById("disclosure");
+    // Without JavaScript the disclosure stays visible; with it, the disclosure appears right after a click.
+    disclosure.hidden = true;
+    var params = new URLSearchParams(window.location.search);
+    ["utm_source", "utm_medium", "utm_campaign"].forEach(function (key) {
+      var field = document.querySelector('input[name="' + key + '"]');
+      if (field) { field.value = params.get(key) || ""; }
+    });
+    document.querySelectorAll(".cta").forEach(function (button) {
+      button.addEventListener("click", function () {
+        document.querySelector('input[name="cta"]').value = button.getAttribute("data-cta") || "";
+        disclosure.hidden = false;
+        disclosure.focus();
+        disclosure.scrollIntoView();
+        // Analytics hook: listen for this event in the human's analytics snippet to count CTA clicks.
+        document.dispatchEvent(new CustomEvent("mg:cta", { detail: { experiment: document.body.dataset.experiment, cta: button.getAttribute("data-cta") } }));
+      });
+    });
+  })();
+</script>
+</body>
+</html>

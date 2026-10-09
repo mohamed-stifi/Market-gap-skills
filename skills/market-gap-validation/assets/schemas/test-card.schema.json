@@ -1,0 +1,331 @@
+{
+  "$id": "test-card",
+  "description": "Pre-registered Test Card (method cards V03-V04). success_threshold and kill_threshold are proportions (0-1) used by the wilson, themes and ellis rules (PASS if Wilson lower bound >= success_threshold; FAIL if upper bound < kill_threshold; kill <= success). Survey and spike rules use `criteria`. Frozen by `prereg freeze`; any later edit is detected by `prereg verify`.",
+  "type": "object",
+  "required": [
+    "id",
+    "assumption_ids",
+    "solution_id",
+    "type",
+    "hypothesis",
+    "xyz",
+    "metric",
+    "evidence_level",
+    "success_threshold",
+    "kill_threshold",
+    "min_n",
+    "decision_rule",
+    "duration_days",
+    "budget_usd",
+    "channels",
+    "ethics",
+    "required_ht",
+    "on_pass",
+    "on_fail",
+    "on_inconclusive",
+    "x_derivation",
+    "status"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^EXP-[0-9]{2}$"
+    },
+    "assumption_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^A[0-9]{1,2}$"
+      },
+      "minItems": 1
+    },
+    "solution_id": {
+      "type": "string",
+      "pattern": "^SOL-[0-9]$"
+    },
+    "type": {
+      "enum": [
+        "search-demand",
+        "problem-interviews",
+        "switch-interviews",
+        "odi-survey",
+        "kano-survey",
+        "pricing-survey",
+        "smoke-test",
+        "fake-door",
+        "loi",
+        "presale",
+        "concierge",
+        "tech-spike"
+      ]
+    },
+    "hypothesis": {
+      "type": "object",
+      "required": [
+        "we_believe",
+        "to_verify",
+        "measure",
+        "right_if"
+      ],
+      "properties": {
+        "we_believe": {
+          "type": "string",
+          "minLength": 10
+        },
+        "to_verify": {
+          "type": "string",
+          "minLength": 10
+        },
+        "measure": {
+          "type": "string",
+          "minLength": 5
+        },
+        "right_if": {
+          "type": "string",
+          "minLength": 5
+        }
+      }
+    },
+    "xyz": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "z"
+      ],
+      "properties": {
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y": {
+          "type": "string"
+        },
+        "z": {
+          "type": "string"
+        }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "required": [
+        "name",
+        "numerator",
+        "denominator"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "numerator": {
+          "type": "string"
+        },
+        "denominator": {
+          "type": "string"
+        }
+      }
+    },
+    "evidence_level": {
+      "enum": [
+        "desk",
+        "prototype",
+        "interview",
+        "survey",
+        "click",
+        "email",
+        "call",
+        "loi",
+        "deposit",
+        "presale"
+      ]
+    },
+    "success_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "kill_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "planning_p": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "half_width": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "min_n": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "decision_rule": {
+      "enum": [
+        "wilson",
+        "odi",
+        "kano",
+        "van-westendorp",
+        "ellis",
+        "themes",
+        "criteria"
+      ]
+    },
+    "price_point_month_usd": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "duration_days": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "budget_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ethics": {
+      "type": "object",
+      "required": [
+        "disclosure",
+        "consent",
+        "no_charge_without_consent",
+        "privacy_notice",
+        "exposure_limit"
+      ],
+      "properties": {
+        "disclosure": {
+          "const": true
+        },
+        "consent": {
+          "const": true
+        },
+        "no_charge_without_consent": {
+          "const": true
+        },
+        "privacy_notice": {
+          "const": true
+        },
+        "exposure_limit": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    },
+    "required_ht": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "on_pass": {
+      "enum": [
+        "continue",
+        "go",
+        "scale-test"
+      ]
+    },
+    "on_fail": {
+      "enum": [
+        "kill",
+        "pivot",
+        "iterate"
+      ]
+    },
+    "on_inconclusive": {
+      "enum": [
+        "extend",
+        "iterate",
+        "kill"
+      ]
+    },
+    "pivot_hypothesis": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "x_derivation": {
+      "type": "string",
+      "minLength": 20
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "frozen",
+        "running",
+        "analyzed",
+        "closed"
+      ]
+    },
+    "criteria": {
+      "type": "object",
+      "description": "Typed pass/fail criteria for rules whose metric is not a 0-1 proportion. odi: {outcomes:[...], min_opportunity:10}; kano: {features:[...], pass_categories:['A','O','M']}; van-westendorp: {price_point_month_usd:P}; themes: {problem_codes:[...]} (thresholds are the share of interviews); criteria (tech-spike): {acceptance_tests:[...]}.",
+      "properties": {
+        "outcomes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "min_opportunity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pass_categories": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "A",
+              "O",
+              "M",
+              "I",
+              "R",
+              "Q"
+            ]
+          }
+        },
+        "price_point_month_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "problem_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "acceptance_tests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

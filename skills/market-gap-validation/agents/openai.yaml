@@ -1,0 +1,7 @@
+# Optional metadata for OpenAI Codex CLI. Claude Code and OpenCode ignore this file;
+# the skill works without it. See the Codex "build skills" documentation.
+interface:
+  display_name: "Market Gap Validation"
+  short_description: "Pre-register and run SaaS validation experiments with a human operator; returns GO, ITERATE, PIVOT or KILL"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,50 @@
+{
+  "$id": "assignment",
+  "description": "Assignment file written by `gapscan.py assign` (or `gapval.py assign`). A subagent reads this first, then exactly the files in `read`, and writes only the paths in `outputs`.",
+  "type": "object",
+  "required": ["assignment_id", "run", "skill_dir", "phase", "role", "mode", "read", "inputs", "outputs", "limits", "rules", "created_at"],
+  "properties": {
+    "assignment_id": {"type": "string"},
+    "run": {"type": "string"},
+    "skill_dir": {"type": "string"},
+    "phase": {"type": "string"},
+    "round": {"type": ["integer", "null"]},
+    "role": {"enum": ["scout", "reviewer", "screener", "miner", "coder", "synthesizer", "red-team", "writer", "designer", "builder", "analyst"]},
+    "mode": {"type": "string"},
+    "scout_id": {"type": ["string", "null"]},
+    "persona": {"type": ["object", "null"]},
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["unit_id", "family", "kinds"],
+        "properties": {
+          "unit_id": {"type": "string"},
+          "family": {"type": "string"},
+          "kinds": {"type": "array", "items": {"type": "string"}},
+          "tier": {"type": "integer"},
+          "how": {"type": "string"},
+          "query_blocks": {"type": "array"}
+        }
+      }
+    },
+    "read": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "inputs": {"type": "object"},
+    "outputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["path", "schema", "format"],
+        "properties": {
+          "path": {"type": "string"},
+          "schema": {"type": ["string", "null"]},
+          "format": {"enum": ["json", "jsonl", "md"]}
+        }
+      }
+    },
+    "limits": {"type": "object"},
+    "rules": {"type": "array", "items": {"type": "string"}},
+    "created_at": {"type": "string"}
+  }
+}

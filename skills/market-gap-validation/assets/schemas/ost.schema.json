@@ -1,0 +1,64 @@
+{
+  "$id": "ost",
+  "description": "Opportunity Solution Tree for one opportunity (method cards V01-V02): outcome -> opportunity -> >=3 solutions -> typed assumptions rated on importance and evidence.",
+  "type": "object",
+  "required": ["assignment_id", "outcome", "opportunity", "solutions", "target_solution"],
+  "properties": {
+    "assignment_id": {"type": "string"},
+    "outcome": {
+      "type": "object",
+      "required": ["metric", "target", "why"],
+      "properties": {"metric": {"type": "string", "minLength": 5}, "target": {"type": "string"}, "why": {"type": "string"}}
+    },
+    "opportunity": {
+      "type": "object",
+      "required": ["statement", "evidence_ids"],
+      "properties": {
+        "gap_id": {"type": ["string", "null"]},
+        "statement": {"type": "string", "minLength": 20},
+        "evidence_ids": {"type": "array", "items": {"type": "string"}},
+        "sub_opportunities": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "solutions": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "concept", "differentiator", "assumptions"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^SOL-[0-9]$"},
+          "concept": {"type": "string", "minLength": 10},
+          "differentiator": {"type": "string", "minLength": 5},
+          "assumptions": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "type": "object",
+              "required": ["id", "text", "type", "importance", "evidence", "ice"],
+              "properties": {
+                "id": {"type": "string", "pattern": "^A[0-9]{1,2}$"},
+                "text": {"type": "string", "minLength": 10},
+                "type": {"enum": ["desirability", "viability", "feasibility"]},
+                "importance": {"type": "integer", "minimum": 1, "maximum": 5},
+                "evidence": {"type": "integer", "minimum": 0, "maximum": 5},
+                "evidence_ids": {"type": "array", "items": {"type": "string"}},
+                "ice": {
+                  "type": "object",
+                  "required": ["impact", "confidence", "ease"],
+                  "properties": {
+                    "impact": {"type": "integer", "minimum": 1, "maximum": 10},
+                    "confidence": {"type": "integer", "minimum": 1, "maximum": 10},
+                    "ease": {"type": "integer", "minimum": 1, "maximum": 10}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "target_solution": {"type": "string", "pattern": "^SOL-[0-9]$"},
+    "notes": {"type": "string"}
+  }
+}

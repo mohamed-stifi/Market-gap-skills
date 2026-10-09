@@ -1,0 +1,353 @@
+{
+  "_doc": "Every constant is {value, source}. A Test Card may set its own thresholds, but they are frozen with the card; nothing is changed after data arrives.",
+  "assumptions": {
+    "importance_scale": {
+      "value": [
+        1,
+        5
+      ],
+      "source": "Assumptions map (Bland & Osterwalder, Testing Business Ideas): importance axis; five-point scale chosen for scoring."
+    },
+    "evidence_scale": {
+      "value": [
+        0,
+        5
+      ],
+      "source": "Assumptions map evidence axis; 0 = none, 5 = strong behavioural evidence (deposit/pre-sale)."
+    },
+    "critical_importance_min": {
+      "value": 4,
+      "source": "Design default: assumptions rated 4-5 on importance are critical (top half of the importance axis)."
+    },
+    "experiments_per_round": {
+      "value": 3,
+      "source": "Design default: test the three riskiest assumptions in parallel, then re-plan."
+    }
+  },
+  "solutions": {
+    "min_solutions": {
+      "value": 3,
+      "source": "Torres, Opportunity Solution Tree: generate at least three solutions per target opportunity to avoid fixating on one."
+    }
+  },
+  "stats": {
+    "z": {
+      "value": 1.96,
+      "source": "95% Wilson interval."
+    },
+    "planning_half_width": {
+      "value": 0.05,
+      "source": "Design default precision for smoke tests (+/-5 percentage points); n = z^2 p(1-p)/h^2 (10% +/- 5pp gives 139)."
+    },
+    "min_visitors_floor": {
+      "value": 100,
+      "source": "Design floor so tiny tests are never judged; research-methods track recommends 150-200 targeted visitors per variant."
+    }
+  },
+  "surveys": {
+    "odi_min_n": {
+      "value": 180,
+      "source": "Ulwick / Strategyn: ODI surveys use 180-1,200 respondents."
+    },
+    "odi_top_two_box": {
+      "value": [
+        4,
+        5
+      ],
+      "source": "Ulwick: importance and satisfaction are the share rating 4 or 5 on a 1-5 scale, divided by 10."
+    },
+    "odi_underserved": {
+      "value": 10,
+      "source": "Ulwick: opportunity >= 10 is underserved."
+    },
+    "odi_high": {
+      "value": 12,
+      "source": "Strategyn: > 12 high opportunity."
+    },
+    "odi_extreme": {
+      "value": 15,
+      "source": "Strategyn: > 15 extreme opportunity."
+    },
+    "kano_min_n": {
+      "value": 200,
+      "source": "Chapman & Callegaro (Google): Kano category assignment may be unreliable below about 200 respondents."
+    },
+    "kano_tie_order": {
+      "value": [
+        "M",
+        "O",
+        "A",
+        "I",
+        "R",
+        "Q"
+      ],
+      "source": "Conventional Kano tie-break: Must-be > One-dimensional > Attractive > Indifferent."
+    },
+    "vw_min_n": {
+      "value": 100,
+      "source": "Practitioner consensus of 100-200 respondents per segment (not verified against a primary source)."
+    },
+    "nms_calibration": {
+      "value": {
+        "5": 0.7,
+        "4": 0.5,
+        "3": 0.3,
+        "2": 0.1,
+        "1": 0.0
+      },
+      "source": "Newton, Miller & Smith 1993 purchase-likelihood calibration as used by Sawtooth defaults."
+    },
+    "ellis_threshold": {
+      "value": 0.4,
+      "source": "Sean Ellis: 40% 'very disappointed' indicates product-market fit."
+    },
+    "ellis_min_n": {
+      "value": 40,
+      "source": "Ellis / Vohra: about 40 responses give directional results."
+    }
+  },
+  "interviews": {
+    "min_interviews": {
+      "value": 10,
+      "source": "Ash Maurya, Running Lean: at least 10 good problem interviews."
+    },
+    "gnc_base": {
+      "value": 4,
+      "source": "Guest, Namey & Chen 2020: base size 4 interviews."
+    },
+    "gnc_run": {
+      "value": 2,
+      "source": "Guest, Namey & Chen 2020: run length 2."
+    },
+    "gnc_threshold": {
+      "value": 0.05,
+      "source": "Guest, Namey & Chen 2020: <=5% new information."
+    },
+    "reliability_fraction": {
+      "value": 0.2,
+      "source": "O'Connor & Joffe 2020: double-code 10-25%."
+    },
+    "alpha_accept": {
+      "value": 0.8,
+      "source": "Krippendorff 2004."
+    },
+    "alpha_provisional": {
+      "value": 0.667,
+      "source": "Krippendorff 2004."
+    },
+    "min_positives_per_code": {
+      "value": 3,
+      "source": "Design default for small interview samples (lower than the desk default of 5)."
+    },
+    "id_prefix": {
+      "value": "IV",
+      "source": "Interview records are numbered IV-000001 so they never collide with discovery evidence ids (EV-)."
+    },
+    "standard_codes": {
+      "value": [
+        {
+          "id": "X-FRAG",
+          "type": "cross",
+          "label": "Fragmentation",
+          "definition": "The person juggles several tools or places to get one job done; there is no single place.",
+          "include": "Mentions switching between tools, copying data between apps, or many tools for one job.",
+          "exclude": "A single tool lacking one feature (use a pain or feature code)."
+        },
+        {
+          "id": "X-INTEG",
+          "type": "cross",
+          "label": "Integration missing",
+          "definition": "Tools the person uses do not connect or sync with each other.",
+          "include": "No integration, broken sync, manual export/import between named tools.",
+          "exclude": "General complaints about a tool's own features."
+        },
+        {
+          "id": "X-PRICE",
+          "type": "cross",
+          "label": "Price mismatch",
+          "definition": "Too expensive for the value received or for this segment.",
+          "include": "Explicit cost complaints, seat pricing that does not fit, no small tier.",
+          "exclude": "Statements about willingness to pay without complaint (use stance wtp)."
+        },
+        {
+          "id": "X-COMPLEX",
+          "type": "cross",
+          "label": "Too complex",
+          "definition": "The product is too complex or heavy for this user or use case.",
+          "include": "Bloat, steep learning curve, built for bigger teams.",
+          "exclude": "Missing features."
+        },
+        {
+          "id": "X-LANG",
+          "type": "cross",
+          "label": "Language or locale missing",
+          "definition": "Language, currency, tax, date format or local compliance is not supported.",
+          "include": "Translation gaps, missing local currency or tax rules, regional regulation.",
+          "exclude": "General UX complaints."
+        },
+        {
+          "id": "X-SUPPORT",
+          "type": "cross",
+          "label": "Support gap",
+          "definition": "Support is missing, slow or unhelpful.",
+          "include": "Unanswered tickets, no human support, slow responses.",
+          "exclude": "Bugs themselves (use X-RELIAB)."
+        },
+        {
+          "id": "X-RELIAB",
+          "type": "cross",
+          "label": "Reliability",
+          "definition": "The product breaks, loses data or is unavailable.",
+          "include": "Bugs, data loss, outages, failed syncs.",
+          "exclude": "Missing features."
+        },
+        {
+          "id": "X-SCALE",
+          "type": "cross",
+          "label": "Pain grows with volume",
+          "definition": "The pain grows as usage, volume, clients or team size grow (dose-response).",
+          "include": "'Fine at 5 clients, impossible at 50', costs scaling with volume.",
+          "exclude": "Pain that is constant regardless of volume."
+        },
+        {
+          "id": "F-PUSH",
+          "type": "force",
+          "label": "Push of the situation",
+          "definition": "Something in the current situation pushes the person to seek change.",
+          "include": "Frustration events, deadlines missed, a breaking point.",
+          "exclude": "Attraction to a specific new product (use F-PULL)."
+        },
+        {
+          "id": "F-PULL",
+          "type": "force",
+          "label": "Pull of the new solution",
+          "definition": "An attraction to a new way of doing the job.",
+          "include": "'I saw X does Y and wanted that', promised outcomes.",
+          "exclude": "Complaints about the old way (use F-PUSH)."
+        },
+        {
+          "id": "F-ANX",
+          "type": "force",
+          "label": "Anxiety of the new",
+          "definition": "Worries that hold back switching to a new solution.",
+          "include": "Migration risk, learning cost, fear it will not work.",
+          "exclude": "Satisfaction with the current tool (use F-HABIT)."
+        },
+        {
+          "id": "F-HABIT",
+          "type": "force",
+          "label": "Habit of the present",
+          "definition": "Comfort with the current way that holds back switching.",
+          "include": "'Good enough', 'we have always used', sunk cost.",
+          "exclude": "Fears about the new tool (use F-ANX)."
+        },
+        {
+          "id": "T-FIRST",
+          "type": "stage",
+          "label": "First thought",
+          "definition": "The moment the person first realised the current way is not good enough.",
+          "include": "'It started when...'",
+          "exclude": "Active comparison of options (later stages)."
+        },
+        {
+          "id": "T-PASSIVE",
+          "type": "stage",
+          "label": "Passive looking",
+          "definition": "Noticing alternatives without actively searching.",
+          "include": "'I kept seeing...', bookmarking, asking casually.",
+          "exclude": "Trials and demos (T-ACTIVE)."
+        },
+        {
+          "id": "T-ACTIVE",
+          "type": "stage",
+          "label": "Active looking",
+          "definition": "Actively searching, comparing and trialling options.",
+          "include": "Trials, comparisons, demo requests, 'looking for an alternative'.",
+          "exclude": "The final choice (T-DECIDE)."
+        },
+        {
+          "id": "T-DECIDE",
+          "type": "stage",
+          "label": "Deciding",
+          "definition": "Choosing and committing, including what tipped the decision.",
+          "include": "'We picked X because...', purchase moments.",
+          "exclude": "Using the new product afterwards (T-CONSUME)."
+        },
+        {
+          "id": "T-CONSUME",
+          "type": "stage",
+          "label": "Consuming",
+          "definition": "Experience after switching: onboarding, first value, regret or delight.",
+          "include": "'Since switching...', post-purchase experiences.",
+          "exclude": "Pre-purchase comparisons."
+        }
+      ],
+      "source": "Same standard X-/F-/T- codes as market-gap-discovery (coding.standard_codes): cross-cutting pains, Forces of Progress and the switch timeline (Moesta & Spiek). Used to build validation/codebook.json for standalone ideas."
+    }
+  },
+  "evidence_ladder": {
+    "value": {
+      "desk": 0,
+      "prototype": 1,
+      "interview": 1,
+      "survey": 1,
+      "click": 1,
+      "email": 2,
+      "call": 3,
+      "loi": 4,
+      "deposit": 5,
+      "presale": 5
+    },
+    "source": "Testing Business Ideas evidence strength (doing over saying); ordering click < email < booked call < LOI < deposit/pre-sale from the market-methods track. Desk evidence (search demand) and prototypes (technical spikes) sit below behavioural evidence."
+  },
+  "verdict": {
+    "viability_min_level": {
+      "value": 4,
+      "source": "Design default: a viability (willingness-to-pay) assumption counts as validated only with LOI-level evidence or stronger, or a Van Westendorp range that contains the planned price with n >= vw_min_n."
+    },
+    "desirability_min_level": {
+      "value": 2,
+      "source": "Design default: desirability needs at least email-level behaviour (a waitlist sign-up), not clicks or opinions alone."
+    },
+    "precedence": {
+      "value": [
+        "KILL",
+        "PIVOT",
+        "ITERATE",
+        "GO"
+      ],
+      "source": "Design rule: when critical assumptions disagree, the most conservative pre-registered action wins."
+    }
+  },
+  "privacy": {
+    "retention_days": {
+      "value": 180,
+      "source": "GDPR storage limitation; delete raw respondent data after the decision."
+    },
+    "store_emails_in_repo": {
+      "value": false,
+      "source": "Emails stay in the human-controlled form service; only aggregates enter the run folder."
+    }
+  },
+  "demand_strength": {
+    "value": {
+      "strong": [
+        "deposit",
+        "presale"
+      ],
+      "moderate": [
+        "email",
+        "call",
+        "loi"
+      ],
+      "weak": [
+        "desk",
+        "prototype",
+        "interview",
+        "survey",
+        "click"
+      ]
+    },
+    "source": "Testing Business Ideas: evidence strength rises with doing over saying and money over email; mapping used by the validation cards (V10)."
+  }
+}
