@@ -1,0 +1,328 @@
+{
+  "$id": "handoff",
+  "description": "Machine-readable handoff from discovery to validation, build, launch and monitor skills (method card D25). Versioned by schema_version.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id",
+    "generated_at",
+    "protocol_sha256",
+    "coverage",
+    "opportunities",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string"
+    },
+    "protocol_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sources": {
+      "type": "object"
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "landscape",
+        "themes",
+        "independence",
+        "coverage_gaps"
+      ],
+      "properties": {
+        "landscape": {
+          "type": "object"
+        },
+        "themes": {
+          "type": "object"
+        },
+        "independence": {
+          "enum": [
+            "full",
+            "degraded"
+          ]
+        },
+        "coverage_gaps": {
+          "type": "array"
+        }
+      }
+    },
+    "opportunities": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": [
+          "rank",
+          "gap_id",
+          "title",
+          "statement",
+          "score",
+          "p_top3",
+          "certainty",
+          "icp",
+          "jtbd",
+          "top_quotes",
+          "competitors",
+          "pricing_hypothesis",
+          "mvp",
+          "experiments",
+          "gtm_channels",
+          "kill_criteria",
+          "risks",
+          "assumptions"
+        ],
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "gap_id": {
+            "type": "string",
+            "pattern": "^GAP-[0-9]{3}$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number"
+          },
+          "p_top3": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "certainty": {
+            "type": "object",
+            "required": [
+              "pain",
+              "demand",
+              "demand_strength"
+            ],
+            "properties": {
+              "pain": {
+                "enum": [
+                  "High",
+                  "Moderate",
+                  "Low",
+                  "Very low"
+                ]
+              },
+              "demand": {
+                "enum": [
+                  "High",
+                  "Moderate",
+                  "Low",
+                  "Very low"
+                ]
+              },
+              "demand_strength": {
+                "enum": [
+                  "weak",
+                  "moderate",
+                  "strong"
+                ]
+              }
+            }
+          },
+          "icp": {
+            "type": "object",
+            "required": [
+              "description",
+              "where_they_gather"
+            ],
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "segment_codes": {
+                "type": "array"
+              },
+              "where_they_gather": {
+                "type": "array"
+              }
+            }
+          },
+          "jtbd": {
+            "type": "object",
+            "required": [
+              "job",
+              "outcomes"
+            ],
+            "properties": {
+              "job": {
+                "type": "string"
+              },
+              "outcomes": {
+                "type": "array"
+              }
+            }
+          },
+          "top_quotes": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "type": "object",
+              "required": [
+                "evidence_id",
+                "quote",
+                "url"
+              ],
+              "properties": {
+                "evidence_id": {
+                  "type": "string",
+                  "pattern": "^EV-[0-9]{6}$"
+                },
+                "quote": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "strength": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "competitors": {
+            "type": "array"
+          },
+          "pricing_hypothesis": {
+            "type": "object",
+            "required": [
+              "model",
+              "basis"
+            ],
+            "properties": {
+              "model": {
+                "type": "string"
+              },
+              "range_month_usd": {
+                "type": "array"
+              },
+              "basis": {
+                "type": "string"
+              }
+            }
+          },
+          "mvp": {
+            "type": "object",
+            "required": [
+              "in_scope",
+              "out_of_scope",
+              "agent_buildability"
+            ],
+            "properties": {
+              "in_scope": {
+                "type": "array"
+              },
+              "out_of_scope": {
+                "type": "array"
+              },
+              "agent_buildability": {
+                "enum": [
+                  "yes",
+                  "partial",
+                  "no"
+                ]
+              },
+              "notes": {
+                "type": "string"
+              }
+            }
+          },
+          "experiments": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "assumption_id",
+                "type",
+                "hypothesis_xyz",
+                "metric"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "assumption_id": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "search-demand",
+                    "problem-interviews",
+                    "switch-interviews",
+                    "odi-survey",
+                    "kano-survey",
+                    "pricing-survey",
+                    "smoke-test",
+                    "fake-door",
+                    "loi",
+                    "presale",
+                    "concierge"
+                  ]
+                },
+                "hypothesis_xyz": {
+                  "type": "string"
+                },
+                "metric": {
+                  "type": "string"
+                },
+                "requires_ht": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "gtm_channels": {
+            "type": "array"
+          },
+          "metrics": {
+            "type": "array"
+          },
+          "kill_criteria": {
+            "type": "array",
+            "minItems": 1
+          },
+          "risks": {
+            "type": "array"
+          },
+          "sizing": {
+            "type": "object"
+          },
+          "why_now": {
+            "type": "array"
+          },
+          "assumptions": {
+            "type": "array",
+            "minItems": 1
+          },
+          "open_questions": {
+            "type": "array"
+          }
+        }
+      },
+      "description": "Ranked opportunities; may be empty when no gap met the thresholds (an honest, valid outcome explained in limitations)."
+    },
+    "watchlist": {
+      "type": "object"
+    },
+    "limitations": {
+      "type": "array"
+    }
+  }
+}

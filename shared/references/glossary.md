@@ -1,0 +1,175 @@
+# Glossary
+
+Use these terms exactly as defined. When a source uses another word for the same idea, map it to the term here.
+
+Contents
+1. Gaps and opportunities
+2. Customers and jobs
+3. Search and sampling
+4. Evidence
+5. Coding and synthesis
+6. Appraisal and scoring
+7. Validation
+8. Operations
+
+## 1. Gaps and opportunities
+- **Market gap**: a job that a defined segment needs done, where current supply is absent, poor, overpriced, inaccessible or untrusted, and where evidence shows people care enough to act (complain, work around, pay or switch).
+- **Gap types** (field `gap_type.primary`). These can combine, plus a catalyst:
+  - **segment**: an underserved group.
+  - **non-consumption**: people who buy nothing today.
+  - **price**: no fitting price tier.
+  - **quality**: existing tools are hated.
+  - **feature**: a missing capability.
+  - **integration**: tools don't connect, or a marketplace has no fitting app.
+  - **access**: the product can't be reached here or through this channel.
+  - **language**: no local language, currency or compliance.
+  - **trust**: buyers can't verify or compare.
+  - **synthesis**: many point tools exist but no integrated one.
+- **Catalyst**: the change that makes a gap newly solvable or newly painful (technology, regulation, behaviour, platform, economic). It is recorded in the why-now log.
+- **Absolute gap**: a gap-map cell with demand but little or no supply. This is the Evidence Gap Map term for a cell with few primary studies.
+- **Synthesis gap**: a cell with many point solutions and fragmentation pain. This is the EGM term for many studies but no synthesis; in markets it is a rebundling opportunity.
+- **Robinson reason**: why the gap exists, from Robinson et al. 2011:
+  - **insufficient**: too little supply or evidence.
+  - **biased**: what exists serves another group.
+  - **inconsistent**: segments disagree.
+  - **wrong-information**: supply addresses the wrong job or outcome.
+- **Gap-spotting modes** (Sandberg & Alvesson 2011):
+  - **confusion**: contradictory evidence, often a hidden segment split.
+  - **neglect**: overlooked or under-served.
+  - **application**: a proven model applied to a new setting.
+- **Problematization** (Alvesson & Sandberg 2011): challenge an assumption shared by all incumbents instead of filling a hole they leave.
+- **Noncustomer tiers** (Blue Ocean):
+  - tier 1: minimal buyers about to leave.
+  - tier 2: considered the offering and refused it.
+  - tier 3: never considered it.
+- **Gap statement**: "Although [what is known], [what is missing, contradictory or untested] remains [unserved/unclear], because [why existing supply cannot answer it]. This matters because [consequence]."
+- **Opportunity**: a gap card that survived the red team, passed the gates and was scored. It goes into the dossier and `handoff.json`.
+
+## 2. Customers and jobs
+- **Segment / ICP**: a group of buyers who share a job, a context and a buying process. The ICP is the segment you target first.
+- **Job (JTBD)**: "the progress that a person is trying to make in a particular circumstance" (Christensen). Name it with a verb and an object, without mentioning any product.
+- **Job map**: the eight universal steps of a job (Bettencourt & Ulwick): define, locate, prepare, confirm, execute, monitor, modify, conclude. Use it to check coverage step by step.
+- **Desired outcome statement** (ODI): direction + metric + object + clarifier, for example "Minimize the time it takes to reconcile invoices with bank payments".
+- **Pain / gain**: negative or positive results the customer experiences, as in the Value Proposition Canvas.
+- **Forces of Progress**: push of the situation, pull of the new solution, anxiety of the new, habit of the present. People switch when push + pull exceed anxiety + habit.
+- **Switch timeline**: first thought → passive looking → active looking → deciding → consuming.
+- **Workaround**: what people do today instead of a fitting product: spreadsheets, templates, scripts, freelancers, copy-paste between tools.
+- **WTP (willingness to pay)**: evidence that money changes hands for the job: paid tools, paid templates, hired freelancers, explicit price statements.
+- **Substitute**: any alternative way to get the job done, including doing nothing.
+
+## 3. Search and sampling
+- **Protocol**: the pre-registered plan for the run (PICOS question, eligibility, sources, thresholds). It is frozen by hash before searching.
+- **PICOS**: Population (segment), Intervention (job or category), Comparator (incumbents and workarounds), Outcomes (desired outcomes), Setting (context, platform, geography).
+- **Lexicon**: domain vocabulary in facets (segment, job, category, tool, pain, workaround) collected independently by scouts.
+- **Query block**: a deterministic combination of facet terms used as one search. Blocks are split between scouts so their searches stay independent.
+- **PRESS review**: peer review of a search strategy (translation of the question, operators, synonyms, spelling, limits).
+- **Scout**: a subagent that searches in isolation and writes only its own file.
+- **Persona**: the vantage point a scout searches from (practitioner, buyer, switcher, builder, and so on).
+- **Channel family**: a kind of source (web search, Hacker News, Stack Exchange, GitHub, WordPress plugins, App Store, Atlassian Marketplace, YC directory, listings).
+- **Sampling unit**: one scout × one channel family in one round. Incidence counts are computed over units.
+- **Entity**: a product, community or directory with a canonical key. Examples: `dom:` registrable domain, `gh:owner/repo`, `wp:slug`, `app:ios:id`, `atl:key`, `sub:name`, `se:site:tag`.
+- **Incidence**: which sampling units found each entity.
+- **S_obs, Q1, Q2, T**:
+  - S_obs: entities observed.
+  - Q1: entities found by exactly one unit (singletons).
+  - Q2: entities found by exactly two units (doubletons).
+  - T: number of units.
+- **Chao2 (Ŝ)**: an estimate of the total number of entities, including unseen ones, from incidence data. It is a lower bound when searches are correlated.
+- **Completeness**: S_obs / Ŝ. This is the user's "90% intersection" rule, expressed with an estimator.
+- **Sample coverage (Ĉ)**: the estimated probability that the next unit's find is already known (Chao & Jost 2012).
+- **Marginal yield**: new verified entities in a round ÷ entities known before it.
+- **Probe**: a holdout scout with an unused persona and channel. The share of its finds that are new is a direct check on saturation.
+- **Snowballing**: following links from known entities (alternatives, integrations, "vs" pages) backward and forward (Wohlin 2014). Snowball finds are excluded from the estimator's incidence counts.
+- **Saturation verdicts**: EXPAND (search more units), PROBE (run the holdout check), SATURATED, STOP_UNSATURATED (the round limit was reached without saturating; reported as a limitation).
+- **Independence: degraded**: the run could not isolate its scouts. The probe becomes mandatory and certainty is downgraded.
+- **Screening**: include/exclude decisions with reason codes (PRISMA). A 20% sample is screened twice as an audit.
+
+## 4. Evidence
+- **Evidence record**: one verbatim quote of at most 280 characters, with its URL, snapshot hash, stance, strength, credibility and a hashed author.
+- **Snapshot**: raw bytes of a page or API response saved by a script with a sha256 hash. A quote counts only if it is found in its snapshot.
+- **Stance**: pain, wish, switch, workaround, wtp, praise, contra. Praise and contra are collected on purpose, for balance.
+- **Strength (S0–S4)**:
+  - S0: hypothetical or opinion ("I would…").
+  - S1: generic complaint.
+  - S2: a specific past event.
+  - S3: a workaround that cost effort.
+  - S4: money spent, or a paid tool switched.
+  
+  This follows the Mom Test and Testing Business Ideas: facts over opinions, doing over saying.
+- **Credibility**: independent, vendor, incentivized, affiliate, unknown.
+- **Indirect**: evidence about an adjacent persona, or a stated rather than revealed preference.
+- **Coverage gap**: a source that could not be used (blocked, rate-limited, robots-disallowed, missing key). Listed in the run's limitations.
+- **Demand signal**: a time series of interest (Hacker News or Stack Exchange mentions per month, Wikipedia pageviews, search volume).
+- **Burst**: a period where a term's share rises above its baseline (Kleinberg 2002), tested against shuffled timelines.
+- **Why-now log**: catalysts recorded with factor (PESTLE + platform), date, evidence and the job they unlock.
+
+## 5. Coding and synthesis
+- **Codebook**: versioned codes (jobs, outcomes, pains, gains, segments, cross-cutting X- codes, forces F-, timeline T-), each with a definition and include/exclude rules. It is frozen by hash before closed coding.
+- **Open / closed coding**: open coding drafts the codebook from a base sample; closed coding applies the frozen codebook to every record.
+- **Coder A / coder B**: the primary coder codes everything. An independent coder B codes a random 20% sample without seeing A's codes.
+- **Krippendorff's α**: agreement between coders, computed per code:
+  - ≥ .80: accept.
+  - .667–.80: provisional.
+  - below .667: revise the codebook.
+- **Cohen's κ** and **Landis–Koch bands**: a second agreement statistic reported alongside α, with the bands slight, fair, moderate, substantial and almost perfect.
+- **Theme saturation**: coverage Ĉ over records × codes, plus the Guest–Namey–Chen run test (new themes in a run ÷ themes in the base ≤ 5%).
+- **Competitor matrix** (concept matrix): entities × attributes and jobs served.
+- **Price ladder**: competitor prices sorted by tier and model.
+- **Strategy canvas**: the offering level (0–3) of each player on each competing factor; the line is the value curve.
+- **ERRC grid**: which factors to eliminate, reduce, raise and create.
+- **Gap map**: jobs/outcomes × solution approaches, with demand (strength-weighted distinct authors) and supply (products and satisfaction) per cell.
+- **Association strength**: co-occurrence normalised by expected co-occurrence (van Eck & Waltman 2009). It finds segment-specific pains.
+- **Proxy opportunity score**: an ODI-shaped score computed from desk evidence. It is used to rank only, never compared to the survey thresholds 10/12/15.
+- **Variation (change one dimension)**: systematically vary one dimension of a proven product (segment, language, platform, price tier, delivery, integration, AI-native). This is Zwicky's morphological box.
+
+## 6. Appraisal and scoring
+- **Red team**: an adversarial subagent that tries to kill a gap. It searches for existing solutions and failed attempts, explains why the space is empty, and runs Five Forces and a pre-mortem.
+- **Pre-mortem**: assume the product failed a year from now and list why (Klein 2007).
+- **Five Forces (SaaS)**: rivalry, new entrants, substitutes (spreadsheets, agencies, in-house tools, doing nothing), buyer power, supplier power (host platforms, API vendors, a single acquisition channel).
+- **Platform risk (0–3)**: dependence on one platform that can change its rules or copy you.
+- **Certainty**: confidence in a claim.
+  - Pain claims use GRADE-CERQual: start High, then downgrade for methodological limits, coherence, adequacy and relevance.
+  - Demand and WTP claims use GRADE-style rating: start Low, downgrade for bias, inconsistency, indirectness and imprecision, upgrade for magnitude (money spent) and dose-response.
+- **Demand strength**: weak, moderate or strong (Testing Business Ideas). Desk-only evidence is capped at weak; validation can raise it.
+- **Gates**: pass/fail checks run before scoring: regulatory load, human-ops burden, agent-buildability, platform risk, ToS feasibility.
+- **Rubric**: Pain, Pay, Size, Competition/why-empty, Why-now, Reach, Right-to-win, each scored 0–3 against written anchors and citing evidence ids.
+- **p_top3**: the share of 2,000 weight perturbations (Dirichlet) in which a gap ranks in the top 3. It is a robustness check on the ranking.
+- **TAM / SAM / SOM**: bottom-up market sizes.
+  - TAM = target accounts × annual revenue per account.
+  - SAM = the reachable share of TAM.
+  - SOM = SAM × conversion × win rate.
+  
+  Never compute them as "x% of TAM".
+- **PRISMA flow**: counts at each stage: identified → de-duplicated → screened → verified → included.
+
+## 7. Validation
+- **Opportunity Solution Tree**: outcome → opportunities → at least 3 solutions per target opportunity → assumption tests (Torres).
+- **Assumption map**: desirability, viability and feasibility assumptions placed on importance × evidence. Test the important, low-evidence ones first (Bland & Osterwalder).
+- **Test Card / Learning Card**:
+  - Test Card: "We believe… To verify, we will… And measure… We are right if…".
+  - Learning Card: "We believed… We observed… We learned… Therefore we will…".
+- **XYZ hypothesis**: "At least X% of Y will Z" (Savoia). X comes from unit economics, not from benchmarks.
+- **Pre-registration**: freezing a Test Card (hypothesis, metric, sample size, decision rule) by hash before data arrives.
+- **Wilson interval**: the confidence interval for a proportion.
+  - Pass if the lower bound ≥ X.
+  - Fail if the upper bound < X.
+  - Otherwise the result is inconclusive.
+- **Evidence ladder**: click < email < booked call < letter of intent < deposit / pre-sale.
+- **Smoke test / fake door**: a landing page or button for something not built yet. The truth is disclosed right after the click, followed by a waitlist offer.
+- **ODI survey**:
+  - Importance and satisfaction are top-two-box shares × 10.
+  - Opportunity = I + max(I − S, 0).
+  - ≥ 10 means underserved; S > I means overserved.
+- **Kano**: functional/dysfunctional question pairs that place a feature in a category (Attractive, One-dimensional, Must-be, Indifferent, Reverse, Questionable), with Better and Worse coefficients.
+- **Van Westendorp (PSM)**: four price questions giving PMC, OPP, IPP and PME. The acceptable range is PMC–PME. The Newton–Miller–Smith extension adds purchase likelihood.
+- **PMF survey (Sean Ellis)**: the share of users who would be "very disappointed" without the product, compared to 40%. It is used after launch.
+- **Verdicts**: GO, ITERATE, PIVOT, KILL, decided only by pre-registered rules.
+
+## 8. Operations
+- **Run**: one folder holding everything for one protocol.
+- **Assignment**: a JSON file telling one subagent its role, what to read, its inputs, its output path and its limits.
+- **Human task (HT)**: something only the human can do: account, key, payment, legal, outward action, judgment gate, directive.
+- **Autonomy**: `autonomous` (optional human tasks never block; fallbacks are used) or `gated` (the human approves the protocol, the landscape and the shortlist).
+- **Amendment**: a logged change to a frozen protocol, with a reason.
+- **Tiers**: 0 = built-in web search and fetch; 1 = free scripted API; 2 = needs a key or approval via a human task; excluded = never fetch.
+- **MGD_CONTACT**: the environment variable holding the contact string sent in User-Agent headers. Only the human sets it.
