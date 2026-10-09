@@ -1,0 +1,392 @@
+{
+  "schema_version": "1.0",
+  "run_id": "indie-dev-tools",
+  "generated_at": "2026-10-09T22:15:00+00:00",
+  "protocol_sha256": "1044d8a1ae4ba40de7704a3a020129f11de4388e4f37c8aa501222a03948ef23",
+  "sources": {
+    "allowed_tiers": [
+      0,
+      1
+    ],
+    "tier2_enabled": [],
+    "unavailable": [
+      "gh (not logged in)",
+      "wiki (MGD_CONTACT not set)",
+      "directories unit R02-B3-directories (web search denied)"
+    ]
+  },
+  "coverage": {
+    "landscape": {
+      "verdict": "STOP_UNSATURATED",
+      "round": 4,
+      "S_obs": 171,
+      "T": 72,
+      "chao2_estimate": 280.8984725965858,
+      "chao2_ci": [
+        236.06379514698216,
+        356.62818617909534
+      ],
+      "completeness": 0.6087608751279426,
+      "coverage": 0.6941952678107124,
+      "marginal_yield": 0.22142857142857142,
+      "probe": null,
+      "included_verified": 395,
+      "snowball_only": 224,
+      "targets_lowered_by_human_to": 0.5,
+      "note": "All estimates are lower bounds. Saturation targets lowered from ~0.90 to 0.65 then 0.50 by human directive (amendments 2-3); the marginal-yield rule was still not met."
+    },
+    "themes": {
+      "codebook_version": 3,
+      "coverage": 0.9511112172065599,
+      "themes_observed": 54,
+      "themes_estimated": 68.17301038062284,
+      "completeness": 0.7921023246370926,
+      "saturated": true,
+      "agreement_verdict": "provisional",
+      "provisional_codes": [
+        "F-PULL",
+        "T-CONSUME",
+        "X-COMPLEX",
+        "X-INTEG"
+      ],
+      "strength_alpha": 0.8503600960256068,
+      "strength_vs_miner_alpha": 0.593313462240678
+    },
+    "independence": "full",
+    "coverage_gaps": [
+      "GitHub unavailable: gh not logged in / config unreadable in sandbox; web query blocks naming GitHub (QB-041, QB-053, QB-057, QB-065, QB-069) refused by the shell guard",
+      "Directories unit R02-B3-directories not searched: tier-0 web search denied by the host permission classifier",
+      "Wikipedia pageviews skipped: MGD_CONTACT not set",
+      "No tier-2 keys: Reddit, Product Hunt, SaaSHub, X, Google Trends, keyword tools",
+      "Snapshot failures: 122 robots.txt disallows, 28 HTTP 403, 15 network errors, 13 incomplete reads, 8 HTTP 429; Tawk.to pricing page blocked",
+      "Apple review feeds intermittently empty (3 times)",
+      "Independence slip among evidence miners reported by the orchestrator (details in the event log, not in writer inputs); scout independence recorded as full by the saturation script"
+    ]
+  },
+  "opportunities": [
+    {
+      "rank": 1,
+      "gap_id": "GAP-001",
+      "title": "Reliable, uncapped visitor chat for solo founders and tiny online businesses",
+      "statement": "Although many chat tools (mobile companions of SMB live-chat suites, free and open-core widgets) let small sellers talk to site visitors, reliable mobile alerts and replying without conversation caps or paid branding removal remain poorly served for solo founders and 1-5 person online businesses, because incumbents gate volume and branding behind tiers priced for support teams. This matters because users report missed or misrouted chats, lockout after caps or cancellation, and switching (EV-000032, EV-000037, EV-000043).",
+      "score": 60.66666666666668,
+      "p_top3": 1.0,
+      "certainty": {
+        "pain": "Low",
+        "demand": "Very low",
+        "demand_strength": "weak"
+      },
+      "icp": {
+        "description": "Solo founders, indie app and plugin developers and other 1-5 person online businesses that answer their own site visitors and customers, mostly from a phone (most verified reviewers are general small businesses, not developers)",
+        "segment_codes": [],
+        "where_they_gather": [
+          {
+            "channel": "Hacker News Show HN",
+            "url": "https://news.ycombinator.com/show",
+            "size": null
+          },
+          {
+            "channel": "Widget 'powered by' badge on customers' sites",
+            "url": "https://knocket.trtc.io/blog/best-free-live-chat/",
+            "size": null
+          },
+          {
+            "channel": "Apple App Store (companion app listing)",
+            "url": "https://apps.apple.com/",
+            "size": null
+          }
+        ]
+      },
+      "jtbd": {
+        "job": "Converse with site visitors and customers through an embedded chat widget and a mobile reply app",
+        "outcomes": [
+          {
+            "statement": "Minimize the number of visitor messages missed or sent to the wrong conversation when away from the desk"
+          },
+          {
+            "statement": "Minimize the likelihood of losing the ability to reply once a plan limit is reached or a plan is cancelled"
+          },
+          {
+            "statement": "Minimize the page-speed cost of the embedded chat widget on the seller's site"
+          }
+        ]
+      },
+      "top_quotes": [
+        {
+          "evidence_id": "EV-000032",
+          "quote": "It’s been two years and you till haven’t resolved your mobile app notification issue",
+          "url": "https://itunes.apple.com/us/rss/customerreviews/page=1/id=1085770229/sortby=mostrecent/json",
+          "strength": "S2"
+        },
+        {
+          "evidence_id": "EV-000037",
+          "quote": "I’ve been subscribed for some time but after canceling my last subscription I couldn’t text anyone anymore",
+          "url": "https://itunes.apple.com/us/rss/customerreviews/page=1/id=1258723897/sortby=mostrecent/json",
+          "strength": "S4"
+        },
+        {
+          "evidence_id": "EV-000043",
+          "quote": "Was using smartsupp paid version and this free version is killing it, I’m going to upgrade",
+          "url": "https://itunes.apple.com/us/rss/customerreviews/page=2/id=6449775006/sortby=mostrecent/json",
+          "strength": "S4"
+        },
+        {
+          "evidence_id": "EV-000031",
+          "quote": "This requires me to close the crisp website anytime I leave my computer and use my phone.",
+          "url": "https://itunes.apple.com/us/rss/customerreviews/page=2/id=1085770229/sortby=mostrecent/json",
+          "strength": "S3"
+        },
+        {
+          "evidence_id": "EV-000095",
+          "quote": "I usually talk to my clients on whatsapp, but it's super inefficient. They are very vague to describe a problem, and when I ask for screenshots, I get a photo of their screen taken with their phone.",
+          "url": "https://news.ycombinator.com/item?id=48119687",
+          "strength": "S3"
+        }
+      ],
+      "competitors": [
+        {
+          "entity": "app:ios:1085770229",
+          "name": "Crisp",
+          "url": "https://crisp.chat/en/pricing/",
+          "covers": "partial"
+        },
+        {
+          "entity": "app:ios:1258723897",
+          "name": "Smartsupp",
+          "min_paid_month_usd": 17.99,
+          "covers": "partial"
+        },
+        {
+          "entity": "app:ios:6449775006",
+          "name": "Chatway",
+          "url": "https://chatway.app/pricing",
+          "covers": "partial"
+        },
+        {
+          "entity": "app:ios:907458277",
+          "name": "Tawk.to",
+          "url": "https://www.tawk.to/pricing/",
+          "covers": "partial"
+        },
+        {
+          "entity": "app:ios:916822567",
+          "name": "Tidio",
+          "covers": "partial"
+        },
+        {
+          "entity": "dom:chatwoot.com",
+          "name": "Chatwoot",
+          "url": "https://www.chatwoot.com/pricing",
+          "min_paid_month_usd": 19.0,
+          "covers": "partial"
+        },
+        {
+          "entity": "dom:chatim.app",
+          "min_paid_month_usd": 9.0
+        },
+        {
+          "entity": "dom:revechat.com",
+          "min_paid_month_usd": 14.99
+        },
+        {
+          "entity": "dom:getfernand.com",
+          "min_paid_month_usd": 29.0
+        },
+        {
+          "entity": "wp:thrivedesk",
+          "min_paid_month_usd": 29.0
+        },
+        {
+          "name": "Umnico Live Chat",
+          "url": "https://umnico.com/onlinechat/",
+          "covers": "partial"
+        },
+        {
+          "name": "ChatSpark",
+          "url": "https://news.ycombinator.com/item?id=47399667",
+          "covers": "partial"
+        },
+        {
+          "name": "Knocket",
+          "url": "https://knocket.trtc.io/blog/best-free-live-chat/",
+          "covers": "partial"
+        },
+        {
+          "name": "GhostChat / Libredesk",
+          "url": "https://news.ycombinator.com/item?id=48268391",
+          "covers": "partial"
+        }
+      ],
+      "pricing_hypothesis": {
+        "model": "flat monthly subscription with a free tier",
+        "range_month_usd": [
+          9.0,
+          29.0
+        ],
+        "basis": "Price ladder of site-chat incumbents' minimum paid tiers in gaps/sizing.json (chatim.app 9.0 to getfernand.com and ThriveDesk 29.0); card A2 tests 9 USD/month. Free unlimited tiers (Tawk.to, Umnico, Chatway free) push willingness to pay down."
+      },
+      "mvp": {
+        "in_scope": [
+          "embeddable chat widget",
+          "web inbox",
+          "mobile reply with push notifications",
+          "no conversation cap and no branding paywall on the paid plan"
+        ],
+        "out_of_scope": [
+          "multi-agent team routing",
+          "AI chatbot",
+          "helpdesk ticketing",
+          "CRM"
+        ],
+        "agent_buildability": "partial",
+        "notes": "Widget, inbox and websocket backend are routine for a coding agent; a reliable native mobile app with push delivery guarantees (the core promise) is harder and needs device testing by the human. Human ops burden judged medium against ~5 h/week."
+      },
+      "experiments": [
+        {
+          "id": "EXP-01",
+          "assumption_id": "A1",
+          "type": "problem-interviews",
+          "hypothesis_xyz": "At least 30% of 40 solo founders using a site chat tool, recruited in indie communities, will report a missed or misrouted visitor message in the last 30 days.",
+          "metric": "share of interviewees reporting a missed or misrouted message in the last 30 days",
+          "requires_ht": [
+            "recruit and interview founders in indie communities"
+          ]
+        },
+        {
+          "id": "EXP-02",
+          "assumption_id": "A2",
+          "type": "fake-door",
+          "hypothesis_xyz": "At least 4% of 200 landing-page visitors from indie communities will start a paid checkout at 9 USD per month.",
+          "metric": "paid-checkout starts / landing-page visitors",
+          "requires_ht": [
+            "post the landing page in communities",
+            "create the checkout account"
+          ]
+        },
+        {
+          "id": "EXP-03",
+          "assumption_id": "A3",
+          "type": "smoke-test",
+          "hypothesis_xyz": "At least 1% of visitors who click a widget's 'powered by' link will create a free account within 7 days.",
+          "metric": "free accounts within 7 days / badge clicks",
+          "requires_ht": [
+            "install the widget on real sites"
+          ]
+        }
+      ],
+      "gtm_channels": [
+        {
+          "channel": "Hacker News Show HN",
+          "url": "https://news.ycombinator.com/show",
+          "size": null,
+          "note": "red team: simple-widget launches drew almost no attention"
+        },
+        {
+          "channel": "'powered by' badge on customers' widgets (growth loop, untested)",
+          "size": null
+        },
+        {
+          "channel": "Apple App Store companion app listing",
+          "url": "https://apps.apple.com/",
+          "size": null
+        }
+      ],
+      "metrics": [
+        "push notification delivery within 30 s",
+        "paid-checkout start rate",
+        "badge-click to sign-up rate",
+        "MRR",
+        "weekly human support hours"
+      ],
+      "kill_criteria": [
+        "EXP-02 upper confidence bound below 4% paid-checkout starts",
+        "EXP-01 upper confidence bound below 30% reporting a missed or misrouted message",
+        "Prototype push delivery below 99% of 1,000 messages within 30 seconds",
+        "Support load above 5 human hours a week during the trial",
+        "An incumbent removes caps or branding on its cheapest plan"
+      ],
+      "risks": [
+        "Free tiers with unlimited chats (Tawk.to, Umnico, Chatway free) keep solo founders from paying",
+        "Push delivery no more reliable than incumbents (APNs/FCM throttling, iOS background limits)",
+        "Always-on support load exceeds ~5 human hours a week",
+        "Badge loop brings mostly free-tier users; ~110 customers at 9 USD needed for 1,000 USD MRR",
+        "Agent-built clones (ChatSpark, GhostChat, Libredesk) copy any wedge quickly",
+        "Platform dependence on APNs/FCM and App Store review (platform risk 1)"
+      ],
+      "sizing": {
+        "usd_per_year": {
+          "low": {
+            "tam": 2160000,
+            "sam": 216000.0,
+            "som": 216.0
+          },
+          "base": {
+            "tam": 22800000,
+            "sam": 4560000.0,
+            "som": 18240.0
+          },
+          "high": {
+            "tam": 66120000,
+            "sam": 19836000.0,
+            "som": 238032.0
+          }
+        },
+        "accounts_source": "WordPress.org active installs only (crisp 20,000; tawkto-live-chat 100,000; tidio-live-chat 70,000); Shopify, Webflow and custom sites not counted; installs are sites, not 1-5 person businesses",
+        "assumptions": [
+          "reachable share",
+          "conversion",
+          "win rate"
+        ]
+      },
+      "why_now": [],
+      "assumptions": [
+        {
+          "id": "A1",
+          "type": "desirability",
+          "text": "Solo founders who run site chat miss or misroute visitor messages often enough to want to switch tools."
+        },
+        {
+          "id": "A2",
+          "type": "viability",
+          "text": "Solo founders will pay for uncapped, reliable chat although free tiers exist."
+        },
+        {
+          "id": "A3",
+          "type": "viability",
+          "text": "A visible 'powered by' mark on the widget brings new sign-ups at no ad cost (growth loop)."
+        },
+        {
+          "id": "A4",
+          "type": "feasibility",
+          "text": "Reliable mobile push delivery for chat can be built by an AI coding agent and run with about 5 human hours a week."
+        }
+      ],
+      "open_questions": [
+        "A4 feasibility: will a prototype raise a phone notification for at least 99% of 1,000 test messages within 30 seconds over 2 weeks?",
+        "Are the buyers indie developers at all? Most verified reviewers are general small businesses.",
+        "Can any differentiation survive free unlimited incumbents and agent-built clones?"
+      ]
+    }
+  ],
+  "watchlist": {
+    "file": "output/watchlist.json",
+    "rerun_cadence_days": 90
+  },
+  "limitations": [
+    "Desk research cannot predict virality or revenue; demand strength is capped at weak until validation experiments run.",
+    "Thin result: 12 cards, 1 ranked (GAP-001, weakened; pain Low, demand Very low), 2 killed by the red team (GAP-003, GAP-004), 9 insufficient.",
+    "Near-misses GAP-005 (failed-payment recovery), GAP-002 (VAT filing without a merchant of record) and GAP-007 (multi-provider subscriptions) are leads needing evidence: each failed the threshold on 2 qualifying domains (3 needed).",
+    "Landscape STOP_UNSATURATED: completeness 0.6087608751279426, coverage 0.6941952678107124, marginal yield 0.22142857142857142 in round 4; no probe; all counts are lower bounds.",
+    "Saturation targets lowered by human directive to 0.65 (amendment 2) then 0.50 (amendment 3); reliability thresholds unchanged.",
+    "Amendment 1 clarified payments (seller billing/MoR/dunning/license tools in, fund-holding or KYC processors out) and communities/directories (reach channels, not competitors).",
+    "Amendment 4: one targeted evidence round by human directive for near-miss cards; it added no new chat evidence for GAP-001.",
+    "Amendment 5: budget raised to 100 subagents (HT-003). Amendment 6: coding batch size raised to 100 records.",
+    "GitHub unavailable (gh not logged in; GitHub-named query blocks refused); directories unit R02-B3-directories not searched.",
+    "Independence slip among evidence miners reported by the orchestrator; its details were not in the writer's inputs.",
+    "Codebook v3 agreement provisional; provisional codes F-PULL, T-CONSUME, X-COMPLEX, X-INTEG (X-COMPLEX is on GAP-001); 16 codes not assessable.",
+    "Round-1 evidence concentrated in Hacker News and App Store reviews; GAP-001 rests mostly on App Store reviews and vendor pricing pages.",
+    "19 post-landscape discoveries; 13 large evidence pools truncated without a stopping test.",
+    "Sizing accounts are WordPress plugin installs only; reachable share, conversion and win rate are assumptions.",
+    "Crowding pattern: dense, often free, agent-built supply in chat (30 entities), status pages/uptime (39 entities plus 2026 Show HN clones), extension payments (4+ SDKs), launch directories, feedback boards (50), subscription billing (30)."
+  ]
+}

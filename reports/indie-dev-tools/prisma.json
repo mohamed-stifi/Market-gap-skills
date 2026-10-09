@@ -1,0 +1,118 @@
+{
+  "computed_at": "2026-10-09T22:01:46+00:00",
+  "landscape": {
+    "records_identified": 1198,
+    "identified_by_family": {
+      "yc": 186,
+      "apple": 67,
+      "web": 152,
+      "directories": 21,
+      "wp": 87,
+      "hn": 67,
+      "atl": 62,
+      "se": 7,
+      "snowball": 549
+    },
+    "unique_entities": 789,
+    "duplicates_removed": 398,
+    "invalid_items": 0,
+    "screened": 789,
+    "excluded_by_reason": {
+      "EX-DEAD": 40,
+      "EX-OUT-OF-SCOPE": 202,
+      "EX-DUPLICATE": 4,
+      "EX-NOT-FOUND": 12,
+      "EX-NOT-SOFTWARE": 3
+    },
+    "unsure": 124,
+    "included": 404,
+    "verification": {
+      "ok": 395,
+      "blocked": 3,
+      "name_missing": 5,
+      "not_found": 1
+    },
+    "included_verified": 395,
+    "counted_in_saturation": 171,
+    "snowball_only": 224
+  },
+  "searches": {
+    "yc (gapscan fetch)": 53,
+    "hn (gapscan fetch)": 175,
+    "se (gapscan fetch)": 56,
+    "wp-search (gapscan fetch)": 47,
+    "apple-search (gapscan fetch)": 38,
+    "web (agent-web-search)": 96,
+    "atl-search (gapscan fetch)": 77,
+    "directories (agent-web-search)": 11,
+    "hn (agent-reported)": 2,
+    "vendor (agent-reported)": 5,
+    "apple-reviews (gapscan fetch)": 14,
+    "hn-counts (gapscan fetch)": 2,
+    "wp-reviews (gapscan fetch)": 4,
+    "atl-reviews (gapscan fetch)": 1,
+    "wp-plugin (gapscan fetch)": 3
+  },
+  "evidence": {
+    "submitted": 298,
+    "rejected_at_merge": 1,
+    "accepted_on_retry": 38,
+    "duplicates": 8,
+    "in_ledger": 289,
+    "verification": {
+      "verified": 289
+    },
+    "verified_by_source_type": {
+      "review": 96,
+      "pricing": 7,
+      "forum": 127,
+      "qa": 41,
+      "docs": 6,
+      "other": 10,
+      "news": 2
+    },
+    "rounds": 2,
+    "large_pools": {
+      "over_pool_min": 13,
+      "stop_tested": 0,
+      "truncated_without_test": 13
+    },
+    "post_landscape_discoveries": [
+      "atl:jsd-status-page",
+      "dom:apple.com",
+      "dom:authorize.net",
+      "dom:boxwatch.app",
+      "dom:chromewebstore.google.com",
+      "dom:cloudflare.com",
+      "dom:digitalriver.com",
+      "dom:larm.dev",
+      "dom:mollie.com",
+      "dom:nagios.org",
+      "dom:pingdom.com",
+      "dom:quaderno.io",
+      "dom:rapidapi.com",
+      "dom:senja.io",
+      "dom:tooldirectory.ai",
+      "dom:trustsqueezy.com",
+      "dom:velprove.com",
+      "wp:taxjar-simplified-taxes-for-woocommerce",
+      "wp:wp-health"
+    ]
+  },
+  "coding": {
+    "codebook_version": 3,
+    "agreement": "provisional",
+    "themes_saturated": true,
+    "records_coded": 289
+  },
+  "gaps": {
+    "cards_proposed": 12,
+    "by_status": {
+      "weakened": 1,
+      "insufficient": 9,
+      "killed": 2
+    },
+    "gated_out": 0,
+    "ranked": 1
+  }
+}

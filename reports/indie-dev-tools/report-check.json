@@ -1,0 +1,8 @@
+{
+  "checked_at": "2026-10-09T22:07:03+00:00",
+  "ok": true,
+  "errors": [],
+  "warnings": [
+    "GAP-001: most supporting evidence is older than 12 months"
+  ]
+}

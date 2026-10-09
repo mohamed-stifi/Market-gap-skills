@@ -1,0 +1,153 @@
+{
+  "schema_version": "1.0",
+  "run_id": "indie-dev-tools",
+  "title": "Indie dev and solo-founder tools",
+  "topic": "Low-touch SaaS tools for indie developers and solo founders that one person with an AI coding agent can build and run",
+  "question": "Which jobs of indie developers, solo founders and micro-SaaS teams (1-5 people) are under-served by current developer and founder software and workarounds, and which could a small SaaS, built mostly by an AI coding agent and run with about 5 human hours a week and a budget under $300, serve profitably (>= $1,000 MRR) with growth built into the product?",
+  "picos": {
+    "population": "Indie developers, solo founders and micro-SaaS / bootstrapped software teams of 1-5 people who build, launch and sell web products, apps, APIs or plugins online",
+    "intervention": "Running and growing a small software product: shipping and deploying, monitoring and fixing, getting first users and launching, collecting payments and handling subscriptions, onboarding and support, analytics and feedback, and showcasing the product publicly",
+    "comparator": "Incumbent developer and founder SaaS, open-source and self-hosted tools, scripts and spreadsheets, Zapier-style glue, hiring freelancers, doing it by hand, and doing nothing",
+    "outcomes": "Less time spent on non-coding work, lower tool cost, fewer outages and errors, faster launch and first revenue, more users and signups, less churn and failed payments, less support load",
+    "setting": "Global, English-speaking online communities; web, browser, GitHub, app stores and plugin marketplaces; companies of 1-5 people"
+  },
+  "scope": {
+    "in": [
+      "Self-serve software sold online to indie developers and solo founders",
+      "Tools covering launch, distribution, analytics, payments, monitoring, support, feedback and public showcase",
+      "Browser extensions, APIs, GitHub apps and marketplace apps aimed at this population"
+    ],
+    "out": [
+      "Enterprise developer platforms sold through sales teams",
+      "Courses, communities, consulting and agencies",
+      "General-purpose AI coding assistants and IDEs (frontier-lab territory)",
+      "Products that need regulated data (health, payments custody, KYC) or hardware"
+    ]
+  },
+  "business_models": [
+    "b2b-saas",
+    "prosumer-saas",
+    "api",
+    "browser-extension",
+    "marketplace-app",
+    "open-core"
+  ],
+  "geography": [
+    "global"
+  ],
+  "languages": [
+    "en"
+  ],
+  "as_of": "2026-10-09",
+  "recency_days": 730,
+  "eligibility": {
+    "include": [
+      "The product or workaround serves people who build or sell software alone or in teams of 1-5",
+      "The page shows a self-serve product, an open-source tool, or a described workaround for a job named in picos.intervention",
+      "The product was active (release, changelog, post or pricing update) within recency_days, or the workaround is described within recency_days"
+    ],
+    "exclude": [
+      "Aimed only at enterprises or teams larger than 50 (sales-only pricing, contact sales as the only plan)",
+      "Not a software product, workaround, directory or community (course, agency, newsletter); communities and directories are kept as reach channels per D06, not counted as competitors",
+      "General payment processors, banks or fintechs that hold funds or require merchant KYC; billing, merchant-of-record, dunning and license tools sold to software makers stay in scope",
+      "Dead: no activity within recency_days or announced shutdown",
+      "Outside the jobs in picos.intervention",
+      "Duplicate or rebrand of an entity already listed"
+    ]
+  },
+  "founder_fit": {
+    "skills": [
+      "product built by an AI coding agent (Claude Code) with web, API and browser-extension stacks",
+      "human helper for accounts, payments, posting and support triage"
+    ],
+    "budget_usd": 300,
+    "hours_per_week": 5,
+    "exclusions": [
+      "sales-led or high-touch onboarding",
+      "regulated or sensitive data",
+      "heavy ongoing manual operations or content moderation",
+      "two-sided marketplaces needing liquidity",
+      "products needing paid ads to grow"
+    ],
+    "schlep_tolerance": "low",
+    "unfair_advantages": [
+      "can ship and iterate fast with coding agents",
+      "willing to build in public"
+    ]
+  },
+  "ambition": {
+    "min_arr_usd": 12000
+  },
+  "variation_dimensions": {
+    "segment": [
+      "indie hackers",
+      "solo SaaS founders",
+      "open-source maintainers",
+      "mobile app indie devs",
+      "no-code / AI-app builders",
+      "WordPress and Shopify plugin devs"
+    ],
+    "language": [
+      "en",
+      "es",
+      "pt-BR",
+      "fr",
+      "de"
+    ],
+    "platform": [
+      "web app",
+      "browser extension",
+      "GitHub app",
+      "CLI",
+      "Slack/Discord bot",
+      "VS Code extension"
+    ],
+    "price_tier": [
+      "free + paid tier",
+      "$5-19/mo",
+      "$20-49/mo",
+      "one-time license",
+      "usage-based"
+    ],
+    "delivery": [
+      "self-serve",
+      "done-for-you automated"
+    ],
+    "integration": [
+      "GitHub",
+      "Stripe",
+      "Vercel/Netlify",
+      "Product Hunt / launch sites",
+      "X / Bluesky",
+      "Slack/Discord"
+    ],
+    "ai_native": [
+      true,
+      false
+    ]
+  },
+  "competing_factors": [],
+  "sources": {
+    "allowed_tiers": [
+      0,
+      1
+    ],
+    "tier2_enabled": [],
+    "excluded_extra": []
+  },
+  "autonomy": "autonomous",
+  "budget": {
+    "subagents_max": 100,
+    "fetches_max": 3000
+  },
+  "overrides": {
+    "landscape.completeness_target_theta": 0.5,
+    "landscape.coverage_target": 0.5,
+    "landscape.probe_max_new_share": 0.5,
+    "coding.theme_coverage_target": 0.5,
+    "lexicon.overlap_target": 0.5,
+    "coding.batch_size": 100
+  },
+  "seed": 843868183,
+  "notes": "Human constraints (2026-10-09): Claude Code builds; a human helper does only what agents cannot (accounts, payments, posting); minimal human time (~5 h/week) and budget (<$300); target >= $1,000 MRR. Viral = built-in growth loop observable in evidence (output seen by non-users). Targeted evidence round 2 requested by the user to diversify domains for near-miss gap cards GAP-003 extension payments, GAP-004 outage alerts + public status pages, GAP-007 multi-provider subscriptions, GAP-002 VAT filing, GAP-005 failed-payment recovery."
+}
