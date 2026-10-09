@@ -1,0 +1,571 @@
+{
+  "_doc": "Every constant is {value, source}. A run's protocol may override a key via protocol.overrides['section.key']; every override is logged as an amendment. Read values through mgcore.config.get(path).",
+  "lexicon": {
+    "scouts": {
+      "value": 3,
+      "source": "Smallest number of independent searchers that gives pairwise agreement plus a tie-breaker; matches the deep-research coordinator default of 3 parallel researchers."
+    },
+    "overlap_target": {
+      "value": 0.8,
+      "source": "Design default: vocabulary has a long tail, so the aim is query diversity rather than completeness; stricter targets waste rounds."
+    },
+    "max_rounds": {
+      "value": 2,
+      "source": "Design default: after two rounds the union of three scouts feeds the PRESS review instead of more rounds."
+    },
+    "queries_per_scout": {
+      "value": 24,
+      "source": "Design default: enough query blocks to cover every facet pair at least once per scout."
+    }
+  },
+  "landscape": {
+    "scouts": {
+      "value": 3,
+      "source": "Same reasoning as lexicon.scouts."
+    },
+    "units_per_scout": {
+      "value": 3,
+      "source": "Research-statistics track: treat each scout x channel family as one sampling unit so T grows fast enough for Chao2 (3 scouts x 3 families = 9 units per round)."
+    },
+    "completeness_target_theta": {
+      "value": 0.9,
+      "source": "The user's doctoral-team rule (~90% intersection), enforced as S_obs / Chao2 estimate instead of raw overlap."
+    },
+    "coverage_target": {
+      "value": 0.95,
+      "source": "Chao & Jost 2012 sample coverage; research-statistics track recommendation (stop when C-hat >= 0.95)."
+    },
+    "max_marginal_yield": {
+      "value": 0.05,
+      "source": "Wohlin 2014 (stop when an iteration adds ~nothing) and Guest, Namey & Chen 2020 (<=5% new information)."
+    },
+    "min_units_T": {
+      "value": 6,
+      "source": "Design default: incidence estimators need several sampling units; T>=6 keeps A=(T-1)/T >= 0.83."
+    },
+    "min_per_kind": {
+      "value": 3,
+      "source": "Design default: fewer than 3 entities of a kind gives no usable Q1/Q2 split."
+    },
+    "max_rounds": {
+      "value": 4,
+      "source": "Budget guard; matches the plan's STOP_UNSATURATED rule."
+    },
+    "probe_max_new_share": {
+      "value": 0.1,
+      "source": "Equals 1 - completeness_target_theta: a fresh holdout searcher should find at most 10% new items if ~90% are already known."
+    },
+    "extrapolation_limit_factor": {
+      "value": 2,
+      "source": "Chao & Jost 2012; Chao & Colwell 2017: do not extrapolate beyond double the reference sample size."
+    },
+    "z": {
+      "value": 1.96,
+      "source": "95% normal quantile used by the log-normal Chao2 interval (Chao & Colwell 2017)."
+    },
+    "verify_batch": {
+      "value": 40,
+      "source": "Fetches per `entities verify` call at the 3-second politeness interval: about two minutes per call, so a call stays well inside tool timeouts."
+    }
+  },
+  "snowball": {
+    "max_iterations": {
+      "value": 3,
+      "source": "Wohlin 2014 worked example converged in 3-4 iterations; budget guard."
+    },
+    "high_yield_flag": {
+      "value": 0.1,
+      "source": "If snowballing adds more than 1 - theta new verified entities, sampling missed part of the market; flag as a coverage limitation."
+    }
+  },
+  "screening": {
+    "audit_fraction": {
+      "value": 0.2,
+      "source": "O'Connor & Joffe 2020: double-code 10-25% of units; upper-middle value chosen."
+    },
+    "audit_min_units": {
+      "value": 10,
+      "source": "Design default: below 10 audited units an agreement coefficient is not informative."
+    },
+    "alpha_accept": {
+      "value": 0.8,
+      "source": "Krippendorff 2004: rely on alpha >= .800."
+    },
+    "alpha_provisional": {
+      "value": 0.667,
+      "source": "Krippendorff 2004: .667-.800 supports tentative conclusions only."
+    },
+    "reason_codes": {
+      "value": {
+        "IN": "Meets all eligibility rules",
+        "EX-NOT-SOFTWARE": "Not a software product, community or directory",
+        "EX-OUT-OF-SCOPE": "Outside the protocol scope (segment, job, geography or business model)",
+        "EX-DEAD": "Product discontinued, domain parked or no activity inside the recency window",
+        "EX-DUPLICATE": "Duplicate of another entity under a different key",
+        "EX-NOT-FOUND": "Page does not exist or does not mention the entity",
+        "EX-EXCLUDED-SOURCE": "Only reachable through an excluded source",
+        "UNSURE": "Needs a second opinion"
+      },
+      "source": "PRISMA 2020 requires reasons for exclusion; codes adapted to software products."
+    },
+    "batch_size": {
+      "value": 40,
+      "source": "Context budget: a screener reads part of each entity's page; 40 entities per subagent keeps one context manageable (a live run with 186 entities in one batch would not fit)."
+    }
+  },
+  "evidence": {
+    "miners": {
+      "value": 3,
+      "source": "One miner per channel group (marketplaces/vendor pages, communities/Q&A, signals/why-now)."
+    },
+    "max_rounds": {
+      "value": 4,
+      "source": "Budget guard."
+    },
+    "quote_max_chars": {
+      "value": 280,
+      "source": "Data minimisation (GDPR art. 5(1)(c)); data-sources track recommendation of <=280-char quotes."
+    },
+    "retention_days": {
+      "value": 180,
+      "source": "Design default retention limit for snapshots containing personal data; GDPR storage-limitation principle."
+    },
+    "min_interval_seconds": {
+      "value": 3,
+      "source": "Polite per-domain spacing for pages without a documented API limit."
+    },
+    "robots_cache_hours": {
+      "value": 24,
+      "source": "RFC 9309 section 2.4: crawlers should not use a cached robots.txt for more than 24 hours."
+    },
+    "stoptest_pool_min": {
+      "value": 200,
+      "source": "Design default: below ~200 candidates screen everything; the statistical stop only pays off on large ranked pools."
+    },
+    "stoptest_recall": {
+      "value": 0.95,
+      "source": "Callaghan & Mueller-Hansen 2020 target recall."
+    },
+    "stoptest_confidence": {
+      "value": 0.95,
+      "source": "Callaghan & Mueller-Hansen 2020 confidence level."
+    },
+    "strength_weights": {
+      "value": {
+        "S0": 0.25,
+        "S1": 0.5,
+        "S2": 1.0,
+        "S3": 1.5,
+        "S4": 2.0
+      },
+      "source": "Ordinal weights on the Mom Test / Testing Business Ideas evidence ladder (facts over opinions, doing over saying); tunable design default."
+    },
+    "stale_months": {
+      "value": 12,
+      "source": "Data-sources track: flag evidence older than 12 months."
+    }
+  },
+  "coding": {
+    "open_base_n": {
+      "value": 30,
+      "source": "Design default: enough short records to draft a codebook of 20-40 codes (O'Connor & Joffe 2020 suggest keeping codebooks to roughly 20-40 codes)."
+    },
+    "reliability_fraction": {
+      "value": 0.2,
+      "source": "O'Connor & Joffe 2020: double-code 10-25% of units."
+    },
+    "reliability_min_units": {
+      "value": 30,
+      "source": "Design default: smaller samples make per-code alpha unstable."
+    },
+    "min_positives_per_code": {
+      "value": 5,
+      "source": "O'Connor & Joffe 2020: rare codes depress kappa/alpha; require a minimum number of positives before judging a code."
+    },
+    "alpha_accept": {
+      "value": 0.8,
+      "source": "Krippendorff 2004."
+    },
+    "alpha_provisional": {
+      "value": 0.667,
+      "source": "Krippendorff 2004."
+    },
+    "max_revisions": {
+      "value": 3,
+      "source": "Budget guard; after three revisions remaining weak codes are carried as provisional and downgrade certainty."
+    },
+    "theme_coverage_target": {
+      "value": 0.95,
+      "source": "Research-statistics track: treat records x themes as incidence data and require C-hat >= 0.95."
+    },
+    "gnc_base": {
+      "value": 20,
+      "source": "Adaptation of Guest, Namey & Chen 2020 (base 4 for interviews) to short desk posts; documented as an adaptation."
+    },
+    "gnc_run": {
+      "value": 10,
+      "source": "Adaptation of Guest, Namey & Chen 2020 (run 2-3 for interviews) to short desk posts."
+    },
+    "gnc_threshold": {
+      "value": 0.05,
+      "source": "Guest, Namey & Chen 2020: <=5% new information."
+    },
+    "standard_codes": {
+      "value": [
+        {
+          "id": "X-FRAG",
+          "type": "cross",
+          "label": "Fragmentation",
+          "definition": "The person juggles several tools or places to get one job done; there is no single place.",
+          "include": "Mentions switching between tools, copying data between apps, or many tools for one job.",
+          "exclude": "A single tool lacking one feature (use a pain or feature code)."
+        },
+        {
+          "id": "X-INTEG",
+          "type": "cross",
+          "label": "Integration missing",
+          "definition": "Tools the person uses do not connect or sync with each other.",
+          "include": "No integration, broken sync, manual export/import between named tools.",
+          "exclude": "General complaints about a tool's own features."
+        },
+        {
+          "id": "X-PRICE",
+          "type": "cross",
+          "label": "Price mismatch",
+          "definition": "Too expensive for the value received or for this segment.",
+          "include": "Explicit cost complaints, seat pricing that does not fit, no small tier.",
+          "exclude": "Statements about willingness to pay without complaint (use stance wtp)."
+        },
+        {
+          "id": "X-COMPLEX",
+          "type": "cross",
+          "label": "Too complex",
+          "definition": "The product is too complex or heavy for this user or use case.",
+          "include": "Bloat, steep learning curve, built for bigger teams.",
+          "exclude": "Missing features."
+        },
+        {
+          "id": "X-LANG",
+          "type": "cross",
+          "label": "Language or locale missing",
+          "definition": "Language, currency, tax, date format or local compliance is not supported.",
+          "include": "Translation gaps, missing local currency or tax rules, regional regulation.",
+          "exclude": "General UX complaints."
+        },
+        {
+          "id": "X-SUPPORT",
+          "type": "cross",
+          "label": "Support gap",
+          "definition": "Support is missing, slow or unhelpful.",
+          "include": "Unanswered tickets, no human support, slow responses.",
+          "exclude": "Bugs themselves (use X-RELIAB)."
+        },
+        {
+          "id": "X-RELIAB",
+          "type": "cross",
+          "label": "Reliability",
+          "definition": "The product breaks, loses data or is unavailable.",
+          "include": "Bugs, data loss, outages, failed syncs.",
+          "exclude": "Missing features."
+        },
+        {
+          "id": "X-SCALE",
+          "type": "cross",
+          "label": "Pain grows with volume",
+          "definition": "The pain grows as usage, volume, clients or team size grow (dose-response).",
+          "include": "'Fine at 5 clients, impossible at 50', costs scaling with volume.",
+          "exclude": "Pain that is constant regardless of volume."
+        },
+        {
+          "id": "F-PUSH",
+          "type": "force",
+          "label": "Push of the situation",
+          "definition": "Something in the current situation pushes the person to seek change.",
+          "include": "Frustration events, deadlines missed, a breaking point.",
+          "exclude": "Attraction to a specific new product (use F-PULL)."
+        },
+        {
+          "id": "F-PULL",
+          "type": "force",
+          "label": "Pull of the new solution",
+          "definition": "An attraction to a new way of doing the job.",
+          "include": "'I saw X does Y and wanted that', promised outcomes.",
+          "exclude": "Complaints about the old way (use F-PUSH)."
+        },
+        {
+          "id": "F-ANX",
+          "type": "force",
+          "label": "Anxiety of the new",
+          "definition": "Worries that hold back switching to a new solution.",
+          "include": "Migration risk, learning cost, fear it will not work.",
+          "exclude": "Satisfaction with the current tool (use F-HABIT)."
+        },
+        {
+          "id": "F-HABIT",
+          "type": "force",
+          "label": "Habit of the present",
+          "definition": "Comfort with the current way that holds back switching.",
+          "include": "'Good enough', 'we have always used', sunk cost.",
+          "exclude": "Fears about the new tool (use F-ANX)."
+        },
+        {
+          "id": "T-FIRST",
+          "type": "stage",
+          "label": "First thought",
+          "definition": "The moment the person first realised the current way is not good enough.",
+          "include": "'It started when...'",
+          "exclude": "Active comparison of options (later stages)."
+        },
+        {
+          "id": "T-PASSIVE",
+          "type": "stage",
+          "label": "Passive looking",
+          "definition": "Noticing alternatives without actively searching.",
+          "include": "'I kept seeing...', bookmarking, asking casually.",
+          "exclude": "Trials and demos (T-ACTIVE)."
+        },
+        {
+          "id": "T-ACTIVE",
+          "type": "stage",
+          "label": "Active looking",
+          "definition": "Actively searching, comparing and trialling options.",
+          "include": "Trials, comparisons, demo requests, 'looking for an alternative'.",
+          "exclude": "The final choice (T-DECIDE)."
+        },
+        {
+          "id": "T-DECIDE",
+          "type": "stage",
+          "label": "Deciding",
+          "definition": "Choosing and committing, including what tipped the decision.",
+          "include": "'We picked X because...', purchase moments.",
+          "exclude": "Using the new product afterwards (T-CONSUME)."
+        },
+        {
+          "id": "T-CONSUME",
+          "type": "stage",
+          "label": "Consuming",
+          "definition": "Experience after switching: onboarding, first value, regret or delight.",
+          "include": "'Since switching...', post-purchase experiences.",
+          "exclude": "Pre-purchase comparisons."
+        }
+      ],
+      "source": "Cross-cutting pains from the market-gap taxonomy; Forces of Progress and switch timeline from Moesta & Spiek (jobstobedone.org); added by `codebook freeze` so every run uses the same definitions (method card D13)."
+    },
+    "theme_code_types": {
+      "value": [
+        "job",
+        "outcome",
+        "pain",
+        "gain",
+        "segment"
+      ],
+      "source": "Method card D14: theme saturation counts the run's own codes; standard X-/F-/T- codes exist by construction and are left out."
+    },
+    "batch_size": {
+      "value": 60,
+      "source": "Context budget: 60 coded quotes (at most 280 characters each) plus the frozen codebook fit one subagent's working context; closed-coding batches in the live dry run, 2026-10-09."
+    },
+    "max_own_codes": {
+      "value": 40,
+      "source": "Design default, not an empirical threshold: the run's own codes that one coder can apply consistently from a single context. Standard X-/F-/T- codes, sharpened or not, do not count; the live run's v2 codebook had 36 own codes."
+    }
+  },
+  "gapmap": {
+    "absolute_supply_max": {
+      "value": 1,
+      "source": "Evidence Gap Map convention: an absolute gap is a cell with few or no primary studies; here <=1 product serving the job."
+    },
+    "synthesis_supply_min": {
+      "value": 5,
+      "source": "Design default: 5+ point solutions for one job indicates a fragmented, rebundling-prone cell (EGM 'synthesis gap' analogue)."
+    },
+    "synthesis_fragmentation_share": {
+      "value": 0.2,
+      "source": "Design default: at least 20% of the job's demand evidence complains about fragmentation or integration."
+    },
+    "min_demand_authors": {
+      "value": 5,
+      "source": "Matches gap_card.min_records; marketingskills/customer-research prior art uses >=5 data points per segment."
+    },
+    "assoc_min_cooccurrence": {
+      "value": 3,
+      "source": "Design default: association strength is unstable for co-occurrence counts below 3."
+    }
+  },
+  "gap_card": {
+    "min_records": {
+      "value": 5,
+      "source": "Prior art (customer-research skill) requires >=5 data points; plan threshold."
+    },
+    "min_domains": {
+      "value": 3,
+      "source": "Triangulation across independent sources (data-sources track lesson 4)."
+    },
+    "min_source_types": {
+      "value": 2,
+      "source": "Methodological triangulation (Denzin): at least two kinds of source."
+    },
+    "min_authors": {
+      "value": 2,
+      "source": "A single author is an anecdote, not a pattern."
+    },
+    "require_triangulation": {
+      "value": true,
+      "source": "Data-sources track: combine pain + demand + supply before calling something a gap."
+    }
+  },
+  "certainty": {
+    "bias_moderate": {
+      "value": 0.15,
+      "source": "Design operationalisation of GRADE risk-of-bias for market evidence (share of vendor/incentivized/affiliate sources)."
+    },
+    "bias_serious": {
+      "value": 0.3,
+      "source": "Same as above."
+    },
+    "inconsistency_moderate": {
+      "value": 0.15,
+      "source": "Design operationalisation of GRADE inconsistency (contra / (support + contra))."
+    },
+    "inconsistency_serious": {
+      "value": 0.3,
+      "source": "Same as above."
+    },
+    "indirect_moderate": {
+      "value": 0.5,
+      "source": "Design operationalisation of GRADE indirectness (share of stated-not-revealed or adjacent-persona evidence)."
+    },
+    "indirect_serious": {
+      "value": 0.75,
+      "source": "Same as above."
+    },
+    "authors_serious_below": {
+      "value": 5,
+      "source": "CERQual adequacy: too few independent authors."
+    },
+    "authors_moderate_below": {
+      "value": 10,
+      "source": "CERQual adequacy."
+    },
+    "ci_width_moderate": {
+      "value": 0.3,
+      "source": "GRADE imprecision: a wide Wilson interval on a prevalence proportion."
+    },
+    "coverage_moderate_below": {
+      "value": 0.9,
+      "source": "Publication-bias analogue: low landscape coverage means unseen supply."
+    },
+    "magnitude_min_authors": {
+      "value": 3,
+      "source": "GRADE large-effect upgrade analogue: money spent on workarounds by >=3 authors."
+    },
+    "dose_response_min_authors": {
+      "value": 3,
+      "source": "GRADE dose-response upgrade analogue: pain that grows with usage (X-SCALE) from >=3 authors."
+    }
+  },
+  "scoring": {
+    "weights": {
+      "value": {
+        "pain": 0.22,
+        "pay": 0.18,
+        "size": 0.12,
+        "competition": 0.14,
+        "why_now": 0.1,
+        "reach": 0.14,
+        "right_to_win": 0.1
+      },
+      "source": "Design default emphasising Pain and Pay because 'no market need' is consistently a top startup failure reason (CB Insights post-mortems); override in the protocol."
+    },
+    "dirichlet_concentration": {
+      "value": 50,
+      "source": "Design default: weights vary by roughly +/-30% relative around the defaults."
+    },
+    "draws": {
+      "value": 2000,
+      "source": "Monte Carlo draws for p_top3; standard error < 0.012 for any probability."
+    },
+    "top_n": {
+      "value": 3,
+      "source": "Report the probability of landing in the top 3."
+    },
+    "gates": {
+      "value": {
+        "regulatory_load_max": "medium",
+        "human_ops_burden_max": "medium",
+        "agent_buildability_min": "partial",
+        "platform_risk_max": 2,
+        "tos_feasible_required": true
+      },
+      "source": "Plan: hard gates before scores (regulatory load, human-ops burden, agent-buildability, platform risk, ToS feasibility)."
+    }
+  },
+  "variation": {
+    "top_products": {
+      "value": 10,
+      "source": "Budget guard on the morphological box (Zwicky): vary only the strongest proven products."
+    },
+    "max_candidates": {
+      "value": 200,
+      "source": "Budget guard."
+    }
+  },
+  "bursts": {
+    "s": {
+      "value": 2,
+      "source": "Kleinberg 2002 two-state model; research-statistics track recommends s=2 for short series."
+    },
+    "gamma": {
+      "value": 1,
+      "source": "Kleinberg 2002 transition-cost parameter."
+    },
+    "shuffles": {
+      "value": 200,
+      "source": "Permutation test with 200 timestamp shuffles (p resolution 0.005)."
+    },
+    "alpha": {
+      "value": 0.05,
+      "source": "Conventional significance level for the shuffle test."
+    }
+  },
+  "reproducibility": {
+    "entity_jaccard_min": {
+      "value": 0.7,
+      "source": "Plan verification threshold."
+    },
+    "top_k": {
+      "value": 5,
+      "source": "Plan verification threshold."
+    },
+    "top_k_match_min": {
+      "value": 3,
+      "source": "Plan verification threshold."
+    },
+    "gap_match_jaccard": {
+      "value": 0.3,
+      "source": "Plan: two gaps match when their incumbents + evidence URLs overlap with Jaccard >= 0.3."
+    },
+    "rbo_p": {
+      "value": 0.9,
+      "source": "Webber, Moffat & Zobel 2010: p=0.9 weights roughly the top 10 ranks."
+    }
+  },
+  "budget": {
+    "subagents_max": {
+      "value": 80,
+      "source": "Cost guard; next refuses to plan another spawn once spent."
+    },
+    "fetches_max": {
+      "value": 3000,
+      "source": "Cost guard for scripted fetches."
+    },
+    "scout_tool_calls": {
+      "value": 20,
+      "source": "Plan: cap each scout at ~15-20 tool calls."
+    },
+    "miner_tool_calls": {
+      "value": 25,
+      "source": "Miners read more pages per item than scouts."
+    }
+  }
+}

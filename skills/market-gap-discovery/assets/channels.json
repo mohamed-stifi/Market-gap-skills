@@ -1,0 +1,369 @@
+{
+  "_doc": "Source registry. tier 0 = built-in web search/fetch used sparingly; tier 1 = free scripted API; tier 2 = needs a key/approval requested through a human task; excluded = never fetch. 'kinds' lists what a landscape unit on this family can surface (used for per-kind saturation). Re-checked by `gapscan.py doctor` at the start of every run; update verified_on when you re-verify.",
+  "families": {
+    "web": {
+      "tier": 0,
+      "name": "Built-in web search (agent tool)",
+      "kinds": [
+        "product",
+        "community",
+        "directory"
+      ],
+      "access": "Agent WebSearch tool; log every query with `gapscan.py log-query`. Snapshot any page you quote with `gapscan.py snapshot`.",
+      "tos": "Respect each result site's robots.txt and terms; never fetch excluded domains.",
+      "landscape": true,
+      "evidence": true,
+      "verified_on": "2026-10-09"
+    },
+    "directories": {
+      "tier": 0,
+      "name": "Public directory listings (listing pages only)",
+      "kinds": [
+        "product",
+        "directory"
+      ],
+      "access": "Listing pages of Slack App Directory, Shopify App Store, Zapier app directory, Chrome Web Store, Google Play, AlternativeTo: use them to discover names and links only. Record each product's own homepage as `url` and the listing as `listing_url`; if no homepage is visible, leave the product out. AlternativeTo answers automated fetches with HTTP 403 (observed in a live run), so an entity known only by its AlternativeTo page cannot be screened.",
+      "tos": "Robots-limited; Shopify ToS is anti-bot; AlternativeTo forbids building a competing database: record pointers, do not copy listings.",
+      "landscape": true,
+      "evidence": false,
+      "verified_on": "2026-10-09"
+    },
+    "vendor": {
+      "tier": 0,
+      "name": "Vendor public pages (pricing, changelog, docs, public roadmap, status, feature-request boards)",
+      "kinds": [
+        "product"
+      ],
+      "access": "`gapscan.py snapshot RUN URL` (robots-checked, rate-limited).",
+      "tos": "Public pages only; never log in.",
+      "landscape": false,
+      "evidence": true,
+      "verified_on": "2026-10-09"
+    },
+    "hn": {
+      "tier": 1,
+      "name": "Hacker News via Algolia API",
+      "kinds": [
+        "product",
+        "community"
+      ],
+      "endpoint": "https://hn.algolia.com/api/v1/search , /search_by_date , /items/{id}",
+      "auth": "none",
+      "limits": "about 10k requests/hour per IP (secondary source); scripts space requests by 1s",
+      "tos": "Open API.",
+      "adapters": [
+        "hn",
+        "hn-counts",
+        "hn-hiring"
+      ],
+      "min_interval_s": 1,
+      "landscape": true,
+      "evidence": true,
+      "verified_on": "2026-10-09"
+    },
+    "se": {
+      "tier": 1,
+      "name": "Stack Exchange API 2.3",
+      "kinds": [
+        "product",
+        "community"
+      ],
+      "endpoint": "https://api.stackexchange.com/2.3/search/advanced",
+      "auth": "none (300 requests/day per IP) or free key via STACKEXCHANGE_KEY (10k/day)",
+      "limits": "max 30 requests/s; honour the 'backoff' field",
+      "tos": "Content is CC BY-SA 4.0: keep attribution (URL) with every quote.",
+      "adapters": [
+        "se",
+        "se-counts"
+      ],
+      "env_optional": "STACKEXCHANGE_KEY",
+      "min_interval_s": 1,
+      "landscape": true,
+      "evidence": true,
+      "verified_on": "2026-10-09"
+    },
+    "gh": {
+      "tier": 1,
+      "name": "GitHub search via the gh CLI",
+      "kinds": [
+        "product",
+        "community"
+      ],
+      "endpoint": "gh search issues|repos ; gh api graphql (discussions)",
+      "auth": "gh auth login (the human's GitHub account)",
+      "limits": "search API 30 requests/min authenticated, 1000 results per query",
+      "tos": "GitHub API terms; public repositories only.",
+      "adapters": [
+        "gh-issues",
+        "gh-repos"
+      ],
+      "min_interval_s": 2,
+      "landscape": true,
+      "evidence": true,
+      "verified_on": "2026-10-09"
+    },
+    "wiki": {
+      "tier": 1,
+      "name": "Wikimedia Pageviews API",
+      "kinds": [],
+      "endpoint": "https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/{project}/{access}/{agent}/{article}/{granularity}/{start}/{end}",
+      "auth": "none, but a User-Agent with contact information is required (set MGD_CONTACT)",
+      "limits": "10 requests/min unidentified, 200/min with a contact User-Agent",
+      "tos": "Wikimedia API usage guidelines.",
+      "adapters": [
+        "wiki-views"
+      ],
+      "requires_contact": true,
+      "min_interval_s": 1,
+      "landscape": false,
+      "evidence": false,
+      "signals": true,
+      "verified_on": "2026-10-09"
+    },
+    "wp": {
+      "tier": 1,
+      "name": "WordPress.org plugin directory API + review feeds",
+      "kinds": [
+        "product"
+      ],
+      "endpoint": "https://api.wordpress.org/plugins/info/1.2/ ; https://wordpress.org/support/plugin/{slug}/reviews/feed/",
+      "auth": "none",
+      "limits": "not published; scripts space requests by 2s",
+      "tos": "Public API.",
+      "adapters": [
+        "wp-search",
+        "wp-plugin",
+        "wp-reviews"
+      ],
+      "min_interval_s": 2,
+      "landscape": true,
+      "evidence": true,
+      "verified_on": "2026-10-09"
+    },
+    "apple": {
+      "tier": 1,
+      "name": "Apple iTunes Search API + App Store customer-review JSON feed",
+      "kinds": [
+        "product"
+      ],
+      "endpoint": "https://itunes.apple.com/search?entity=software ; https://itunes.apple.com/{cc}/rss/customerreviews/page={n}/id={id}/sortby=mostrecent/json",
+      "auth": "none",
+      "limits": "review feed is undocumented: pages 1-10 x 50 reviews per storefront; space requests by 3s",
+      "tos": "Undocumented feed; use sparingly and keep quotes short.",
+      "adapters": [
+        "apple-search",
+        "apple-reviews"
+      ],
+      "min_interval_s": 3,
+      "landscape": true,
+      "evidence": true,
+      "verified_on": "2026-10-09"
+    },
+    "atl": {
+      "tier": 1,
+      "name": "Atlassian Marketplace REST v2",
+      "kinds": [
+        "product"
+      ],
+      "endpoint": "https://marketplace.atlassian.com/rest/2/addons?text= ; /rest/2/addons/{key}/reviews",
+      "auth": "none",
+      "limits": "not published; space requests by 2s",
+      "tos": "Public marketplace API.",
+      "adapters": [
+        "atl-search",
+        "atl-reviews"
+      ],
+      "min_interval_s": 2,
+      "landscape": true,
+      "evidence": true,
+      "verified_on": "2026-10-09"
+    },
+    "yc": {
+      "tier": 1,
+      "name": "Y Combinator company directory (yc-oss mirror)",
+      "kinds": [
+        "product"
+      ],
+      "endpoint": "https://yc-oss.github.io/api/companies/all.json",
+      "auth": "none",
+      "limits": "static JSON; cache it per run",
+      "tos": "Unofficial daily mirror of YC's public index; ycombinator.com/companies?* is disallowed by robots.txt, so never scrape it directly.",
+      "adapters": [
+        "yc"
+      ],
+      "min_interval_s": 1,
+      "landscape": true,
+      "evidence": false,
+      "verified_on": "2026-10-09"
+    },
+    "saashub": {
+      "tier": 2,
+      "name": "SaaSHub API (free beta key, attribution required)",
+      "kinds": [
+        "product"
+      ],
+      "env": "SAASHUB_API_KEY",
+      "tos": "Credit SaaSHub wherever its data appears.",
+      "landscape": true,
+      "evidence": false,
+      "verified_on": "2026-10-09"
+    },
+    "producthunt": {
+      "tier": 2,
+      "name": "Product Hunt API v2",
+      "kinds": [
+        "product"
+      ],
+      "env": "PRODUCTHUNT_TOKEN",
+      "tos": "Must not be used for commercial purposes without permission: request permission before enabling.",
+      "landscape": true,
+      "evidence": true,
+      "verified_on": "2026-10-09"
+    },
+    "reddit": {
+      "tier": 2,
+      "name": "Reddit Data API (OAuth)",
+      "kinds": [
+        "community"
+      ],
+      "env": "REDDIT_CLIENT_ID, REDDIT_CLIENT_SECRET",
+      "tos": "Requires prior approval under the Responsible Builder Policy; new requests close 2026-10-31; commercial use needs a contract; no ML training on content. Enable only if the human already holds approved access. Unauthenticated .json/RSS is excluded.",
+      "landscape": true,
+      "evidence": true,
+      "verified_on": "2026-10-09"
+    },
+    "trends": {
+      "tier": 2,
+      "name": "Google Trends API (alpha, by application)",
+      "kinds": [],
+      "env": "GOOGLE_TRENDS_API_KEY",
+      "tos": "Alpha access only; never scrape trends.google.com (pytrends is archived).",
+      "signals": true,
+      "verified_on": "2026-10-09"
+    },
+    "keyword_planner": {
+      "tier": 2,
+      "name": "Google Ads Keyword Planner via Google Ads API",
+      "kinds": [],
+      "env": "GOOGLE_ADS_DEVELOPER_TOKEN",
+      "tos": "Needs a Google Ads account and developer token.",
+      "signals": true,
+      "verified_on": "2026-10-09"
+    },
+    "serpapi": {
+      "tier": 2,
+      "name": "SerpApi (250 free searches/month)",
+      "kinds": [
+        "product"
+      ],
+      "env": "SERPAPI_KEY",
+      "tos": "Vendor carries the scraping risk; mind the monthly quota.",
+      "landscape": true,
+      "signals": true,
+      "verified_on": "2026-10-09"
+    },
+    "dataforseo": {
+      "tier": 2,
+      "name": "DataForSEO (pay as you go, $50 minimum)",
+      "kinds": [],
+      "env": "DATAFORSEO_LOGIN, DATAFORSEO_PASSWORD",
+      "tos": "Paid API; spending requires a human task.",
+      "signals": true,
+      "verified_on": "2026-10-09"
+    },
+    "semrush_ahrefs": {
+      "tier": 2,
+      "name": "Semrush / Ahrefs APIs",
+      "kinds": [],
+      "env": "SEMRUSH_API_KEY or AHREFS_API_KEY",
+      "tos": "Business / Enterprise plans only.",
+      "signals": true,
+      "verified_on": "2026-10-09"
+    },
+    "x": {
+      "tier": 2,
+      "name": "X API (pay per use)",
+      "kinds": [
+        "community"
+      ],
+      "env": "X_BEARER_TOKEN",
+      "tos": "About $0.005 per post read; spending requires a human task.",
+      "evidence": true,
+      "verified_on": "2026-10-09"
+    }
+  },
+  "excluded": [
+    {
+      "domain": "g2.com",
+      "reason": "Terms ban scrapers and headless browsers and using content to train, test or analyse ML; robots.txt blocks ClaudeBot on review paths.",
+      "verified_on": "2026-10-09"
+    },
+    {
+      "domain": "capterra.com",
+      "reason": "Terms ban automated extraction (Gartner Digital Markets; acquisition by G2 announced 2026-01-29).",
+      "verified_on": "2026-10-09"
+    },
+    {
+      "domain": "getapp.com",
+      "reason": "Same terms as Capterra.",
+      "verified_on": "2026-10-09"
+    },
+    {
+      "domain": "softwareadvice.com",
+      "reason": "Same terms as Capterra.",
+      "verified_on": "2026-10-09"
+    },
+    {
+      "domain": "trustradius.com",
+      "reason": "Review-site terms prohibit automated extraction (not fully verified); excluded conservatively.",
+      "verified_on": "2026-10-09"
+    },
+    {
+      "domain": "indiehackers.com",
+      "reason": "robots.txt disallows AI bots entirely.",
+      "verified_on": "2026-10-09"
+    },
+    {
+      "domain": "upwork.com",
+      "reason": "Terms ban scrapers; RSS removed 2024-08-20.",
+      "verified_on": "2026-10-09"
+    },
+    {
+      "domain": "fiverr.com",
+      "reason": "No public API; scraping banned.",
+      "verified_on": "2026-10-09"
+    },
+    {
+      "domain": "linkedin.com",
+      "reason": "Login-walled; hiQ v. LinkedIn ended with an injunction.",
+      "verified_on": "2026-10-09"
+    },
+    {
+      "domain": "reddit.com",
+      "reason": "Unauthenticated .json returns 403 and RSS ends 2026-11-13; only the tier-2 OAuth API with prior approval is allowed.",
+      "verified_on": "2026-10-09"
+    },
+    {
+      "domain": "redd.it",
+      "reason": "Reddit short links; same as reddit.com.",
+      "verified_on": "2026-10-09"
+    }
+  ],
+  "excluded_paths": [
+    {
+      "domain": "play.google.com",
+      "path_prefix": "/store/getreviews",
+      "reason": "Disallowed by robots.txt; Google terms ban automated access that ignores robots.txt."
+    },
+    {
+      "domain": "chromewebstore.google.com",
+      "path_regex": "^/detail/[^/]+/[^/]+/reviews",
+      "reason": "Review pages disallowed by robots.txt."
+    },
+    {
+      "domain": "www.ycombinator.com",
+      "path_prefix": "/companies?",
+      "reason": "Disallowed by robots.txt; use the yc-oss mirror."
+    }
+  ]
+}

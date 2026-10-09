@@ -1,0 +1,18 @@
+{
+  "$id": "why-now",
+  "description": "One why-now catalyst per line (PESTLE log, method card D12). Miners write their own why-now-X.jsonl without ids; `merge --phase evidence` assigns WN ids and appends to evidence/why-now.jsonl.",
+  "type": "object",
+  "required": ["factor", "change", "date", "url", "snapshot", "job_unlocked", "strength"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^WN-[0-9]{3}$"},
+    "factor": {"enum": ["political", "economic", "social", "technological", "legal", "environmental", "platform"]},
+    "change": {"type": "string", "minLength": 10, "maxLength": 300},
+    "date": {"type": "string", "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"},
+    "url": {"type": "string", "pattern": "^https?://"},
+    "snapshot": {"type": "string", "pattern": "^[0-9a-f]{16,64}$"},
+    "quote": {"type": "string", "maxLength": 280},
+    "job_unlocked": {"type": "string", "minLength": 5},
+    "strength": {"enum": ["weak", "moderate", "strong"]},
+    "related_terms": {"type": "array", "items": {"type": "string"}}
+  }
+}

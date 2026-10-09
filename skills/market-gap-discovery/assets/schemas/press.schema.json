@@ -1,0 +1,42 @@
+{
+  "$id": "press",
+  "description": "PRESS peer review of the search strategy (query blocks) before landscape sampling (method card D02).",
+  "type": "object",
+  "required": ["assignment_id", "verdict", "checklist", "add", "remove"],
+  "properties": {
+    "assignment_id": {"type": "string"},
+    "verdict": {"enum": ["ok", "revise"]},
+    "checklist": {
+      "type": "object",
+      "required": ["translation", "operators", "synonyms", "spelling", "limits", "other"],
+      "properties": {
+        "translation": {"$ref": "#/$defs/item"},
+        "operators": {"$ref": "#/$defs/item"},
+        "synonyms": {"$ref": "#/$defs/item"},
+        "spelling": {"$ref": "#/$defs/item"},
+        "limits": {"$ref": "#/$defs/item"},
+        "other": {"$ref": "#/$defs/item"}
+      }
+    },
+    "add": {
+      "type": "object",
+      "properties": {
+        "segment": {"type": "array", "items": {"type": "string"}},
+        "job": {"type": "array", "items": {"type": "string"}},
+        "category": {"type": "array", "items": {"type": "string"}},
+        "tool": {"type": "array", "items": {"type": "string"}},
+        "pain": {"type": "array", "items": {"type": "string"}},
+        "workaround": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "remove": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "string"}
+  },
+  "$defs": {
+    "item": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {"status": {"enum": ["ok", "issue"]}, "note": {"type": "string"}}
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "_doc": "Search personas give independent scouts different vantage points (heterogeneity reduces correlated searching, which would otherwise make overlap look higher than true coverage). `assign` draws personas without replacement per round with the run seed; the probe uses a persona not used before.",
+  "personas": [
+    {"id": "practitioner", "label": "Practitioner", "brief": "You do this job every week inside a small business. You search for tools that save time on the specific task, and you use the job's own jargon."},
+    {"id": "buyer", "label": "Buyer / manager", "brief": "You evaluate vendors for a team. You search comparisons, pricing pages, 'best X for Y' lists and 'X vs Y' pages."},
+    {"id": "switcher", "label": "Frustrated switcher", "brief": "You are unhappy with your current tool. You search 'alternative to', 'cheaper than', 'X is too complicated' and migration guides."},
+    {"id": "builder", "label": "Indie builder", "brief": "You are a developer. You search open-source projects, APIs, plugins, integrations and 'show HN' launches in the space."},
+    {"id": "newcomer", "label": "Newcomer", "brief": "You are new to the job. You search basic how-to questions, templates, spreadsheets and beginner tools."},
+    {"id": "analyst", "label": "Market analyst", "brief": "You map the market. You search directories, launch lists, funding news, accelerator portfolios and category pages."},
+    {"id": "localizer", "label": "Non-English / regional user", "brief": "You work outside the US in another language or currency. You search for local-language tools, regional compliance and local payment options."},
+    {"id": "integrator", "label": "Workflow integrator", "brief": "You glue tools together. You search app-marketplace listings, Zapier/Make recipes, 'connect X to Y' and integration complaints."}
+  ]
+}

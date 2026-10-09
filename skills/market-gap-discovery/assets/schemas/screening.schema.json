@@ -1,0 +1,14 @@
+{
+  "$id": "screening",
+  "description": "One screening decision per line in screen-A.jsonl / screen-B.jsonl (method card D06).",
+  "type": "object",
+  "required": ["entity_id", "decision", "reason_code", "screener"],
+  "properties": {
+    "entity_id": {"type": "string"},
+    "decision": {"enum": ["include", "exclude", "unsure"]},
+    "reason_code": {"enum": ["IN", "EX-NOT-SOFTWARE", "EX-OUT-OF-SCOPE", "EX-DEAD", "EX-DUPLICATE", "EX-NOT-FOUND", "EX-EXCLUDED-SOURCE", "UNSURE"]},
+    "duplicate_of": {"type": ["string", "null"]},
+    "note": {"type": "string", "maxLength": 300},
+    "screener": {"enum": ["A", "B"]}
+  }
+}

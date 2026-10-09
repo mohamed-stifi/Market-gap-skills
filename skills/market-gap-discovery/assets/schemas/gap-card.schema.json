@@ -1,0 +1,62 @@
+{
+  "$id": "gap-card",
+  "description": "One candidate market gap per line in gaps/cards.jsonl (method cards D17-D20). Every claim points at verified evidence ids.",
+  "type": "object",
+  "required": ["gap_id", "title", "statement", "picos", "gap_type", "robinson_reason", "sa_mode", "egm_type", "codes", "segment_codes", "incumbents", "supporting_evidence", "counter_evidence", "why_now", "why_empty", "assumptions", "origin_methods", "status"],
+  "properties": {
+    "gap_id": {"type": "string", "pattern": "^GAP-[0-9]{3}$"},
+    "title": {"type": "string", "minLength": 5, "maxLength": 100},
+    "statement": {"type": "string", "minLength": 40, "maxLength": 600},
+    "picos": {
+      "type": "object",
+      "required": ["population", "intervention", "comparator", "outcomes", "setting"],
+      "properties": {
+        "population": {"type": "string"},
+        "intervention": {"type": "string"},
+        "comparator": {"type": "string"},
+        "outcomes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "setting": {"type": "string"}
+      }
+    },
+    "gap_type": {
+      "type": "object",
+      "required": ["primary", "catalyst"],
+      "properties": {
+        "primary": {"enum": ["segment", "non-consumption", "price", "quality", "feature", "integration", "access", "language", "trust", "synthesis"]},
+        "secondary": {"type": "array", "items": {"enum": ["segment", "non-consumption", "price", "quality", "feature", "integration", "access", "language", "trust", "synthesis"]}},
+        "catalyst": {"enum": ["technology", "regulation", "behavior", "platform", "economic", "none"]}
+      }
+    },
+    "robinson_reason": {"enum": ["insufficient", "biased", "inconsistent", "wrong-information"]},
+    "sa_mode": {"enum": ["confusion", "neglect", "application", "problematization"]},
+    "egm_type": {"enum": ["absolute", "synthesis", "none"]},
+    "noncustomer_tier": {"enum": [1, 2, 3, null]},
+    "codes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "segment_codes": {"type": "array", "items": {"type": "string"}},
+    "incumbents": {"type": "array", "items": {"type": "string"}},
+    "supporting_evidence": {"type": "array", "items": {"type": "string", "pattern": "^EV-[0-9]{6}$"}, "minItems": 1},
+    "counter_evidence": {"type": "array", "items": {"type": "string", "pattern": "^EV-[0-9]{6}$"}},
+    "demand_signals": {"type": "array", "items": {"type": "string"}},
+    "why_now": {"type": "array", "items": {"type": "string", "pattern": "^WN-[0-9]{3}$"}},
+    "why_empty": {"type": "string", "minLength": 10},
+    "assumptions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "type"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^A[0-9]{1,2}$"},
+          "text": {"type": "string"},
+          "type": {"enum": ["desirability", "viability", "feasibility"]},
+          "riskiest_test": {"type": "string"}
+        }
+      }
+    },
+    "variant_of": {"type": ["string", "null"]},
+    "errc": {"type": "object", "properties": {"eliminate": {"type": "array"}, "reduce": {"type": "array"}, "raise": {"type": "array"}, "create": {"type": "array"}}},
+    "origin_methods": {"type": "array", "items": {"type": "string", "pattern": "^D[0-9]{2}$"}, "minItems": 1},
+    "status": {"enum": ["candidate", "insufficient", "survives", "weakened", "killed"]},
+    "note": {"type": "string", "maxLength": 500}
+  }
+}

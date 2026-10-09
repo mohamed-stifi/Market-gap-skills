@@ -1,0 +1,38 @@
+{
+  "$id": "lexicon-output",
+  "description": "One lexicon scout's independent vocabulary harvest (method card D02).",
+  "type": "object",
+  "required": ["assignment_id", "scout_id", "mode", "facets", "queries", "tool_calls"],
+  "properties": {
+    "assignment_id": {"type": "string"},
+    "scout_id": {"type": "string", "pattern": "^[A-Z]$"},
+    "mode": {"const": "lexicon"},
+    "facets": {
+      "type": "object",
+      "required": ["segment", "job", "category", "tool", "pain", "workaround"],
+      "properties": {
+        "segment": {"type": "array", "items": {"type": "string", "minLength": 2, "maxLength": 80}},
+        "job": {"type": "array", "items": {"type": "string", "minLength": 2, "maxLength": 80}},
+        "category": {"type": "array", "items": {"type": "string", "minLength": 2, "maxLength": 80}},
+        "tool": {"type": "array", "items": {"type": "string", "minLength": 1, "maxLength": 80}},
+        "pain": {"type": "array", "items": {"type": "string", "minLength": 2, "maxLength": 80}},
+        "workaround": {"type": "array", "items": {"type": "string", "minLength": 2, "maxLength": 80}},
+        "other": {"type": "array", "items": {"type": "string", "minLength": 2, "maxLength": 80}}
+      }
+    },
+    "queries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "query"],
+        "properties": {
+          "source": {"type": "string"},
+          "query": {"type": "string", "minLength": 2},
+          "results": {"type": ["integer", "null"], "minimum": 0}
+        }
+      }
+    },
+    "notes": {"type": "string"},
+    "tool_calls": {"type": "integer", "minimum": 0}
+  }
+}

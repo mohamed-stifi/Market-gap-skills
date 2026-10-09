@@ -1,0 +1,39 @@
+{
+  "$id": "evidence",
+  "description": "One evidence record (method cards D08-D10). Miners write candidates without id/verification; `merge --phase evidence` adds id, and `verify` fills verification. Raw author handles are never stored: use `hash-author`.",
+  "type": "object",
+  "required": ["url", "source", "source_type", "snapshot", "quote", "stance", "strength", "credibility", "author_hash"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^EV-[0-9]{6}$"},
+    "url": {"type": "string", "pattern": "^https?://"},
+    "source": {"type": "string"},
+    "source_type": {"enum": ["review", "forum", "qa", "issue", "roadmap", "changelog", "pricing", "docs", "news", "job-post", "marketplace", "social", "other"]},
+    "platform": {"type": "string"},
+    "domain": {"type": "string"},
+    "snapshot": {"type": "string", "pattern": "^[0-9a-f]{16,64}$"},
+    "quote": {"type": "string", "minLength": 8, "maxLength": 280},
+    "stance": {"enum": ["pain", "wish", "switch", "workaround", "wtp", "praise", "contra"]},
+    "strength": {"enum": ["S0", "S1", "S2", "S3", "S4"]},
+    "strength_note": {"type": "string", "maxLength": 200},
+    "credibility": {"enum": ["independent", "vendor", "incentivized", "affiliate", "unknown"]},
+    "indirect": {"type": "boolean"},
+    "entity_ids": {"type": "array", "items": {"type": "string"}},
+    "author_hash": {"type": "string", "pattern": "^(ah_[0-9a-f]{16}|unknown)$"},
+    "posted_at": {"type": ["string", "null"], "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"},
+    "retrieved_at": {"type": "string"},
+    "language": {"type": "string"},
+    "rating": {"type": ["number", "null"]},
+    "miner": {"type": "string"},
+    "round": {"type": "integer", "minimum": 1},
+    "verification": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["pending", "verified", "failed", "no_snapshot"]},
+        "offset": {"type": ["integer", "null"]},
+        "checked_at": {"type": "string"}
+      }
+    },
+    "note": {"type": "string", "maxLength": 300}
+  }
+}

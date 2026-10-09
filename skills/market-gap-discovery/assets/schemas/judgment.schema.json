@@ -1,0 +1,39 @@
+{
+  "$id": "judgment",
+  "description": "Judgment inputs for gates and the judged rubric criteria (method cards D21, D23). Every value carries a rationale; reach channels carry evidence.",
+  "type": "object",
+  "required": ["regulatory_load", "human_ops_burden", "agent_buildability", "platform_risk", "tos_feasible", "right_to_win", "reach_channels", "rationale"],
+  "properties": {
+    "regulatory_load": {"enum": ["low", "medium", "high"]},
+    "human_ops_burden": {"enum": ["low", "medium", "high"]},
+    "agent_buildability": {"enum": ["yes", "partial", "no"]},
+    "platform_risk": {"type": "integer", "minimum": 0, "maximum": 3},
+    "tos_feasible": {"type": "boolean"},
+    "right_to_win": {"type": "integer", "minimum": 0, "maximum": 3},
+    "reach_channels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["channel", "type", "url"],
+        "properties": {
+          "channel": {"type": "string"},
+          "type": {"enum": ["community", "marketplace", "keyword", "directory", "integration", "newsletter", "other"]},
+          "url": {"type": "string"},
+          "size": {"type": ["number", "null"]},
+          "evidence": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "rationale": {
+      "type": "object",
+      "required": ["regulatory_load", "human_ops_burden", "agent_buildability", "platform_risk", "right_to_win"],
+      "properties": {
+        "regulatory_load": {"type": "string", "minLength": 5},
+        "human_ops_burden": {"type": "string", "minLength": 5},
+        "agent_buildability": {"type": "string", "minLength": 5},
+        "platform_risk": {"type": "string", "minLength": 5},
+        "right_to_win": {"type": "string", "minLength": 5}
+      }
+    }
+  }
+}

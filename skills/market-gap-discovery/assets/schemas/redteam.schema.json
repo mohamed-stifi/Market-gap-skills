@@ -1,0 +1,49 @@
+{
+  "$id": "redteam",
+  "description": "Red-team verdict for one gap card, written to gaps/redteam/GAP-NNN.json (method card D21).",
+  "type": "object",
+  "required": ["gap_id", "verdict", "existing_solutions", "failed_attempts", "why_empty", "five_forces", "premortem", "searches", "judgment"],
+  "properties": {
+    "gap_id": {"type": "string", "pattern": "^GAP-[0-9]{3}$"},
+    "verdict": {"enum": ["survives", "weakened", "killed"]},
+    "existing_solutions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "url", "covers"],
+        "properties": {
+          "name": {"type": "string"},
+          "url": {"type": "string", "pattern": "^https?://"},
+          "snapshot": {"type": ["string", "null"]},
+          "covers": {"enum": ["full", "partial", "none"]},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "failed_attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "url", "lesson"],
+        "properties": {"name": {"type": "string"}, "url": {"type": "string"}, "snapshot": {"type": ["string", "null"]}, "lesson": {"type": "string"}}
+      }
+    },
+    "why_empty": {"type": "string", "minLength": 10},
+    "five_forces": {
+      "type": "object",
+      "required": ["rivalry", "new_entrants", "substitutes", "buyer_power", "supplier_power"],
+      "properties": {
+        "rivalry": {"enum": ["low", "medium", "high"]},
+        "new_entrants": {"enum": ["low", "medium", "high"]},
+        "substitutes": {"enum": ["low", "medium", "high"]},
+        "buyer_power": {"enum": ["low", "medium", "high"]},
+        "supplier_power": {"enum": ["low", "medium", "high"]},
+        "notes": {"type": "string"}
+      }
+    },
+    "premortem": {"type": "array", "items": {"type": "string"}, "minItems": 3},
+    "evidence": {"type": "array", "items": {"type": "string"}},
+    "searches": {"type": "array", "items": {"type": "object", "required": ["source", "query"], "properties": {"source": {"type": "string"}, "query": {"type": "string"}, "results": {"type": ["integer", "null"]}}}, "minItems": 3},
+    "judgment": {"$ref": "judgment"}
+  }
+}

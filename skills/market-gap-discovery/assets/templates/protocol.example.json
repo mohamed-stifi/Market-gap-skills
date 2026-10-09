@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "run_id": "example-translators",
+  "title": "Invoicing and payment follow-up for freelance translators",
+  "topic": "invoicing and payment follow-up tools for freelance translators",
+  "question": "Which jobs in invoicing and chasing late payments are underserved for freelance translators, and which of them could a small agent-built SaaS serve?",
+  "picos": {
+    "population": "Freelance translators and interpreters who bill agencies and direct clients, often in several currencies",
+    "intervention": "Software for creating invoices, tracking payments and following up on late payments",
+    "comparator": "Generic invoicing SaaS, translation-management suites with billing modules, spreadsheets, invoice templates and manual reminder emails",
+    "outcomes": "Less time spent invoicing and chasing payments; fewer late or lost payments; correct per-word, per-hour, multi-currency and VAT handling",
+    "setting": "Web and mobile SaaS used by solo freelancers in Europe and North America; English-language public sources"
+  },
+  "scope": {
+    "in": [
+      "invoice creation for translation and interpreting work (per word, per hour, minimum fees)",
+      "payment tracking and late-payment reminders",
+      "agency purchase-order matching and payment terms",
+      "multi-currency invoicing and VAT or sales-tax handling for solo freelancers"
+    ],
+    "out": [
+      "translation memory and computer-assisted translation features",
+      "full accounting or bookkeeping suites for companies with employees",
+      "payment processing infrastructure itself (card networks, banking licences)"
+    ]
+  },
+  "business_models": ["b2b-saas", "prosumer-saas", "plugin"],
+  "geography": ["europe", "north-america"],
+  "languages": ["en"],
+  "as_of": "2026-10-09",
+  "recency_days": 730,
+  "eligibility": {
+    "include": [
+      "Software product, community or directory relevant to invoicing or payment follow-up by freelancers",
+      "Publicly reachable product page or listing",
+      "Activity (release, changelog entry, post) inside the recency window"
+    ],
+    "exclude": [
+      "Products only for companies with an in-house finance team",
+      "Services without software (bookkeepers, collection agencies)",
+      "Pages reachable only through excluded sources"
+    ]
+  },
+  "founder_fit": {
+    "skills": ["web development", "payments API integration", "copywriting in English"],
+    "budget_usd": 500,
+    "hours_per_week": 15,
+    "exclusions": ["regulated money transmission", "products needing a sales team"],
+    "schlep_tolerance": "medium",
+    "unfair_advantages": ["Former freelance translator with access to two translator communities"]
+  },
+  "ambition": {"min_arr_usd": 60000},
+  "variation_dimensions": {
+    "segment": ["literary translators", "legal translators", "interpreters", "subtitlers"],
+    "language": ["de", "fr", "es"],
+    "platform": ["web", "gmail-add-on", "wordpress-plugin"],
+    "price_tier": ["free", "under-10-usd-month", "10-30-usd-month"],
+    "delivery": ["self-serve", "done-for-you"],
+    "integration": ["stripe", "paypal", "wise", "translation-management-systems"],
+    "ai_native": [true, false]
+  },
+  "competing_factors": [
+    "price",
+    "per-word and per-hour rate handling",
+    "multi-currency support",
+    "agency purchase-order matching",
+    "automatic payment reminders",
+    "VAT and sales-tax handling",
+    "ease of setup"
+  ],
+  "sources": {"allowed_tiers": [0, 1], "tier2_enabled": [], "excluded_extra": []},
+  "autonomy": "autonomous",
+  "budget": {"subagents_max": 80, "fetches_max": 3000},
+  "overrides": {},
+  "seed": 20261009,
+  "notes": "Illustrative example protocol. Replace every field for a real run, then run `gapscan.py protocol check` before freezing."
+}

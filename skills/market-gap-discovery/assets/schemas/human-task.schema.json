@@ -1,0 +1,22 @@
+{
+  "$id": "human-task",
+  "description": "A task only the human operator can do (accounts, keys, payments, legal, outward actions, judgment gates, directives). Secrets are returned only as environment variables, never written to files.",
+  "type": "object",
+  "required": ["id", "type", "title", "why", "steps", "returns", "phase", "blocking", "status", "created_at"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^HT-[0-9]{3}$"},
+    "type": {"enum": ["account", "key", "payment", "legal", "outward-action", "judgment", "directive"]},
+    "title": {"type": "string", "minLength": 5},
+    "why": {"type": "string", "minLength": 5},
+    "steps": {"type": "string", "minLength": 5},
+    "returns": {"type": "string", "minLength": 3},
+    "phase": {"type": "string"},
+    "blocking": {"type": "boolean"},
+    "fallback": {"type": ["string", "null"]},
+    "status": {"enum": ["open", "done", "declined"]},
+    "note": {"type": ["string", "null"]},
+    "created_at": {"type": "string"},
+    "closed_at": {"type": ["string", "null"]},
+    "gate": {"type": ["string", "null"]}
+  }
+}

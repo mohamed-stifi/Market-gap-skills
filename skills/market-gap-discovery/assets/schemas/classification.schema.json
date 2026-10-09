@@ -1,0 +1,38 @@
+{
+  "$id": "classification",
+  "description": "Classification scheme built by keywording entity descriptions (systematic mapping, method card D07).",
+  "type": "object",
+  "required": ["assignment_id", "facets", "competing_factors"],
+  "properties": {
+    "assignment_id": {"type": "string"},
+    "facets": {
+      "type": "object",
+      "required": ["approach", "category", "segment", "pricing_model", "platform", "deployment"],
+      "properties": {
+        "approach": {"$ref": "#/$defs/values"},
+        "category": {"$ref": "#/$defs/values"},
+        "segment": {"$ref": "#/$defs/values"},
+        "pricing_model": {"$ref": "#/$defs/values"},
+        "platform": {"$ref": "#/$defs/values"},
+        "deployment": {"$ref": "#/$defs/values"}
+      }
+    },
+    "competing_factors": {"type": "array", "minItems": 3, "maxItems": 12, "items": {"type": "object", "required": ["id", "label", "definition"], "properties": {"id": {"type": "string", "pattern": "^CF[0-9]{2}$"}, "label": {"type": "string"}, "definition": {"type": "string"}}}},
+    "notes": {"type": "string"}
+  },
+  "$defs": {
+    "values": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "definition"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+          "label": {"type": "string"},
+          "definition": {"type": "string"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$id": "signal",
+  "description": "A time series written by `fetch hn-counts|se-counts|wiki-views` into evidence/signals/ (method card D11). Proportion series carry d (documents in period) and r (documents mentioning the term); absolute series carry value.",
+  "type": "object",
+  "required": ["series_id", "source", "term", "kind", "points", "snapshot"],
+  "properties": {
+    "series_id": {"type": "string", "pattern": "^SIG-[a-z0-9-]+$"},
+    "source": {"type": "string"},
+    "term": {"type": "string"},
+    "kind": {"enum": ["proportion", "absolute"]},
+    "points": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["period"],
+        "properties": {
+          "period": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$"},
+          "d": {"type": "integer", "minimum": 0},
+          "r": {"type": "integer", "minimum": 0},
+          "value": {"type": "number", "minimum": 0}
+        }
+      }
+    },
+    "snapshot": {"type": "string"},
+    "retrieved_at": {"type": "string"}
+  }
+}

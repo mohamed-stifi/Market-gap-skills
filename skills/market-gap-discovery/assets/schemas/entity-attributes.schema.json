@@ -1,0 +1,39 @@
+{
+  "$id": "entity-attributes",
+  "description": "Attributes of one included entity, one per line in entity-attributes.jsonl (method card D07). Values must be ids from classification.json.",
+  "type": "object",
+  "required": ["entity_id", "approach", "category", "segments", "pricing", "platform", "deployment", "evidence"],
+  "properties": {
+    "entity_id": {"type": "string"},
+    "approach": {"type": "string"},
+    "category": {"type": "string"},
+    "segments": {"type": "array", "items": {"type": "string"}},
+    "pricing": {
+      "type": "object",
+      "required": ["model"],
+      "properties": {
+        "model": {"type": "string"},
+        "min_paid_month": {"type": ["number", "null"], "minimum": 0},
+        "currency": {"type": ["string", "null"], "pattern": "^[A-Z]{3}$"},
+        "free_tier": {"type": ["boolean", "null"]},
+        "per_seat": {"type": ["boolean", "null"]},
+        "snapshot": {"type": ["string", "null"]}
+      }
+    },
+    "platform": {"type": "array", "items": {"type": "string"}},
+    "deployment": {"type": "string"},
+    "languages": {"type": "array", "items": {"type": "string"}},
+    "integrations": {"type": "array", "items": {"type": "string"}},
+    "description": {"type": "string", "maxLength": 300},
+    "evidence": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{16,64}$"}},
+    "signals": {
+      "type": "object",
+      "properties": {
+        "installs": {"type": ["number", "null"]},
+        "ratings_count": {"type": ["number", "null"]},
+        "rating_avg": {"type": ["number", "null"]},
+        "stars": {"type": ["number", "null"]}
+      }
+    }
+  }
+}

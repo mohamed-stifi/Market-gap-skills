@@ -1,0 +1,20 @@
+{
+  "$id": "code-assignment",
+  "description": "One coded evidence record per line in the coder output file named in the assignment (method cards D13-D14).",
+  "type": "object",
+  "required": ["evidence_id", "coder", "codebook_version", "codes", "strength"],
+  "properties": {
+    "evidence_id": {"type": "string", "pattern": "^EV-[0-9]{6}$"},
+    "coder": {"enum": ["A", "B"]},
+    "codebook_version": {"type": "integer", "minimum": 1},
+    "codes": {"type": "array", "items": {"type": "string"}},
+    "strength": {"enum": ["S0", "S1", "S2", "S3", "S4"]},
+    "outcome_statement": {"type": ["string", "null"], "maxLength": 200},
+    "intensity": {"type": ["integer", "null"], "minimum": 1, "maximum": 3},
+    "note": {"type": "string", "maxLength": 300},
+    "new_code_proposals": {
+      "type": "array",
+      "items": {"type": "object", "required": ["label", "definition"], "properties": {"label": {"type": "string"}, "definition": {"type": "string"}}}
+    }
+  }
+}

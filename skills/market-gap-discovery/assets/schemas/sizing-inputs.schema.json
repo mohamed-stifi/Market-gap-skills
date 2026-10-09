@@ -1,0 +1,48 @@
+{
+  "$id": "sizing-inputs",
+  "description": "Bottom-up sizing inputs per gap (method card D24). Counts need a source; conversion and win rate are assumptions to validate.",
+  "type": "object",
+  "required": ["assignment_id", "gaps"],
+  "properties": {
+    "assignment_id": {"type": "string"},
+    "gaps": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["accounts", "arpa_year_usd", "reachable_share", "conversion", "win_rate"],
+        "properties": {
+          "accounts": {"$ref": "#/$defs/sourced"},
+          "arpa_year_usd": {"$ref": "#/$defs/sourced"},
+          "reachable_share": {"$ref": "#/$defs/share"},
+          "conversion": {"$ref": "#/$defs/share"},
+          "win_rate": {"$ref": "#/$defs/share"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sourced": {
+      "type": "object",
+      "required": ["low", "base", "high", "source"],
+      "properties": {
+        "low": {"type": "number", "minimum": 0},
+        "base": {"type": "number", "minimum": 0},
+        "high": {"type": "number", "minimum": 0},
+        "source": {"type": "string", "minLength": 5},
+        "snapshot": {"type": ["string", "null"]},
+        "note": {"type": "string"}
+      }
+    },
+    "share": {
+      "type": "object",
+      "required": ["low", "base", "high", "rationale"],
+      "properties": {
+        "low": {"type": "number", "minimum": 0, "maximum": 1},
+        "base": {"type": "number", "minimum": 0, "maximum": 1},
+        "high": {"type": "number", "minimum": 0, "maximum": 1},
+        "rationale": {"type": "string", "minLength": 5},
+        "assumption": {"type": "boolean"}
+      }
+    }
+  }
+}

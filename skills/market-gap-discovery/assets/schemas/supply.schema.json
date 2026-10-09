@@ -1,0 +1,13 @@
+{
+  "$id": "supply",
+  "description": "Which jobs/outcomes each included entity serves and how strongly it offers each competing factor (method card D15). One line per entity.",
+  "type": "object",
+  "required": ["entity_id", "jobs_served", "factor_levels", "evidence"],
+  "properties": {
+    "entity_id": {"type": "string"},
+    "jobs_served": {"type": "array", "items": {"type": "string", "pattern": "^(J|O)-[A-Z0-9-]{1,24}$"}},
+    "factor_levels": {"type": "object"},
+    "evidence": {"type": "array", "items": {"type": "string", "pattern": "^[0-9a-f]{16,64}$"}, "minItems": 1},
+    "note": {"type": "string", "maxLength": 300}
+  }
+}

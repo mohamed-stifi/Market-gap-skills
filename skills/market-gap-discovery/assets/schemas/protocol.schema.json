@@ -1,0 +1,92 @@
+{
+  "$id": "protocol",
+  "description": "Pre-registered research protocol (PRISMA-P / scoping-review style). Frozen by `protocol freeze`; later changes only via `protocol amend`.",
+  "type": "object",
+  "required": ["schema_version", "run_id", "title", "topic", "question", "picos", "scope", "business_models", "geography", "languages", "as_of", "recency_days", "eligibility", "founder_fit", "ambition", "variation_dimensions", "sources", "autonomy", "budget", "seed"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 3},
+    "topic": {"type": "string", "minLength": 3},
+    "question": {"type": "string", "minLength": 10},
+    "picos": {
+      "type": "object",
+      "required": ["population", "intervention", "comparator", "outcomes", "setting"],
+      "properties": {
+        "population": {"type": "string", "minLength": 3},
+        "intervention": {"type": "string", "minLength": 3},
+        "comparator": {"type": "string", "minLength": 3},
+        "outcomes": {"type": "string", "minLength": 3},
+        "setting": {"type": "string", "minLength": 3}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["in", "out"],
+      "properties": {
+        "in": {"type": "array", "items": {"type": "string", "minLength": 2}, "minItems": 1},
+        "out": {"type": "array", "items": {"type": "string", "minLength": 2}}
+      }
+    },
+    "business_models": {"type": "array", "minItems": 1, "items": {"enum": ["b2b-saas", "b2c-saas", "prosumer-saas", "plugin", "browser-extension", "api", "marketplace-app", "mobile-app", "desktop-app", "open-core"]}},
+    "geography": {"type": "array", "items": {"type": "string", "minLength": 2}, "minItems": 1},
+    "languages": {"type": "array", "items": {"type": "string", "pattern": "^[a-z]{2,3}(-[A-Za-z]{2,4})?$"}, "minItems": 1},
+    "as_of": {"type": "string", "format": "date"},
+    "recency_days": {"type": "integer", "minimum": 30},
+    "eligibility": {
+      "type": "object",
+      "required": ["include", "exclude"],
+      "properties": {
+        "include": {"type": "array", "items": {"type": "string", "minLength": 3}, "minItems": 1},
+        "exclude": {"type": "array", "items": {"type": "string", "minLength": 3}}
+      }
+    },
+    "founder_fit": {
+      "type": "object",
+      "required": ["skills", "budget_usd", "hours_per_week", "schlep_tolerance"],
+      "properties": {
+        "skills": {"type": "array", "items": {"type": "string"}},
+        "budget_usd": {"type": "number", "minimum": 0},
+        "hours_per_week": {"type": "number", "minimum": 0},
+        "exclusions": {"type": "array", "items": {"type": "string"}},
+        "schlep_tolerance": {"enum": ["low", "medium", "high"]},
+        "unfair_advantages": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "ambition": {"type": "object", "required": ["min_arr_usd"], "properties": {"min_arr_usd": {"type": "number", "minimum": 1}}},
+    "independence": {"enum": ["full", "degraded"]},
+    "variation_dimensions": {
+      "type": "object",
+      "properties": {
+        "segment": {"type": "array", "items": {"type": "string"}},
+        "language": {"type": "array", "items": {"type": "string"}},
+        "platform": {"type": "array", "items": {"type": "string"}},
+        "price_tier": {"type": "array", "items": {"type": "string"}},
+        "delivery": {"type": "array", "items": {"type": "string"}},
+        "integration": {"type": "array", "items": {"type": "string"}},
+        "ai_native": {"type": "array", "items": {"type": "boolean"}}
+      }
+    },
+    "competing_factors": {"type": "array", "items": {"type": "string"}},
+    "sources": {
+      "type": "object",
+      "required": ["allowed_tiers"],
+      "properties": {
+        "allowed_tiers": {"type": "array", "items": {"enum": [0, 1, 2]}, "minItems": 1},
+        "tier2_enabled": {"type": "array", "items": {"type": "string"}},
+        "excluded_extra": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "autonomy": {"enum": ["autonomous", "gated"]},
+    "budget": {
+      "type": "object",
+      "properties": {
+        "subagents_max": {"type": "integer", "minimum": 1},
+        "fetches_max": {"type": "integer", "minimum": 1}
+      }
+    },
+    "overrides": {"type": "object"},
+    "seed": {"type": "integer"},
+    "notes": {"type": "string"}
+  }
+}

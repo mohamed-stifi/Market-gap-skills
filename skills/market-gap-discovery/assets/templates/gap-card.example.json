@@ -1,0 +1,42 @@
+{
+  "gap_id": "GAP-001",
+  "title": "Illustrative: agency PO matching for translator invoices",
+  "statement": "Although freelance translators already use generic invoicing tools, matching invoices to agency purchase orders and chasing agency payment terms remains manual, because generic tools do not model per-word rates, PO numbers or agency payment portals. This matters because late agency payments are the most frequently reported cash-flow pain in this illustrative evidence set.",
+  "picos": {
+    "population": "Freelance translators who bill translation agencies (segment S-AGENCY-TRANSLATORS)",
+    "intervention": "Invoicing with purchase-order matching and agency payment-term reminders",
+    "comparator": "Generic invoicing SaaS (dom:example.com), suite billing modules (dom:example.org), spreadsheets and manual reminder emails",
+    "outcomes": [
+      "Minimize the time it takes to match an invoice to an agency purchase order",
+      "Minimize the number of agency invoices paid after the agreed term"
+    ],
+    "setting": "Solo freelancers in Europe and North America invoicing in several currencies"
+  },
+  "gap_type": {"primary": "feature", "secondary": ["segment"], "catalyst": "regulation"},
+  "robinson_reason": "biased",
+  "sa_mode": "neglect",
+  "egm_type": "absolute",
+  "noncustomer_tier": 2,
+  "codes": ["J-INVOICE-AGENCY", "O-PO-MATCH-TIME", "P-PO-MISMATCH", "P-LATE-AGENCY-PAY"],
+  "segment_codes": ["S-AGENCY-TRANSLATORS"],
+  "incumbents": ["dom:example.com", "dom:example.org"],
+  "supporting_evidence": ["EV-000012", "EV-000031", "EV-000047", "EV-000052", "EV-000068"],
+  "counter_evidence": ["EV-000071"],
+  "demand_signals": ["SIG-hn-translator-invoice"],
+  "why_now": ["WN-002"],
+  "why_empty": "Illustrative example only: the segment is small for horizontal invoicing vendors, and translation-management suites bill on behalf of agencies rather than serving the freelancers who invoice them.",
+  "assumptions": [
+    {"id": "A1", "text": "Agency-billed translators lose at least an hour per month matching invoices to purchase orders.", "type": "desirability", "riskiest_test": "Problem interviews with 10 agency-billed translators (Mom Test)"},
+    {"id": "A2", "text": "Translators will pay at least 9 USD per month for automatic purchase-order matching and agency reminders.", "type": "viability", "riskiest_test": "Van Westendorp pricing survey on the waitlist"},
+    {"id": "A3", "text": "Agency purchase orders can be parsed reliably from the PDFs and emails translators already receive.", "type": "feasibility", "riskiest_test": "Parse 30 real purchase-order samples provided by interviewees"}
+  ],
+  "variant_of": null,
+  "errc": {
+    "eliminate": ["full bookkeeping features"],
+    "reduce": ["setup steps before the first invoice"],
+    "raise": ["agency payment-term tracking"],
+    "create": ["purchase-order matching"]
+  },
+  "origin_methods": ["D16", "D17", "D20"],
+  "status": "candidate"
+}

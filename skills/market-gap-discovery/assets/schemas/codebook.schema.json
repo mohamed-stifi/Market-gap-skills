@@ -1,0 +1,31 @@
+{
+  "$id": "codebook",
+  "description": "Codebook (method card D13). Coders write the draft at coding/codebook.json; `codebook freeze` adds the standard X-/F-/T- codes, validates, and hashes it.",
+  "type": "object",
+  "required": ["version", "codes"],
+  "properties": {
+    "version": {"type": "integer", "minimum": 1},
+    "frozen": {"type": "boolean"},
+    "codes": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "label", "definition", "include", "exclude"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^(J|O|P|G|S|X|F|T)-[A-Z0-9-]{1,24}$"},
+          "type": {"enum": ["job", "outcome", "pain", "gain", "segment", "cross", "force", "stage"]},
+          "label": {"type": "string", "minLength": 2, "maxLength": 80},
+          "definition": {"type": "string", "minLength": 10},
+          "include": {"type": "string"},
+          "exclude": {"type": "string"},
+          "examples": {"type": "array", "items": {"type": "string", "pattern": "^EV-[0-9]{6}$"}},
+          "parent": {"type": ["string", "null"]},
+          "job_step": {"enum": ["define", "locate", "prepare", "confirm", "execute", "monitor", "modify", "conclude", null]},
+          "outcome_statement": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "notes": {"type": "string"}
+  }
+}

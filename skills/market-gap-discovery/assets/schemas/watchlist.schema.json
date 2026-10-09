@@ -1,0 +1,25 @@
+{
+  "$id": "watchlist",
+  "description": "What a future monitor skill should re-check, and how often (method card D25).",
+  "type": "object",
+  "required": ["run_id", "generated_at", "rerun_cadence_days", "items"],
+  "properties": {
+    "run_id": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "rerun_cadence_days": {"type": "integer", "minimum": 1},
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "target", "why"],
+        "properties": {
+          "kind": {"enum": ["competitor", "query", "signal", "community", "regulation", "platform", "pmf-survey"]},
+          "target": {"type": "string"},
+          "why": {"type": "string"},
+          "gap_id": {"type": ["string", "null"]},
+          "check": {"type": "string"}
+        }
+      }
+    }
+  }
+}

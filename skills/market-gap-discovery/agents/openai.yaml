@@ -1,0 +1,6 @@
+# Optional metadata for OpenAI Codex; Claude Code and OpenCode ignore this file.
+interface:
+  display_name: "Market Gap Discovery"
+  short_description: "Find evidence-backed SaaS market gaps with independent scouts, saturation statistics, verified quotes and red-teamed scoring."
+policy:
+  allow_implicit_invocation: true
