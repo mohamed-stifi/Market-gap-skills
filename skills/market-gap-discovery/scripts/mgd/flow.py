@@ -242,6 +242,10 @@ def decide(run):
     s, missing = _group(run, st, "synthesis")
     if s is None:
         RUN("assign %s --phase synthesis" % run, "ADVANCE P5: gap spotting, problematization and variation into gap cards", phase="P5")
+    if s == "merged" and _stale(st, "cards_check", ["gapmap"]):
+        # New evidence or a revised codebook changed the gap map after the cards were checked:
+        # red-teaming the old cards would appraise claims the evidence no longer supports.
+        RUN("assign %s --phase synthesis" % run, "gap map changed since the cards were checked: update the gap cards (D20)", phase="P5")
     if s == "spawn":
         SPAWN("synthesizer", run, missing, phase="P5")
     if s == "ready":

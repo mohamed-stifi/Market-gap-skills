@@ -435,6 +435,21 @@ class DiscoveryE2E(unittest.TestCase):
         self.assertEqual(agr["strength_vs_miner"]["kappa"], 1.0)
         code, out_ = gs("validate", run)
         self.assertEqual(code, 0, out_)
+        # A gap map recomputed after the cards were checked (new evidence, revised codebook) makes `next`
+        # rebuild the cards in update mode before any red team (a live run went straight to red team).
+        from mgcore import state as mstate
+        st = read_json(os.path.join(run, "state.json"))
+        mstate.touch(st, "gapmap")
+        write_json(os.path.join(run, "state.json"), st)
+        for expect in ("variants", "--phase synthesis"):
+            with self.assertRaises(flow.Act) as cm:
+                flow.decide(run)
+            self.assertIn(expect, cm.exception.argline)
+            self.assertEqual(gs(*cm.exception.argline.split()[1:])[0], 0)
+        sy = read_json(os.path.join(run, "gaps", "synth-assign.json"))
+        self.assertEqual(sy["inputs"]["previous_cards"], "gaps/cards.previous-1.jsonl")
+        self.assertTrue(os.path.exists(os.path.join(run, "gaps", "cards.previous-1.jsonl")))
+        self.assertFalse(os.path.exists(os.path.join(run, "gaps", "cards.jsonl")))
         # Supply records the codebook it was mapped under; a newer codebook makes `next` re-map it in
         # update mode (a live run revised the codebook after supply and new jobs looked unserved).
         st = read_json(os.path.join(run, "state.json"))

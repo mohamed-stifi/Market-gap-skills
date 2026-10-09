@@ -646,16 +646,33 @@ def assign_synthesis(run, st, c, args):
     _budget(run, st, 1)
     v = st["coding"]["version"]
     rel_path = "gaps/synth-assign.json"
+    inputs = {"protocol": "protocol.json", "gapmap": "analysis/gapmap.json", "matrices": "analysis/",
+              "codebook": "coding/codebook.v%d.json" % v, "codes": "coding/codes-A.jsonl",
+              "ledger": "evidence/ledger.jsonl (verified records only)", "why_now": "evidence/why-now.jsonl",
+              "variants": "gaps/variants.jsonl", "bursts": "evidence/bursts.json", "signals": "evidence/signals/",
+              "themes": "coding/themes.json", "agreement": "coding/agreement.json"}
+    rules = ["Cite only verified evidence ids; every card must meet the D20 thresholds."]
+    n = 1
+    if os.path.exists(p(run, "gaps", "cards.jsonl")):
+        # Update mode: the gap map changed after the cards were checked. Keep the old cards for reference
+        # (the output path must be empty so the flow waits for the new file).
+        while os.path.exists(p(run, "gaps", "cards.previous-%d.jsonl" % n)):
+            n += 1
+        os.rename(p(run, "gaps", "cards.jsonl"), p(run, "gaps", "cards.previous-%d.jsonl" % n))
+        if os.path.exists(p(run, "gaps", "card-check.json")):
+            os.rename(p(run, "gaps", "card-check.json"), p(run, "gaps", "card-check.previous-%d.json" % n))
+        inputs.update({"previous_cards": "gaps/cards.previous-%d.jsonl" % n,
+                       "previous_card_check": "gaps/card-check.previous-%d.json" % n})
+        n += 1
+        rules.append("Update mode: start from previous_cards and previous_card_check. Re-check every card against the "
+                     "current ledger, codebook and gap map; keep gap ids stable, update evidence and numbers, mark cards "
+                     "that no longer hold as insufficient, and add a card only for a lead the new evidence supports.")
     path = _write(run, rel_path, {
-        "assignment_id": "SYN-1", "phase": "gaps", "round": None, "role": "synthesizer", "mode": "synthesis",
+        "assignment_id": "SYN-%d" % n, "phase": "gaps", "round": None, "role": "synthesizer", "mode": "synthesis",
         "read": ["agents/synthesizer.md", GLOSSARY] + card_paths("D16", "D17", "D18", "D19", "D20"),
-        "inputs": {"protocol": "protocol.json", "gapmap": "analysis/gapmap.json", "matrices": "analysis/",
-                   "codebook": "coding/codebook.v%d.json" % v, "codes": "coding/codes-A.jsonl",
-                   "ledger": "evidence/ledger.jsonl (verified records only)", "why_now": "evidence/why-now.jsonl",
-                   "variants": "gaps/variants.jsonl", "bursts": "evidence/bursts.json", "signals": "evidence/signals/",
-                   "themes": "coding/themes.json", "agreement": "coding/agreement.json"},
+        "inputs": inputs,
         "outputs": [{"path": "gaps/cards.jsonl", "schema": "gap-card", "format": "jsonl"}],
-        "limits": {"max_cards": 12}, "rules": ["Cite only verified evidence ids; every card must meet the D20 thresholds."]})
+        "limits": {"max_cards": 12}, "rules": rules})
     _group(st, "synthesis", "synthesis", "synthesizer", [path])
     return [path]
 
