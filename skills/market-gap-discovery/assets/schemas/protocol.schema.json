@@ -87,6 +87,7 @@
     },
     "overrides": {"type": "object"},
     "seed": {"type": "integer"},
+    "cost_profile": {"enum": ["budget", "balanced", "quality"], "description": "Model tier profile for subagents (assets/defaults.json models.profiles); default balanced."},
     "notes": {"type": "string"}
   }
 }

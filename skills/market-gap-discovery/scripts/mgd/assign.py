@@ -14,6 +14,7 @@ import re
 from mgcore import state
 from mgcore.jsonio import now_iso, read_json, write_json
 
+from . import models
 from .common import (CliError, EXIT_BUDGET, SKILL_DIR, alias_map, card_paths, cfg, channels, entities, resolve_ids, included_verified,
                      ledger, out, p, personas, protocol, require_run, load_state, save_state, validate,
                      verified_ledger)
@@ -49,6 +50,7 @@ def _write(run, rel_path, doc):
     doc.setdefault("created_at", now_iso())
     doc.setdefault("run", os.path.abspath(run))
     doc.setdefault("skill_dir", SKILL_DIR)
+    doc.setdefault("model", models.block(run, load_state(run), cfg(run), doc["role"]))
     doc["rules"] = COMMON_RULES + doc.get("rules", [])
     errs = validate(doc, "assignment")
     if errs:
@@ -300,6 +302,12 @@ def assign_screen(run, st, c, args):
     k = ls.get("screen_batch", 0) + 1
     rng = _rng(run, "screen-%d" % k)
     n_audit = min(len(new), max(c.get("screening.audit_min_units"), int(math.ceil(c.get("screening.audit_fraction") * len(new)))))
+    # Once the cumulative audit has shown reliable screening, later batches skip screener B (one
+    # subagent saved per batch). A revise verdict, or too few audited units, keeps auditing.
+    prior = read_json(p(run, "landscape", "screening-audit.json"), {}) or {}
+    if prior.get("status") == "accept" and (prior.get("units") or 0) >= c.get("screening.audit_until_units"):
+        n_audit = 0
+        ls["audit_stopped_at_batch"] = ls.get("audit_stopped_at_batch") or k
     audit = sorted(rng.sample(new, n_audit), key=lambda e: e["entity_id"])
     size = c.get("screening.batch_size")
     chunks = [("A", i + 1, new[j:j + size]) for i, j in enumerate(range(0, len(new), size))]
@@ -347,6 +355,8 @@ def assign_evidence(run, st, c, args):
     if ev["round"] and ev["merged"] < ev["round"]:
         raise CliError("evidence round %d is not merged yet" % ev["round"])
     r = ev["round"] + 1
+    if getattr(args, "targeted", False):
+        return _assign_evidence_targeted(run, st, c, r)
     _budget(run, st, 3)
     rng = _rng(run, "evidence-%d" % r)
     ents = [e for e in included_verified(entities(run)) if e["kind"] == "product"]
@@ -383,7 +393,8 @@ def assign_evidence(run, st, c, args):
         if sid == "C":
             outputs.append({"path": "evidence/round-%02d/why-now-%s.jsonl" % (r, sid), "schema": "why-now", "format": "jsonl"})
         inputs = dict(inputs, protocol="protocol.json", focus=focus, families=fams,
-                      balance="Collect praise and contra records too (aim for at least 15% of records), not only complaints.")
+                      balance="Collect praise and contra records too (aim for at least 15% of records), not only complaints.",
+                      diversity=_diversity_rule(run, c))
         rel_path = "evidence/round-%02d/assign-%s.json" % (r, sid)
         paths.append(_write(run, rel_path, dict(base, **{
             "assignment_id": "EV-R%02d-%s" % (r, sid), "mode": "evidence:" + focus_name, "scout_id": sid,
@@ -392,6 +403,57 @@ def assign_evidence(run, st, c, args):
             "rules": ["Every record needs a snapshot made by `gapscan.py fetch` or `gapscan.py snapshot` and a verbatim quote of at most 280 characters.",
                       "Use author_hash values from fetch output or `gapscan.py hash-author`; never write raw usernames."]})))
     ev["round"] = r
+    _group(st, "evidence-R%02d" % r, "evidence", "miner", paths)
+    return paths
+
+
+def _diversity_rule(run, c):
+    """Gap cards need >= gap_card.min_domains domains and >= min_source_types source types, so miners
+    spread records from the start and avoid domains that already dominate the ledger."""
+    from .gaps import domain_shares
+    shares = domain_shares(run)
+    heavy = [x["domain"] for x in shares if x["share"] >= c.get("evidence.max_domain_share") / 2.0]
+    return {"min_domains_per_job": c.get("gap_card.min_domains"), "min_source_types_per_job": c.get("gap_card.min_source_types"),
+            "ledger_domain_shares": shares[:8], "avoid_domains": heavy,
+            "rule": ("For every job you mine, spread records over at least %d domains and %d source types (forums, Q&A, "
+                     "marketplace reviews, docs, issue trackers). Prefer domains not in avoid_domains; a 4th quote from a "
+                     "domain you already used is worth less than a 1st quote from a new one." % (
+                         c.get("gap_card.min_domains"), c.get("gap_card.min_source_types")))}
+
+
+def _assign_evidence_targeted(run, st, c, r):
+    """One miner per near-miss gap card (fixable by evidence), told which domains the card already has."""
+    from .gaps import near_misses
+    ev = st["evidence"]
+    near = near_misses(run, limit=c.get("evidence.miners"))
+    if not near:
+        raise CliError("no near-miss gap cards that more evidence could fix (see gaps/card-check.json)")
+    _budget(run, st, len(near))
+    book = read_json(p(run, "coding", "codebook.v%d.json" % st["coding"]["version"]), {}) or {}
+    defs = {x["id"]: {"label": x["label"], "definition": x["definition"]} for x in book.get("codes", [])}
+    fams_e = _families(run, "evidence")
+    paths = []
+    for i, card in enumerate(near):
+        sid = LETTERS[i]
+        outputs = [{"path": "evidence/round-%02d/miner-%s.jsonl" % (r, sid), "schema": "evidence", "format": "jsonl"}]
+        rel_path = "evidence/round-%02d/assign-%s.json" % (r, sid)
+        paths.append(_write(run, rel_path, {
+            "phase": "evidence", "round": r, "role": "miner",
+            "assignment_id": "EV-R%02d-%s" % (r, sid), "mode": "evidence:targeted", "scout_id": sid,
+            "read": ["agents/miner.md", GLOSSARY, SOURCES] + card_paths("D08", "D09", "D10"),
+            "inputs": {"protocol": "protocol.json", "families": fams_e,
+                       "target_card": dict(card, code_definitions={k: defs[k] for k in card["codes"] if k in defs}),
+                       "diversity": _diversity_rule(run, c),
+                       "balance": "Collect praise and contra records too: the aim is an honest test of the card, not support for it."},
+            "outputs": outputs,
+            "limits": {"max_tool_calls": c.get("budget.miner_tool_calls"), "max_records": 40},
+            "rules": ["Targeted round: mine only the jobs and pains in target_card.codes, from domains NOT in target_card.domains "
+                      "(the card needs new, independent sources; see target_card.shortfall for what is missing).",
+                      "Every record needs a snapshot made by `gapscan.py fetch` or `gapscan.py snapshot` and a verbatim quote of at most 280 characters.",
+                      "Use author_hash values from fetch output or `gapscan.py hash-author`; never write raw usernames."]}))
+    ev["round"] = r
+    ev["targeted_rounds"] = ev.get("targeted_rounds", 0) + 1
+    ev.setdefault("targeted", []).append({"round": r, "cards": [x["gap_id"] for x in near]})
     _group(st, "evidence-R%02d" % r, "evidence", "miner", paths)
     return paths
 

@@ -73,6 +73,8 @@ def build_parser():
     s.add_argument("--units", type=int)
     s.add_argument("--batch", type=int)
     s.add_argument("--revise", action="store_true")
+    s.add_argument("--targeted", action="store_true",
+                   help="evidence only: one miner per near-miss gap card, mining domains the card does not have yet")
     s.set_defaults(func=assign.cmd_assign)
 
     s = sub.add_parser("merge", help="validate and merge agent outputs")

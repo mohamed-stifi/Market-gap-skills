@@ -9,8 +9,8 @@ from mgcore import canon, state
 from mgcore.jsonio import append_jsonl, now_iso, read_json, read_jsonl, write_json, write_jsonl
 
 from . import lexicon as lexmod
-from . import net
-from .common import (CliError, alias_map, codebook, entities, resolve_ids, frozen_codebook, out, p, psl, require_run, load_state,
+from . import models, net
+from .common import (CliError, alias_map, cfg, codebook, entities, resolve_ids, frozen_codebook, out, p, psl, require_run, load_state,
                      save_state, validate)
 from .privacy import author_hash
 
@@ -147,6 +147,7 @@ def merge_landscape(run, phase):
     write_json(p(run, "landscape", "units.json"), units)
     folder = os.path.dirname(g["paths"][0])
     write_json(p(run, folder, "merge.json"), dict(stats, group=key, merged_at=now_iso()))
+    _maybe_escalate(run, st, "scout", "merge-" + key, stats["items"] - len(stats["invalid"]), len(stats["invalid"]))
     g["merged"] = True
     if phase == "landscape":
         ls["merged"] = ls["round"]
@@ -237,6 +238,15 @@ def merge_mapping(run):
 # ---------------------------------------------------------------- evidence
 def _norm_quote(q):
     return re.sub(r"\s+", " ", q.strip().casefold())
+
+
+def _maybe_escalate(run, st, role, key, accepted, rejected):
+    """Escalate `role` one model tier when a merge rejects too large a share of its records."""
+    total = accepted + rejected
+    lim = cfg(run).get("models.escalate_on").get("merge_reject_above")
+    if total and rejected / float(total) > lim:
+        if models.escalate_once(st, key, role, "%d of %d records rejected at merge" % (rejected, total)):
+            out("%ss escalated one model tier: %d of %d records were rejected." % (role.capitalize(), rejected, total))
 
 
 def _snapshot_id(run, sid):
@@ -339,6 +349,8 @@ def merge_evidence(run, retry=False):
             k += 1
         name = "merge-retry-%d.json" % k
     write_json(p(run, "evidence", "round-%02d" % r, name), report)
+    _maybe_escalate(run, st, "miner", "merge-evidence-R%02d%s" % (r, "-retry" if retry else ""),
+                    report["accepted"], len(report["rejected"]))
     g["merged"] = True
     ev["merged"] = r
     state.touch(st, "evidence_merge")

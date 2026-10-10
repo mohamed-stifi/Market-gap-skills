@@ -7,6 +7,7 @@ import re
 from mgcore import reliability, state, themes
 from mgcore.jsonio import now_iso, read_json, read_jsonl, sha256_json, write_json
 
+from . import models
 from .common import CliError, cfg, out, p, require_run, load_state, save_state, validate
 
 STD_PREFIX = re.compile(r"^(X|F|T)-")
@@ -155,6 +156,11 @@ def cmd_agreement(args):
     write_json(p(run, "coding", "agreement.json"), doc)
     st["coding"]["agreement"] = verdict
     state.touch(st, "agreement")
+    if verdict == "revise" and cfg(run).get("models.escalate_on").get("coding_revise"):
+        # The reviser and the recoders of the next version run one tier up.
+        if models.escalate_once(st, "agreement-revise-v%d" % v, "coder", "codebook v%d needs revision (weak codes: %s)" % (
+                v, ", ".join(res["weak_codes"][:4]))):
+            out("Coders escalated one model tier for the revision and recoding.")
     save_state(run, st)
     out("Agreement on codebook v%d over %d double-coded records: %s (%d of %d eligible codes measured; weak codes: %s; provisional: %s; "
         "strength alpha %s)." % (
@@ -231,6 +237,10 @@ def cmd_screen_audit(args):
     write_json(p(run, "landscape", "screening-audit.json"), doc)
     st = load_state(run)
     state.touch(st, "screen_audit")
+    if res["alpha"] is not None and res["alpha"] < c.get("models.escalate_on").get("screen_alpha_below"):
+        if models.escalate_once(st, "screen-audit-%d" % st["landscape"].get("screen_batch", 0), "screener",
+                                "screening alpha %.2f" % res["alpha"]):
+            out("Screeners escalated one model tier for later batches.")
     save_state(run, st)
     out("Screening audit over %d double-screened entities: alpha %s, kappa %s (%s) -> %s; %d disagreements." % (
         res["units"], "n/a" if res["alpha"] is None else "%.2f" % res["alpha"],

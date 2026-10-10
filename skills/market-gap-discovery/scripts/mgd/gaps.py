@@ -91,6 +91,39 @@ def cmd_variants(args):
 
 
 # ---------------------------------------------------------------- cards check
+def near_misses(run, limit=3):
+    """Insufficient cards that more evidence could fix, closest to passing first.
+
+    Returns [{gap_id, title, codes, shortfall, domains}] from gaps/card-check.json; `domains` are the
+    card's current supporting domains, which a targeted miner should avoid in favour of new ones."""
+    check = read_json(p(run, "gaps", "card-check.json"), {}) or {}
+    cards = {x["gap_id"]: x for x in read_jsonl(p(run, "gaps", "cards.jsonl"))[0]}
+    led = _ledger_map(run)
+    rows = []
+    for gid, res in (check.get("cards") or {}).items():
+        if res.get("pass") or not res.get("fixable_by_evidence") or gid not in cards:
+            continue
+        card = cards[gid]
+        doms = sorted(set(led[e].get("domain") for e in card.get("supporting_evidence", []) if e in led and led[e].get("domain")))
+        gap = sum(res.get("shortfall", {}).values())
+        rows.append({"gap_id": gid, "title": card.get("title"), "codes": card.get("codes", []),
+                     "shortfall": res.get("shortfall", {}), "domains": doms, "_gap": gap})
+    rows.sort(key=lambda x: (x["_gap"], x["gap_id"]))
+    for x in rows:
+        x.pop("_gap")
+    return rows[:limit]
+
+
+def domain_shares(run):
+    """Share of verified evidence records per registrable domain, largest first."""
+    led = [r for r in read_jsonl(p(run, "evidence", "ledger.jsonl"))[0] if r.get("verification", {}).get("status") == "verified"]
+    counts = {}
+    for r in led:
+        counts[r.get("domain")] = counts.get(r.get("domain"), 0) + 1
+    n = float(len(led)) or 1.0
+    return [{"domain": d, "records": k, "share": round(k / n, 3)} for d, k in sorted(counts.items(), key=lambda x: (-x[1], str(x[0])))]
+
+
 def cmd_cards_check(args):
     run = args.run
     require_run(run)
@@ -158,7 +191,15 @@ def cmd_cards_check(args):
                 reasons.append("triangulation incomplete (pain=%s, demand=%s, supply=%s)" % (pain, demand, supply))
         ok = not reasons
         card["status"] = "candidate" if ok else "insufficient"
-        results[card["gap_id"]] = {"pass": ok, "reasons": reasons, "numbers": nums}
+        # Structured shortfall: what more evidence could fix (counts, missing pain/demand) versus what
+        # it cannot (bad ids, unknown codes, no verified supply). Drives the targeted evidence round.
+        short = {k: c.get("gap_card.min_" + k) - nums[k] for k in ("records", "domains", "source_types", "authors")
+                 if nums[k] < c.get("gap_card.min_" + k)}
+        tri = nums.get("triangulation") or {}
+        short.update({k: 1 for k in ("pain", "demand") if tri and not tri.get(k)})
+        count_reasons = sum(1 for x in reasons if "(need" in x or x.startswith("triangulation"))
+        fixable = bool(reasons) and count_reasons == len(reasons) and tri.get("supply", True)
+        results[card["gap_id"]] = {"pass": ok, "reasons": reasons, "numbers": nums, "shortfall": short, "fixable_by_evidence": fixable}
     variants = read_jsonl(p(run, "gaps", "variants.jsonl"))[0]
     used = set(card.get("variant_of") for card in recs if card.get("variant_of"))
     discarded = [v["variant_id"] for v in variants if v["variant_id"] not in used]

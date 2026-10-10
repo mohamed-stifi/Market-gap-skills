@@ -9,6 +9,7 @@ import re
 from mgcore import hq, state
 from mgcore.jsonio import read_json, read_jsonl, sha256_json, sha256_file
 
+from . import gaps, models
 from .common import SCRIPTS_DIR, cfg, entities, out, p, protocol, require_run, load_state, save_state
 from .setup import protocol_errors
 
@@ -30,6 +31,10 @@ def DO(card, task, *notes, **kw):
 
 
 def SPAWN(role, run, paths, *notes, **kw):
+    # Tell the orchestrator which model tier each subagent should run on (all assignments of a
+    # group share a role, so the first one speaks for the group).
+    mnote = models.note(read_json(p(run, paths[0]), {}) or {}) if paths else None
+    notes = tuple(notes) + ((mnote,) if mnote else ())
     raise Act("SPAWN", "%s %d %s" % (role, len(paths), " ".join(p(run, x) for x in paths)), notes, kw.get("phase"))
 
 
@@ -129,11 +134,17 @@ def decide(run):
     if ls.get("snowball_iteration"):
         _handle(run, st, "snowball-%02d" % ls["snowball_iteration"], "scout", "merge %s --phase snowball" % run, "P2")
     ents = entities(run)
+    if ls.get("screen_batch") and any(e.get("status") == "new" for e in ents):
+        _handle(run, st, "screen-%02d" % ls["screen_batch"], "screener", "merge %s --phase screen" % run, "P2")
+    # Audit after every screening merge, so a reliable audit can retire screener B early and a weak
+    # one stops the run before more batches are screened under an unclear rule.
+    if ls.get("screen_batch") and _stale(st, "screen_audit", ["screen_merge"]):
+        RUN("screen-audit %s" % run, "Krippendorff alpha between screeners A and B", phase="P2")
+    audit = read_json(p(run, "landscape", "screening-audit.json"), {}) or {}
+    if audit.get("status") == "revise" and state.mark(st, "protocol") < state.mark(st, "screen_audit"):
+        DO("D06", "screening audit alpha is low: clarify the eligibility rule behind the disagreements with `gapscan.py protocol amend`, recording the limitation", phase="P2")
     if any(e.get("status") == "new" for e in ents):
-        key = "screen-%02d" % ls.get("screen_batch", 0)
-        s = _handle(run, st, key, "screener", "merge %s --phase screen" % run, "P2") if ls.get("screen_batch") else None
-        if s in (None, "merged"):
-            RUN("assign %s --phase screen" % run, "screen new entities: screener A all, screener B an audit sample (D06)", phase="P2")
+        RUN("assign %s --phase screen" % run, "screen new entities: screener A all, screener B an audit sample until screening is shown reliable (D06)", phase="P2")
     if any(e.get("status") == "included" and not e.get("verified") for e in ents):
         RUN("entities verify %s" % run, "only included entities whose page exists and names them count", phase="P2")
     if not ls.get("sampling_closed"):
@@ -159,11 +170,6 @@ def decide(run):
             RUN("assign %s --phase snowball" % run, "snowball iteration %d added %d entities: continue" % (it, len(new_inc)), phase="P2")
         ls["snowball_done"] = True
         save_state(run, st)
-    if _stale(st, "screen_audit", ["screen_merge"]):
-        RUN("screen-audit %s" % run, "Krippendorff alpha between screeners A and B", phase="P2")
-    audit = read_json(p(run, "landscape", "screening-audit.json"), {}) or {}
-    if audit.get("status") == "revise" and state.mark(st, "protocol") < state.mark(st, "screen_audit"):
-        DO("D06", "screening audit alpha is low: clarify the eligibility rule behind the disagreements with `gapscan.py protocol amend`, recording the limitation", phase="P2")
     _gate(run, st, "landscape", [state.mark(st, "landscape_merge"), state.mark(st, "protocol")], "Approve the market landscape",
           "Gated run: check the landscape and saturation before evidence mining.",
           "Read landscape/saturation.json and landscape/entities.jsonl; approve or decline with a note.", "P2")
@@ -256,6 +262,16 @@ def decide(run):
         RUN("cards check %s" % run, "thresholds and triangulation per card (D20)", phase="P5")
     cards = read_jsonl(p(run, "gaps", "cards.jsonl"))[0]
     candidates = [x for x in cards if x["status"] != "insufficient"]
+    # Too few cards pass and some fail only on evidence counts (domains, source types, authors, demand):
+    # one targeted round mines new domains for those cards before the red team. Live run: this lifted
+    # passing cards from 1 to 3; without it the near-misses were simply dropped.
+    if (_group(run, st, "redteam")[0] is None and len(candidates) < c.get("evidence.target_candidates")
+            and ev.get("targeted_rounds", 0) < c.get("evidence.max_targeted_rounds") and ev["round"] < c.get("evidence.max_rounds")):
+        near = gaps.near_misses(run, c.get("evidence.miners"))
+        if near:
+            RUN("assign %s --phase evidence --targeted" % run,
+                "only %d card(s) pass; near-miss card(s) %s fail on evidence that new domains could supply: one targeted round (D08)" % (
+                    len(candidates), ", ".join("%s %s" % (x["gap_id"], x["shortfall"]) for x in near)), phase="P3")
     # ---------------- P6 appraisal
     if candidates:
         s = _handle(run, st, "redteam", "red-team", "merge %s --phase redteam" % run, "P6")

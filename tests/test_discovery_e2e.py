@@ -435,6 +435,21 @@ class DiscoveryE2E(unittest.TestCase):
         self.assertEqual(agr["strength_vs_miner"]["kappa"], 1.0)
         code, out_ = gs("validate", run)
         self.assertEqual(code, 0, out_)
+        # Fewer than evidence.target_candidates cards passed and a near-miss failed only on evidence
+        # counts, so the flow ran one targeted round on its own (a live run needed the human for this).
+        st = read_json(os.path.join(run, "state.json"))
+        self.assertEqual(st["evidence"].get("targeted_rounds"), 1)
+        tgt = st["evidence"]["targeted"][0]
+        ta = read_json(os.path.join(run, "evidence", "round-%02d" % tgt["round"], "assign-A.json"))
+        self.assertEqual(ta["mode"], "evidence:targeted")
+        self.assertIn(ta["inputs"]["target_card"]["gap_id"], tgt["cards"])
+        self.assertTrue(any("NOT in target_card.domains" in r for r in ta["rules"]))
+        # Every assignment carries a model tier; machine-checked roles run on the fast tier by default.
+        self.assertEqual(ta["model"]["tier"], "fast")
+        self.assertEqual(ta["model"]["names"]["claude-code"], "haiku")
+        wa = read_json(os.path.join(run, "output", "writer-assign-01.json"))
+        self.assertEqual(wa["model"]["tier"], "standard")
+        self.assertTrue(any(t.startswith("SPAWN") for t in trace))
         # A gap map recomputed after the cards were checked (new evidence, revised codebook) makes `next`
         # rebuild the cards in update mode before any red team (a live run went straight to red team).
         from mgcore import state as mstate
@@ -447,8 +462,9 @@ class DiscoveryE2E(unittest.TestCase):
             self.assertIn(expect, cm.exception.argline)
             self.assertEqual(gs(*cm.exception.argline.split()[1:])[0], 0)
         sy = read_json(os.path.join(run, "gaps", "synth-assign.json"))
-        self.assertEqual(sy["inputs"]["previous_cards"], "gaps/cards.previous-1.jsonl")
-        self.assertTrue(os.path.exists(os.path.join(run, "gaps", "cards.previous-1.jsonl")))
+        prev = sy["inputs"]["previous_cards"]
+        self.assertRegex(prev, r"^gaps/cards\.previous-\d+\.jsonl$")
+        self.assertTrue(os.path.exists(os.path.join(run, prev)))
         self.assertFalse(os.path.exists(os.path.join(run, "gaps", "cards.jsonl")))
         # Supply records the codebook it was mapped under; a newer codebook makes `next` re-map it in
         # update mode (a live run revised the codebook after supply and new jobs looked unserved).
