@@ -278,6 +278,7 @@ class FakeAgents(object):
                  demand_signals=["SIG-hn-late-payment-invoice"],
                  assumptions=[{"id": "A1", "text": "Solo translators will pay for automatic chasing", "type": "viability", "riskiest_test": "pre-sale"}]),
             dict(common, gap_id="GAP-002", title="Currency-safe invoicing for translators with foreign clients",
+                 lens="clone-wedge", base_entities=["dom:bravo.io"], wedge={"dimension": "reliability", "statement": "Rounding-safe currencies"},
                  statement="Although multi-currency invoicing exists, rounding-safe currency handling for translators invoicing foreign agencies remains poorly served, because tools are built for domestic invoicing. This matters because broken invoices delay payment.",
                  gap_type={"primary": "quality", "secondary": [], "catalyst": "none"}, sa_mode="confusion", egm_type="none",
                  codes=["J-INVOICE", "P-CURRENCY"], incumbents=["dom:bravo.io"], supporting_evidence=(cur + wtp)[:12],
@@ -405,6 +406,15 @@ class DiscoveryE2E(unittest.TestCase):
         self.assertTrue(check["ok"], check)
         rk = read_json(os.path.join(run, "gaps", "ranking.json"))
         self.assertEqual([x["gap_id"] for x in rk["ranked"]][0], "GAP-001")
+        # Lens-aware appraisal (D26): GAP-002 is a clone-wedge card (the fixture's near-miss), so its check counts
+        # proven products as the demand leg and requires its base products to be verified; GAP-001 keeps gap logic.
+        by_id = {x["gap_id"]: x for x in rk["ranked"]}
+        self.assertEqual(by_id["GAP-001"]["lens"], "gap")
+        cc = read_json(os.path.join(run, "gaps", "card-check.json"))["cards"]
+        self.assertIn("proven_products", cc["GAP-002"]["numbers"])
+        self.assertNotIn("proven_products", cc["GAP-001"]["numbers"])
+        self.assertTrue(os.path.exists(os.path.join(run, "opportunities", "candidates.jsonl")))
+        self.assertTrue(os.path.exists(os.path.join(run, "landscape", "traction.jsonl")))
         prisma = read_json(os.path.join(run, "output", "prisma.json"))
         ents = [e for e in read_jsonl(os.path.join(run, "landscape", "entities.jsonl"))[0]]
         self.assertEqual(prisma["landscape"]["included_verified"],
@@ -456,7 +466,7 @@ class DiscoveryE2E(unittest.TestCase):
         st = read_json(os.path.join(run, "state.json"))
         mstate.touch(st, "gapmap")
         write_json(os.path.join(run, "state.json"), st)
-        for expect in ("variants", "--phase synthesis"):
+        for expect in ("variants", "opportunities scan", "--phase synthesis"):
             with self.assertRaises(flow.Act) as cm:
                 flow.decide(run)
             self.assertIn(expect, cm.exception.argline)

@@ -41,17 +41,55 @@ def draft_protocol(run_id, topic, title, seed, autonomy):
     }
 
 
+def _from_opportunity(args, run_id, seed):
+    """Protocol draft for a narrow deep run, from one opportunity of a finished scan run (D28)."""
+    from . import opportunities
+    src = args.from_run
+    if not args.opportunity:
+        raise CliError("--from-run needs --opportunity OPP-NNN")
+    if not os.path.exists(os.path.join(src, "state.json")):
+        raise CliError("%s is not a run folder" % src)
+    doc = read_json(os.path.join(src, "output", "opportunities.json"), {}) or {}
+    cands = {c["opp_id"]: c for c in read_jsonl_safe(os.path.join(src, "opportunities", "candidates.jsonl"))}
+    if args.opportunity not in cands:
+        raise CliError("%s has no %s (see its output/opportunities.md)" % (src, args.opportunity))
+    cand = dict(cands[args.opportunity])
+    ents = {e["entity_id"]: e for e in read_jsonl_safe(os.path.join(src, "landscape", "entities.jsonl"))}
+    cand["base_urls"] = [(ents.get(e, {}).get("urls") or [None])[0] for e in cand.get("base_entities") or []]
+    killed = [o for o in doc.get("excluded", []) if o.get("opp_id") == args.opportunity]
+    d = opportunities.next_protocol(src, cand, new_run_id=run_id)
+    d["seed"] = seed
+    d["autonomy"] = args.autonomy
+    return d, ("note: %s was excluded in the scan (%s); the draft is written anyway." % (args.opportunity, "; ".join(killed[0]["reasons"])) if killed else None)
+
+
+def read_jsonl_safe(path):
+    from mgcore.jsonio import read_jsonl
+    return read_jsonl(path)[0]
+
+
 def cmd_init(args):
     run = args.run
     if os.path.exists(p(run, "state.json")):
         raise CliError("%s already holds a run; choose a new folder." % run)
+    if not args.topic and not getattr(args, "from_run", None):
+        raise CliError("give --topic, or --from-run SCAN_RUN --opportunity OPP-NNN")
+    seed = args.seed if args.seed is not None else secrets.randbelow(10 ** 9)
+    run_id = os.path.basename(os.path.normpath(run))
+    note = None
+    if getattr(args, "from_run", None):
+        proto, note = _from_opportunity(args, run_id, seed)
+        args.topic = proto["topic"]
+    else:
+        proto = draft_protocol(run_id, args.topic, args.title, seed, args.autonomy)
+        proto["depth"] = getattr(args, "depth", None) or "scan"
     for d in RUN_DIRS:
         os.makedirs(p(run, d), exist_ok=True)
     with open(p(run, ".salt"), "w") as fh:
         fh.write(secrets.token_hex(16))
-    seed = args.seed if args.seed is not None else secrets.randbelow(10 ** 9)
-    run_id = os.path.basename(os.path.normpath(run))
-    write_json(p(run, "protocol.json"), draft_protocol(run_id, args.topic, args.title, seed, args.autonomy))
+    write_json(p(run, "protocol.json"), proto)
+    if note:
+        out(note)
     st = {"schema_version": "1.0", "run_id": run_id, "created_at": now_iso(), "seed": seed,
           "autonomy": args.autonomy, "independence": "full", "groups": {},
           "lexicon": {"round": 0, "merged": 0, "overlap": None},
@@ -63,8 +101,12 @@ def cmd_init(args):
           "report": {"writer_rounds": 0}}
     save_state(run, st)
     state.event(run, "init", topic=args.topic, seed=seed, autonomy=args.autonomy)
-    out("Created run %s (seed %d, autonomy %s)." % (run, seed, args.autonomy))
-    out("Next: fill protocol.json following method card D01, then `gapscan.py protocol check %s`." % run)
+    out("Created run %s (seed %d, autonomy %s, depth %s)." % (run, seed, args.autonomy, proto.get("depth") or "deep"))
+    if getattr(args, "from_run", None):
+        out("Protocol drafted from %s %s: review the question, PICOS and eligibility, then `gapscan.py protocol check %s`." % (
+            args.from_run, args.opportunity, run))
+    else:
+        out("Next: fill protocol.json following method card D01, then `gapscan.py protocol check %s`." % run)
     return 0
 
 
@@ -93,10 +135,11 @@ def protocol_warnings(run, proto=None):
     warns = []
     inter = (proto.get("picos") or {}).get("intervention") or ""
     jobs = [x for x in re.split(r"[,;]", inter.split(":", 1)[-1]) if len(x.strip()) > 2]
-    if len(jobs) >= c.get("scope.broad_jobs_warning"):
-        warns.append(("picos.intervention names about %d jobs. Each job is its own sub-market: a broad run spends most of its budget "
+    if len(jobs) >= c.get("scope.broad_jobs_warning") and (proto.get("depth") or "deep") == "deep":
+        warns.append(("picos.intervention names about %d jobs. Each job is its own sub-market: a broad deep run spends most of its budget "
                       "mapping supply and spreads evidence thin (live run: 7 jobs -> 395 competitors, 1 weak surviving gap). "
-                      "Prefer one run per job, or keep at most 3.") % len(jobs))
+                      "Start with depth scan (about 15-20 mostly fast-tier subagents) and run deep on the option it ranks best, "
+                      "or keep at most 3 jobs.") % len(jobs))
     if not proto.get("cost_profile"):
         warns.append("cost_profile not set: using '%s' (fast tier for scouts, screeners, miners, coders; standard for synthesis, "
                      "red team, writer). Set budget or quality with `protocol amend` if needed." % c.get("models.profile"))

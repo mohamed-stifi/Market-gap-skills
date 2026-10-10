@@ -146,12 +146,13 @@
       "kinds": [
         "product"
       ],
-      "endpoint": "https://itunes.apple.com/search?entity=software ; https://itunes.apple.com/{cc}/rss/customerreviews/page={n}/id={id}/sortby=mostrecent/json",
+      "endpoint": "https://itunes.apple.com/search?entity=software ; https://itunes.apple.com/lookup?id={id} ; https://itunes.apple.com/{cc}/rss/customerreviews/page={n}/id={id}/sortby=mostrecent/json",
       "auth": "none",
       "limits": "review feed is undocumented: pages 1-10 x 50 reviews per storefront; space requests by 3s",
       "tos": "Undocumented feed; use sparingly and keep quotes short.",
       "adapters": [
         "apple-search",
+        "apple-lookup",
         "apple-reviews"
       ],
       "min_interval_s": 3,

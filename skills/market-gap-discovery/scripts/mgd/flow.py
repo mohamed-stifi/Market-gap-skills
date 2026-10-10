@@ -122,9 +122,10 @@ def decide(run):
     _handle(run, st, "lexicon-R%02d" % lx["round"], "scout", "merge %s --phase lexicon" % run, "P1")
     if (lx.get("overlap") or 0) < c.get("lexicon.overlap_target") and lx["round"] < c.get("lexicon.max_rounds"):
         RUN("assign %s --phase lexicon" % run, "lexicon overlap %.2f < %.2f: one expansion round" % (lx.get("overlap") or 0, c.get("lexicon.overlap_target")), phase="P1")
-    s = _handle(run, st, "press", "reviewer", "lexicon apply-press %s" % run, "P1")
-    if s is None:
-        RUN("assign %s --phase press" % run, "PRESS peer review of the search strategy before sampling", phase="P1")
+    if c.get("lexicon.press"):
+        s = _handle(run, st, "press", "reviewer", "lexicon apply-press %s" % run, "P1")
+        if s is None:
+            RUN("assign %s --phase press" % run, "PRESS peer review of the search strategy before sampling", phase="P1")
     # ---------------- P2 landscape
     ls = st["landscape"]
     if ls["round"] == 0:
@@ -139,7 +140,8 @@ def decide(run):
         _handle(run, st, "screen-%02d" % ls["screen_batch"], "screener", "merge %s --phase screen" % run, "P2")
     # Audit after every screening merge, so a reliable audit can retire screener B early and a weak
     # one stops the run before more batches are screened under an unclear rule.
-    if ls.get("screen_batch") and _stale(st, "screen_audit", ["screen_merge"]):
+    audited = c.get("screening.audit_fraction") or c.get("screening.audit_min_units")
+    if ls.get("screen_batch") and audited and _stale(st, "screen_audit", ["screen_merge"]):
         RUN("screen-audit %s" % run, "Krippendorff alpha between screeners A and B", phase="P2")
     audit = read_json(p(run, "landscape", "screening-audit.json"), {}) or {}
     if audit.get("status") == "revise" and state.mark(st, "protocol") < state.mark(st, "screen_audit"):
@@ -161,7 +163,7 @@ def decide(run):
     if not ls.get("snowball_done"):
         it = ls.get("snowball_iteration", 0)
         note = "landscape %s -> snowballing (D05)" % sat.get("verdict")
-        if it == 0:
+        if it == 0 and c.get("snowball.max_iterations") > 0:
             RUN("assign %s --phase snowball" % run, note, phase="P2")
         new_inc = [e for e in ents if e.get("first_group") == "snowball-%02d" % it and e.get("status") == "included"
                    and (e.get("verified") or {}).get("status") == "ok"]
@@ -177,6 +179,11 @@ def decide(run):
     s = _handle(run, st, "mapping", "synthesizer", "merge %s --phase mapping" % run, "P2")
     if s is None:
         RUN("assign %s --phase mapping" % run, "systematic map: classification scheme and attributes (D07)", phase="P2")
+    # Traction: a script reads installs and ratings from saved marketplace responses (no subagent, D27).
+    if _stale(st, "traction", ["mapping"]):
+        RUN("traction %s" % run, "installs and ratings for marketplace products: proven demand at zero subagent cost (D27)", phase="P2")
+    if (proto.get("depth") or c.get("depth.default")) == "scan":
+        _decide_scan(run, st, c)
     # ---------------- P3 evidence
     ev = st["evidence"]
     if ev["round"] == 0:
@@ -246,6 +253,9 @@ def decide(run):
     # ---------------- P5 gaps
     if _stale(st, "variants", ["gapmap"]):
         RUN("variants %s" % run, "change-one-dimension candidates (D19)", phase="P5")
+    if _stale(st, "opp_scan", ["gapmap", "traction", "verify"]):
+        RUN("opportunities scan %s" % run, "every lens in protocol.lenses: gaps plus clone-with-a-wedge, bundle, port, "
+            "down-market, replace, hosted open source, productized service (D26)", phase="P5")
     s, missing = _group(run, st, "synthesis")
     if s is None:
         RUN("assign %s --phase synthesis" % run, "ADVANCE P5: gap spotting, problematization and variation into gap cards", phase="P5")
@@ -321,6 +331,56 @@ def decide(run):
     raise Act("DONE", "", ["deliverables: %s" % ", ".join(os.path.join(run, "output", f) for f in show + ["dossier.md", "handoff.json", "prisma.md", "watchlist.json"])]
               + notes + [("show the human output/summary.md and the dashboard first; " if show else "") + "spend: `gapscan.py status %s`" % run,
                          "next skill: market-gap-validation reads output/handoff.json"], "P7")
+
+
+def _decide_scan(run, st, c):
+    """Scan depth (D28), after the landscape map: options from every lens (script), evidence spent by successive
+    halving, a quick red-flag check, then a script-written report. No codebook, gap cards or writer subagent."""
+    from . import opportunities as opm
+    ev = st["evidence"]
+    if _stale(st, "opp_scan", ["traction", "mapping", "verify"]):
+        RUN("opportunities scan %s" % run, "options from every lens in protocol.lenses, from the map and traction alone (D26); no subagent", phase="P5")
+    cands = [x for x in read_jsonl(p(run, "opportunities", "candidates.jsonl"))[0] if x.get("status") != "excluded"]
+    if not cands:
+        DO("D26", "the scan generated no options: check landscape/entity-attributes.jsonl and protocol.lenses, widen the "
+                  "protocol with `protocol amend`, or start a deep run on a narrower question", phase="P5")
+    k = ev.get("scan_rounds", 0)
+    if k == 0:
+        RUN("assign %s --phase scan-evidence" % run, "test the %d best options (lens-diverse) plus one leads miner (D28 round 1)" % min(
+            len(cands), c.get("scan.evidence_candidates")), phase="P3")
+    _handle(run, st, "evidence-R%02d" % ev["round"], "miner", "merge %s --phase evidence" % run, "P3")
+    if _stale(st, "verify", ["evidence_merge"]):
+        RUN("verify %s" % run, "every quote is checked against its snapshot", phase="P3")
+    if _stale(st, "opp_score", ["opp_scan", "verify"]):
+        RUN("opportunities score %s" % run, "verified evidence per option: promising, thin, untested or contradicted", phase="P5")
+    if k < c.get("scan.rounds") and ev["round"] < c.get("evidence.max_rounds") and opm.select(run, k + 1):
+        RUN("assign %s --phase scan-evidence" % run, "successive halving: the better half of the tested options gets a second, "
+            "independent round on new domains (D28 round %d)" % (k + 1), phase="P3")
+    s = _handle(run, st, "redflag", "red-team", "merge %s --phase redflag" % run, "P6")
+    if s is None:
+        RUN("assign %s --phase redflag" % run, "quick red-flag check of the best options: already taken, blocked or impractical? (D28)", phase="P6")
+    if _stale(st, "opp_rank", ["opp_score", "redflag"]):
+        RUN("opportunities rank %s" % run, "evidence tier, red flags, gates and ambition math", phase="P6")
+    _gate(run, st, "shortlist", state.mark(st, "opp_rank"), "Approve the opportunity ranking",
+          "Gated run: confirm the ranking before the report and next-run drafts are written.",
+          "Read opportunities/ranking.json; approve or decline with a note.", "P6")
+    if _stale(st, "prisma", ["opp_rank", "verify"]):
+        RUN("prisma %s" % run, "PRISMA-style flow counts", phase="P7")
+    if _stale(st, "opp_report", ["opp_rank", "prisma"]):
+        RUN("opportunities report %s" % run, "opportunities.md, opportunities.json and protocol drafts for narrow deep runs", phase="P7")
+    notes = []
+    if _stale(st, "viz", ["opp_report"]):
+        if viz_available():
+            RUN("viz %s" % run, "one-page summary.md and opportunity charts for the human (D28)", phase="P7")
+        notes.append("dashboard skipped: matplotlib is not installed. Install it (`pip install matplotlib`), then run "
+                     "`gapscan.py viz %s`" % run)
+    show = ["summary.md", "dashboard/index.html"] if not notes else []
+    nxt = (read_json(p(run, "output", "opportunities.json"), {}) or {}).get("next_runs") or []
+    raise Act("DONE", "", ["deliverables: %s" % ", ".join(os.path.join(run, "output", f) for f in show + ["opportunities.md", "opportunities.json", "prisma.md"])]
+              + notes + ["show the human output/opportunities.md first; spend: `gapscan.py status %s`" % run,
+                         ("next: pick one option and start a narrow deep run: `gapscan.py init gap-runs/NEW --from-run %s --opportunity %s` "
+                          "(drafts for %s in output/next-runs/)" % (run, nxt[0], ", ".join(nxt))) if nxt else
+                         "next: no option has evidence yet; widen the scan or run deep on the best untested option"], "P7")
 
 
 def viz_available():

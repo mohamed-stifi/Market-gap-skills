@@ -21,7 +21,7 @@ ADAPTERS = {
     "gh-issues": apis.gh_issues, "gh-repos": apis.gh_repos,
     "wiki-views": apis.wiki_views,
     "wp-search": apis.wp_search, "wp-plugin": apis.wp_plugin, "wp-reviews": apis.wp_reviews,
-    "apple-search": apis.apple_search, "apple-reviews": apis.apple_reviews,
+    "apple-search": apis.apple_search, "apple-lookup": apis.apple_lookup, "apple-reviews": apis.apple_reviews,
     "atl-search": apis.atl_search, "atl-reviews": apis.atl_reviews,
     "yc": apis.yc,
 }

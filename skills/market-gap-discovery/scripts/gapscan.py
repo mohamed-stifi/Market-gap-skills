@@ -12,7 +12,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from mgd import analysis, assign, coding, entities, evidence, flow, gaps, merge, report, saturation, setup  # noqa: E402
+from mgd import analysis, assign, coding, entities, evidence, flow, gaps, merge, opportunities, report, saturation, setup, traction  # noqa: E402
 from mgd import lexicon as lexmod  # noqa: E402
 from mgd.common import CliError  # noqa: E402
 from mgd.fetch import ADAPTERS, cmd_fetch  # noqa: E402
@@ -24,10 +24,14 @@ def build_parser():
 
     s = sub.add_parser("init", help="create a run folder and a protocol draft")
     s.add_argument("run")
-    s.add_argument("--topic", required=True)
+    s.add_argument("--topic", help="required unless --from-run is given")
     s.add_argument("--title")
     s.add_argument("--seed", type=int)
     s.add_argument("--autonomy", choices=["autonomous", "gated"], default="autonomous")
+    s.add_argument("--depth", choices=["scan", "deep"], default="scan",
+                   help="scan: cheap breadth pass ranking many opportunities (default); deep: full method on a narrow question")
+    s.add_argument("--from-run", help="a finished scan run whose opportunity seeds this deep run's protocol")
+    s.add_argument("--opportunity", help="OPP-NNN from --from-run's output/opportunities.json")
     s.set_defaults(func=setup.cmd_init)
 
     s = sub.add_parser("doctor", help="check sources, keys and network; record coverage gaps")
@@ -80,7 +84,7 @@ def build_parser():
     s = sub.add_parser("merge", help="validate and merge agent outputs")
     s.add_argument("run")
     s.add_argument("--phase", required=True, choices=["lexicon", "landscape", "probe", "snowball", "screen", "mapping",
-                                                       "evidence", "coding", "supply", "redteam"])
+                                                       "evidence", "coding", "supply", "redteam", "redflag"])
     s.add_argument("--retry", action="store_true",
                    help="evidence only: merge the current round again after fixing rejected records; "
                         "records already in the ledger count as duplicates")
@@ -179,6 +183,16 @@ def build_parser():
         s = sub.add_parser(name, help=help_)
         s.add_argument("run")
         s.set_defaults(func=fn)
+
+    s = sub.add_parser("traction", help="installs and ratings for marketplace products, from saved API responses then lookups (D27)")
+    s.add_argument("run")
+    s.add_argument("--offline", action="store_true", help="only read saved API responses; no network")
+    s.set_defaults(func=traction.cmd_traction)
+
+    s = sub.add_parser("opportunities", help="opportunity lenses and the scan funnel (D26, D28)")
+    s.add_argument("action", choices=["scan", "score", "rank", "report"])
+    s.add_argument("run")
+    s.set_defaults(func=opportunities.cmd_opportunities)
 
     s = sub.add_parser("cards", help="gap-card utilities")
     s.add_argument("action", choices=["check"])

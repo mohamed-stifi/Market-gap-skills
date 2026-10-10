@@ -150,6 +150,8 @@ def assign_lexicon(run, st, c, args):
             "scout_id": sid, "persona": chosen[i],
             "read": ["agents/scout.md", GLOSSARY, SOURCES] + card_paths("D02"),
             "inputs": {"protocol": "protocol.json", "seed_terms": _seed_terms(run),
+                       # Deep runs drafted from a scan option name the products it builds on: known tools, not search results.
+                       "known_tools": [x["name"] for x in protocol(run).get("seed_entities") or []],
                        "expand_from": union if r > 1 else [],
                        "note": "Round 1 is fully independent. In round 2 you receive the union of round 1 and look for missing vocabulary."},
             "channels": [],
@@ -460,6 +462,142 @@ def _assign_evidence_targeted(run, st, c, r):
     return paths
 
 
+LENS_GUIDE = {
+    "clone-wedge": "Complaints about the base products that name the wedge (price, complexity, reliability, support, limits), switch "
+                   "stories, and praise for the base products as counter-evidence. Start with their marketplace reviews "
+                   "(wp-reviews, apple-reviews, atl-reviews), then forums and Q&A.",
+    "port": "Requests for this kind of product on the target platform, language or segment ('is there X for Y'), complaints that "
+            "the leaders lack it, and signs of how many users the target has.",
+    "down-market": "Price complaints from small buyers, people who never started or stopped paying because of price, and what they use instead.",
+    "bundle": "People who use both kinds of tool and complain about switching, syncing or paying twice; people who prefer separate "
+              "best-of-breed tools are counter-evidence.",
+    "unbundle": "Users who use only one part of the suite and resent its price or complexity.",
+    "replace": "Users leaving the affected product, where they go, and how many seem affected.",
+    "hosted-oss": "Requests for a hosted or managed version, self-hosting pain, the license text (snapshot it) and whether the "
+                  "maintainers already sell hosting.",
+    "productize": "What people pay a freelancer, agency or assistant to do for this job, how often, and how much.",
+    "gap": "Pain, workarounds and wishes for the unmet job, and any product that already does it (counter-evidence).",
+}
+
+
+def assign_scan_evidence(run, st, c, args):
+    """Scan depth (D28): one miner per few options, chosen by successive halving; round 1 adds a leads miner
+    that looks for evidence-led options (paid services, shutdowns, one-part-of-a-suite users)."""
+    from . import opportunities as opm
+    ev = st["evidence"]
+    if ev["round"] and ev["merged"] < ev["round"]:
+        raise CliError("evidence round %d is not merged yet" % ev["round"])
+    k = ev.get("scan_rounds", 0) + 1
+    picked = opm.select(run, k)
+    if not picked:
+        raise CliError("no options to test in scan round %d (see opportunities/scores.json)" % k)
+    per = c.get("scan.candidates_per_miner")
+    chunks = [picked[i:i + per] for i in range(0, len(picked), per)]
+    leads = k == 1
+    _budget(run, st, len(chunks) + (1 if leads else 0))
+    r = ev["round"] + 1
+    fams_e = _families(run, "evidence")
+    ents = {e["entity_id"]: e for e in entities(run)}
+    led = {x["id"]: x for x in verified_ledger(run)}
+    sc = (read_json(p(run, "opportunities", "scores.json"), {}) or {}).get("candidates", {})
+    quota = c.get("scan.records_per_candidate")
+    common_rules = ["Every record needs a snapshot made by `gapscan.py fetch` or `gapscan.py snapshot` and a verbatim quote of at most 280 characters.",
+                    "Use author_hash values from fetch output or `gapscan.py hash-author`; never write raw usernames.",
+                    "Set entity_ids when a record names a product (use the landscape key from base_entities when it is one of them)."]
+    paths = []
+    for i, chunk in enumerate(chunks):
+        sid = LETTERS[i]
+        brief = []
+        for cand in chunk:
+            have = sorted(set(led[e].get("domain") for e in (sc.get(cand["opp_id"]) or {}).get("evidence_ids", []) if e in led))
+            brief.append({"opp_id": cand["opp_id"], "lens": cand["lens"], "title": cand["title"], "why": cand.get("why"),
+                          "base_entities": cand.get("base_entities"), "base_names": cand.get("base_names"),
+                          "base_urls": [((ents.get(e) or {}).get("urls") or [None])[0] for e in cand.get("base_entities") or []],
+                          "twist": cand.get("twist"), "needs": cand.get("needs"), "look_for": LENS_GUIDE[cand["lens"]],
+                          "domains_already_used": have})
+        rel_path = "evidence/round-%02d/assign-%s.json" % (r, sid)
+        paths.append(_write(run, rel_path, {
+            "phase": "evidence", "round": r, "role": "miner", "assignment_id": "EV-R%02d-%s" % (r, sid),
+            "mode": "evidence:opportunity", "scout_id": sid,
+            "read": ["agents/miner.md", GLOSSARY, SOURCES] + card_paths("D08", "D09", "D10", "D26"),
+            "inputs": {"protocol": "protocol.json", "families": fams_e, "candidates": brief, "records_per_candidate": quota,
+                       "scan_round": k, "diversity": _diversity_rule(run, c),
+                       "balance": "Collect counter-evidence too (praise for the incumbents, people for whom today's tools are enough): "
+                                  "the aim is an honest test of each option."},
+            "outputs": [{"path": "evidence/round-%02d/miner-%s.jsonl" % (r, sid), "schema": "evidence", "format": "jsonl"}],
+            "limits": {"max_tool_calls": c.get("budget.miner_tool_calls"), "max_records": quota * len(chunk) + 10},
+            "rules": ["Test each option in `candidates`: about %d records per option, from at least 2 domains%s." % (
+                          quota, " not in its domains_already_used" if k > 1 else ""),
+                      "Tag every record with candidate_ids: the OPP ids it supports or contradicts (a record may bear on several)."]
+                     + common_rules}))
+    if leads:
+        sid = LETTERS[len(chunks)]
+        rng = _rng(run, "scan-leads-%d" % r)
+        blocks = _take_blocks(_blocks(run), set(ev.get("used_blocks", [])), 12, rng, "evidence")
+        rel_path = "evidence/round-%02d/assign-%s.json" % (r, sid)
+        paths.append(_write(run, rel_path, {
+            "phase": "evidence", "round": r, "role": "miner", "assignment_id": "EV-R%02d-%s" % (r, sid),
+            "mode": "evidence:leads", "scout_id": sid,
+            "read": ["agents/miner.md", GLOSSARY, SOURCES] + card_paths("D08", "D09", "D10", "D12", "D26"),
+            "inputs": {"protocol": "protocol.json", "families": fams_e, "query_blocks": blocks,
+                       "look_for": ["people who pay a freelancer, agency or assistant to do a job in this topic (productize)",
+                                    "people leaving a product after a shutdown, acquisition, price rise or platform change (replace)",
+                                    "people who use only one part of a big product and resent its price or complexity (unbundle)",
+                                    "people who use two tools together and wish they were one (bundle)",
+                                    "people asking for an existing kind of product on another platform or in another language (port)"],
+                       "diversity": _diversity_rule(run, c)},
+            "outputs": [{"path": "evidence/round-%02d/miner-%s.jsonl" % (r, sid), "schema": "evidence", "format": "jsonl"},
+                        {"path": "evidence/round-%02d/why-now-%s.jsonl" % (r, sid), "schema": "why-now", "format": "jsonl"}],
+            "limits": {"max_tool_calls": c.get("budget.miner_tool_calls"), "max_records": 40},
+            "rules": ["Leads round: find evidence-led options the structural scan cannot see; log catalysts (shutdowns, acquisitions, "
+                      "price changes, platform changes) in the why-now file (D12)."] + common_rules}))
+    ev["round"] = r
+    ev["scan_rounds"] = k
+    ev.setdefault("scan", []).append({"round": r, "scan_round": k, "candidates": [x["opp_id"] for x in picked], "leads": leads,
+                                      "pool": len(opm.tested_pool(run)) if k > 1 else None})
+    _group(st, "evidence-R%02d" % r, "evidence", "miner", paths)
+    return paths
+
+
+def assign_redflag(run, st, c, args):
+    """Scan depth (D28): a quick, standard-tier check of the best options before the report."""
+    from . import opportunities as opm
+    doc = opm.rank(run)
+    top_n = c.get("scan.redflag_top")
+    tested = [r for r in doc["ranked"] if r["status"] in ("promising", "thin")]
+    rest = [r for r in doc["ranked"] if r not in tested and r["status"] != "contradicted"]
+    pick = (tested + rest)[:top_n]
+    if not pick:
+        raise CliError("no ranked options to check")
+    cands = {x["opp_id"]: x for x in read_jsonl_(p(run, "opportunities", "candidates.jsonl"))}
+    per = c.get("scan.redflag_per_agent")
+    batches = [pick[i:i + per] for i in range(0, len(pick), per)]
+    _budget(run, st, len(batches))
+    paths = []
+    for i, batch in enumerate(batches, 1):
+        rel_path = "opportunities/redflags/assign-%02d.json" % i
+        paths.append(_write(run, rel_path, {
+            "assignment_id": "RF-%02d" % i, "phase": "appraisal", "round": None, "role": "red-team", "mode": "redflag",
+            "read": ["agents/red-team.md", GLOSSARY, SOURCES] + card_paths("D26", "D28"),
+            "inputs": {"protocol": "protocol.json", "founder_fit": protocol(run).get("founder_fit"),
+                       "options": [dict(cands[r["opp_id"]], evidence_status=r["status"]) for r in batch],
+                       "scores": "opportunities/scores.json", "ledger": "evidence/ledger.jsonl (verified records only)"},
+            "outputs": [{"path": "opportunities/redflags/%s.json" % r["opp_id"], "schema": "redflag", "format": "json"} for r in batch],
+            "limits": {"max_tool_calls": 8 * len(batch)},
+            "rules": ["Quick check, not a full red team: at least 2 logged searches per option, focused on whether a product "
+                      "already does exactly this option for this segment at a fitting price.",
+                      "killed needs evidence: the snapshot of a product that fully covers the option, or license text that forbids it "
+                      "(set license_ok false). Otherwise use flag (a real concern) or clear.",
+                      "Fill gates for this founder (protocol founder_fit) and growth_loop when the product could carry one."]}))
+    _group(st, "redflag", "redflag", "red-team", paths)
+    return paths
+
+
+def read_jsonl_(path):
+    from mgcore.jsonio import read_jsonl
+    return read_jsonl(path)[0]
+
+
 def _signal_terms(run):
     lex = read_json(p(run, "lexicon", "lexicon.json"), {}) or {}
     terms = []
@@ -714,8 +852,13 @@ def assign_synthesis(run, st, c, args):
               "codebook": "coding/codebook.v%d.json" % v, "codes": "coding/codes-A.jsonl",
               "ledger": "evidence/ledger.jsonl (verified records only)", "why_now": "evidence/why-now.jsonl",
               "variants": "gaps/variants.jsonl", "bursts": "evidence/bursts.json", "signals": "evidence/signals/",
-              "themes": "coding/themes.json", "agreement": "coding/agreement.json"}
-    rules = ["Cite only verified evidence ids; every card must meet the D20 thresholds."]
+              "themes": "coding/themes.json", "agreement": "coding/agreement.json",
+              "opportunities": "opportunities/candidates.jsonl (options from every lens, with their signals and linked evidence)",
+              "traction": "landscape/traction.jsonl", "lenses": protocol(run).get("lenses") or "all (D26)"}
+    rules = ["Cite only verified evidence ids; every card must meet the D20 thresholds.",
+             "Look through every lens in inputs.lenses (D26), not only gaps: a card may build on a scan option (set lens and "
+             "opportunity_id) or on the gap map (lens gap). For lenses other than gap, list the proven products in base_entities "
+             "and state the wedge."]
     n = 1
     if os.path.exists(p(run, "gaps", "cards.jsonl")):
         # Update mode: the gap map changed after the cards were checked. Keep the old cards for reference
@@ -733,7 +876,7 @@ def assign_synthesis(run, st, c, args):
                      "that no longer hold as insufficient, and add a card only for a lead the new evidence supports.")
     path = _write(run, rel_path, {
         "assignment_id": "SYN-%d" % n, "phase": "gaps", "round": None, "role": "synthesizer", "mode": "synthesis",
-        "read": ["agents/synthesizer.md", GLOSSARY] + card_paths("D16", "D17", "D18", "D19", "D20"),
+        "read": ["agents/synthesizer.md", GLOSSARY] + card_paths("D16", "D17", "D18", "D19", "D20", "D26"),
         "inputs": inputs,
         "outputs": [{"path": "gaps/cards.jsonl", "schema": "gap-card", "format": "jsonl"}],
         "limits": {"max_cards": 12}, "rules": rules})
@@ -753,11 +896,14 @@ def assign_redteam(run, st, c, args):
         rel_path = "gaps/redteam/assign-%02d.json" % i
         paths.append(_write(run, rel_path, {
             "assignment_id": "RT-%02d" % i, "phase": "appraisal", "round": None, "role": "red-team", "mode": "redteam",
-            "read": ["agents/red-team.md", GLOSSARY, SOURCES] + card_paths("D21"),
+            "read": ["agents/red-team.md", GLOSSARY, SOURCES] + card_paths("D21", "D26"),
             "inputs": {"protocol": "protocol.json", "cards": [x["gap_id"] for x in batch], "cards_file": "gaps/cards.jsonl",
                        "entities": "landscape/entities.jsonl", "gapmap": "analysis/gapmap.json"},
             "outputs": [{"path": "gaps/redteam/%s.json" % x["gap_id"], "schema": "redteam", "format": "json"} for x in batch],
-            "limits": {"max_tool_calls": 15 * len(batch)}, "rules": ["Try honestly to kill each gap; log at least 3 searches per gap."]}))
+            "limits": {"max_tool_calls": 15 * len(batch)},
+            "rules": ["Try honestly to kill each gap; log at least 3 searches per gap.",
+                      "Read each card's lens (missing = gap). For other lenses incumbents are the premise, not a kill: kill only "
+                      "when a product already delivers this card's wedge, port, bundle or price to this segment (D26 kill rules)."]}))
     _group(st, "redteam", "redteam", "red-team", paths)
     return paths
 
@@ -824,6 +970,7 @@ PHASES = {
     "coding-open": assign_coding_open, "coding-closed": assign_coding_closed,
     "coding-reliability": assign_coding_reliability, "supply": assign_supply, "synthesis": assign_synthesis,
     "redteam": assign_redteam, "sizing": assign_sizing, "writer": assign_writer,
+    "scan-evidence": assign_scan_evidence, "redflag": assign_redflag,
 }
 
 
