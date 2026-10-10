@@ -1,0 +1,132 @@
+{
+  "generated_at": "2026-10-10T00:48:42+00:00",
+  "charts": [
+    {
+      "id": "01",
+      "file": "output/dashboard/01-funnel.png",
+      "title": "Search and screening funnel",
+      "subtitle": "Read each block top to bottom: every bar is one step of the pipeline, the number is what was left after it, and the grey note says what that step removed.",
+      "sources": [
+        "output/prisma.json",
+        "landscape/screening-audit.json"
+      ]
+    },
+    {
+      "id": "02",
+      "file": "output/dashboard/02-saturation.png",
+      "title": "Landscape saturation",
+      "subtitle": "Left: products found by the sampled search and the statistical estimate of how many exist (shaded = 95% range). Right: how complete the search looks; the search may stop once both lines clear the target.",
+      "sources": [
+        "landscape/saturation.json",
+        "landscape/units.json",
+        "landscape/entities.jsonl"
+      ]
+    },
+    {
+      "id": "03",
+      "file": "output/dashboard/03-crowding.png",
+      "title": "Competitor crowding by category",
+      "subtitle": "Each bar counts the verified products in one category; longer bars mean a more crowded market. Colours split each category by how products charge.",
+      "sources": [
+        "landscape/entity-attributes.jsonl",
+        "landscape/entities.jsonl",
+        "landscape/classification.json"
+      ]
+    },
+    {
+      "id": "04",
+      "file": "output/dashboard/04-gap-map.png",
+      "title": "Demand-supply gap map",
+      "subtitle": "Each bubble is one job people are trying to get done. Higher = more people asking (weighted by how strong their evidence is); further right = more products already serving it; bigger = more verified quotes. The shaded corner (above-median demand, below-median supply) is where gaps live.",
+      "sources": [
+        "analysis/gapmap.json"
+      ]
+    },
+    {
+      "id": "05",
+      "file": "output/dashboard/05-evidence-profile.png",
+      "title": "Evidence profile",
+      "subtitle": "Four views of the same quotes: what people said, how strong the evidence is (S0 opinion up to S4 money spent), what kind of page it came from, and which websites supplied it.",
+      "sources": [
+        "evidence/ledger.jsonl (verified records)"
+      ]
+    },
+    {
+      "id": "06",
+      "file": "output/dashboard/06-evidence-timeline.png",
+      "title": "Evidence over time",
+      "subtitle": "Each bar counts verified quotes posted in one quarter, split by what they say. The shaded band is the protocol's recency window: quotes inside it describe the market as it is now.",
+      "sources": [
+        "evidence/ledger.jsonl",
+        "protocol.json (as_of, recency_days)"
+      ]
+    },
+    {
+      "id": "07",
+      "file": "output/dashboard/07-coding-reliability.png",
+      "title": "Coding reliability",
+      "subtitle": "Each bar is one code (a job, pain or theme) that two coders applied separately; Krippendorff's alpha of 1 means perfect agreement. Bars past 0.80 are reliable; 0.667-0.80 supports tentative conclusions only.",
+      "sources": [
+        "coding/agreement.json",
+        "coding/codebook.v*.json",
+        "coding/themes.json"
+      ]
+    },
+    {
+      "id": "08",
+      "file": "output/dashboard/08-gap-scorecard.png",
+      "title": "Gap cards scorecard",
+      "subtitle": "One row per gap idea. The first five columns are the evidence thresholds every idea must pass (green tick = met, red cross = short); the last two say what happened to it.",
+      "sources": [
+        "gaps/cards.jsonl",
+        "gaps/card-check.json",
+        "gaps/redteam/*.json"
+      ]
+    },
+    {
+      "id": "09",
+      "file": "output/dashboard/09-ranking-sizing.png",
+      "title": "Ranking and sizing",
+      "subtitle": "Left: the desk score out of 100 (longer = stronger case) and how often the gap stays in the top 3 when the criteria weights are varied. Right: obtainable revenue per year (low to high, dot = base case) against the founder's ambition line.",
+      "sources": [
+        "gaps/ranking.json",
+        "gaps/sizing.json",
+        "protocol.json (ambition.min_arr_usd)"
+      ]
+    },
+    {
+      "id": "10",
+      "file": "output/dashboard/10-price-ladder.png",
+      "title": "Price ladder",
+      "subtitle": "Each dot is one product's cheapest paid plan per month (USD); the dark tick and the number on the right are the category median. Cheapest categories at the top. The scale is logarithmic, so equal distances mean equal price ratios.",
+      "sources": [
+        "analysis/price_ladder.csv",
+        "landscape/entity-attributes.jsonl"
+      ]
+    },
+    {
+      "id": "11",
+      "file": "output/dashboard/11-demand-bursts.png",
+      "title": "Demand bursts",
+      "subtitle": "Each panel tracks how often a term appears per month. Shaded spans are bursts the burst test found; orange means statistically significant, grey means it could be chance. Ticks at the bottom mark dated why-now events.",
+      "sources": [
+        "evidence/bursts.json",
+        "evidence/signals/*.json",
+        "evidence/why-now.jsonl"
+      ]
+    },
+    {
+      "id": "12",
+      "file": "output/dashboard/12-run-effort.png",
+      "title": "Run effort and amendments",
+      "subtitle": "Left: subagents assigned per pipeline phase, in the order they ran. Right: the running total over the run, with each protocol amendment marked by its number (listed below).",
+      "sources": [
+        "events.jsonl",
+        "state.json (budget)",
+        "protocol.lock.json (amendments)"
+      ]
+    }
+  ],
+  "html": "output/dashboard/index.html",
+  "summary": "output/summary.md"
+}

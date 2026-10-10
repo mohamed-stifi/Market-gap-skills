@@ -10,8 +10,8 @@
       "source": "Design default: vocabulary has a long tail, so the aim is query diversity rather than completeness; stricter targets waste rounds."
     },
     "max_rounds": {
-      "value": 2,
-      "source": "Design default: after two rounds the union of three scouts feeds the PRESS review instead of more rounds."
+      "value": 1,
+      "source": "Live run indie-dev-tools (2026-10-09): round 2 added 650 terms but PRESS used ~4% of the 1,325-term union; overlap stayed 0.02-0.05 on a broad topic. One round plus PRESS review gives the query blocks; extra rounds mostly add tail vocabulary."
     },
     "queries_per_scout": {
       "value": 24,
@@ -66,12 +66,20 @@
     "verify_batch": {
       "value": 40,
       "source": "Fetches per `entities verify` call at the 3-second politeness interval: about two minutes per call, so a call stays well inside tool timeouts."
+    },
+    "min_coverage_gain": {
+      "value": 0.05,
+      "source": "Live run indie-dev-tools (2026-10-09): coverage went 0.11 -> 0.54 -> 0.59 -> 0.68; round 4 cost 3 scouts + 3 screeners for +0.09. Stop (STOP_UNSATURATED) when a round adds less than this much sample coverage (diminishing returns), like the 5% new-information rule of Guest et al. 2020."
+    },
+    "max_units_per_scout": {
+      "value": 4,
+      "source": "Live run indie-dev-tools (2026-10-09): round 4 gave each scout 12 units for a 20-call budget (<2 searches per unit), so units were sampled too thinly to count. Cap EXPAND at scouts x this value."
     }
   },
   "snowball": {
     "max_iterations": {
-      "value": 3,
-      "source": "Wohlin 2014 worked example converged in 3-4 iterations; budget guard."
+      "value": 1,
+      "source": "Live run indie-dev-tools (2026-10-09): three iterations added 67, 80 and 82 included entities with no convergence (a broad market keeps branching) and cost 9 scouts + 14 screeners; snowball finds never enter the estimators, and the red team already runs a targeted existence search per gap."
     },
     "high_yield_flag": {
       "value": 0.1,
@@ -109,8 +117,12 @@
       "source": "PRISMA 2020 requires reasons for exclusion; codes adapted to software products."
     },
     "batch_size": {
-      "value": 40,
-      "source": "Context budget: a screener reads part of each entity's page; 40 entities per subagent keeps one context manageable (a live run with 186 entities in one batch would not fit)."
+      "value": 60,
+      "source": "Live run indie-dev-tools (2026-10-09): screeners finished 40-entity batches with spare budget; 60 cuts screener count by a third."
+    },
+    "audit_until_units": {
+      "value": 50,
+      "source": "Live run indie-dev-tools (2026-10-09): screening alpha was 0.90 over 162 audited entities. Once the cumulative audit has at least this many double-screened units and alpha >= screening.alpha_accept, later batches skip the B audit (saves one subagent per batch); a later revise reopens it."
     }
   },
   "evidence": {
@@ -163,6 +175,18 @@
     "stale_months": {
       "value": 12,
       "source": "Data-sources track: flag evidence older than 12 months."
+    },
+    "max_targeted_rounds": {
+      "value": 1,
+      "source": "Live run indie-dev-tools (2026-10-09): after round 1, 11 of 12 cards failed mainly on source diversity (<3 domains); one targeted round on near-miss cards from new domains lifted passing cards from 1 to 3. Cap the automatic targeted rounds per run."
+    },
+    "target_candidates": {
+      "value": 3,
+      "source": "Design default: if fewer than this many cards pass `cards check` and near-misses fail only on fixable evidence counts, run a targeted evidence round."
+    },
+    "max_domain_share": {
+      "value": 0.6,
+      "source": "Live run indie-dev-tools (2026-10-09): round 1 drew 158 of 165 records from two sites (news.ycombinator.com, itunes.apple.com). Above this share for the top two domains, miners are told which domains to avoid and the dossier flags concentration."
     }
   },
   "coding": {
@@ -362,8 +386,8 @@
       "source": "Method card D14: theme saturation counts the run's own codes; standard X-/F-/T- codes exist by construction and are left out."
     },
     "batch_size": {
-      "value": 60,
-      "source": "Context budget: 60 coded quotes (at most 280 characters each) plus the frozen codebook fit one subagent's working context; closed-coding batches in the live dry run, 2026-10-09."
+      "value": 100,
+      "source": "Live run indie-dev-tools (2026-10-09): coders finished 60-100 record batches in ~2-3 minutes with spare budget; amendment 6 used 100 without quality loss (alpha 0.85 on strength)."
     },
     "max_own_codes": {
       "value": 40,
@@ -566,6 +590,83 @@
     "miner_tool_calls": {
       "value": 25,
       "source": "Miners read more pages per item than scouts."
+    }
+  },
+  "models": {
+    "_doc": "Model tier per subagent role. Scripts verify quotes, schemas, agreement and screening, so cheap tiers are safe for roles whose output is machine-checked; judgment-heavy roles get stronger tiers. A failed check escalates that role one tier for its next assignment.",
+    "profile": {
+      "value": "balanced",
+      "source": "Design default; the protocol may set cost_profile to budget, balanced or quality."
+    },
+    "profiles": {
+      "value": {
+        "budget": {
+          "scout": "fast",
+          "reviewer": "fast",
+          "screener": "fast",
+          "miner": "fast",
+          "coder": "fast",
+          "synthesizer": "standard",
+          "red-team": "standard",
+          "writer": "standard"
+        },
+        "balanced": {
+          "scout": "fast",
+          "reviewer": "standard",
+          "screener": "fast",
+          "miner": "fast",
+          "coder": "fast",
+          "synthesizer": "standard",
+          "red-team": "standard",
+          "writer": "standard"
+        },
+        "quality": {
+          "scout": "standard",
+          "reviewer": "standard",
+          "screener": "standard",
+          "miner": "standard",
+          "coder": "standard",
+          "synthesizer": "strong",
+          "red-team": "strong",
+          "writer": "strong"
+        }
+      },
+      "source": "Live run indie-dev-tools (2026-10-09): ~91 assignments, of which ~75 (scouts, screeners, miners, coders) produce output that scripts verify (100% of 289 quotes verified, screening alpha 0.90, coding alpha >= 0.80 after revision). Those roles can run on the fast tier; synthesis, red team and writing need judgment."
+    },
+    "harness_names": {
+      "value": {
+        "claude-code": {
+          "fast": "haiku",
+          "standard": "sonnet",
+          "strong": "opus"
+        },
+        "opencode": {
+          "fast": "anthropic/claude-haiku-5-5",
+          "standard": "anthropic/claude-sonnet-5-5",
+          "strong": "anthropic/claude-opus-5-5"
+        },
+        "codex": {
+          "fast": "(fast/mini model)",
+          "standard": "(default model)",
+          "strong": "(strongest model)"
+        }
+      },
+      "source": "Claude Code Agent tool model parameter accepts haiku/sonnet/opus; OpenCode uses provider/model ids; Codex model names change, so they are left to the operator."
+    },
+    "escalate_on": {
+      "value": {
+        "miner_verify_below": 0.95,
+        "merge_reject_above": 0.2,
+        "screen_alpha_below": 0.667,
+        "coding_revise": true
+      },
+      "source": "Same thresholds the method already uses (D09 >= 95% quotes verified, D06/D14 alpha bands); a failed check bumps the role one tier."
+    }
+  },
+  "scope": {
+    "broad_jobs_warning": {
+      "value": 5,
+      "source": "Live run indie-dev-tools (2026-10-09): an intervention naming 7 jobs gave lexicon overlap 0.02-0.05, a 395-entity landscape that never saturated and evidence too thin for 11 of 12 gap cards. protocol check warns at this many jobs (non-blocking)."
     }
   }
 }

@@ -121,16 +121,33 @@ def cmd_saturation(args):
         verdict = "STOP_UNSATURATED"
     else:
         verdict = "EXPAND"
+    # Per-round history (kept across recomputations) for the diminishing-returns rule and the dashboard.
+    prev_doc = read_json(p(run, "landscape", "saturation.json"), {}) or {}
+    history = [h for h in prev_doc.get("history", []) if h.get("round") != r]
+    ch_ = overall["chao2"]
+    history.append({"round": r, "T": overall["T"], "S_obs": overall["S_obs"], "chao2": ch_["estimate"],
+                    "ci_low": ch_["ci_low"], "ci_high": ch_["ci_high"], "coverage": overall["coverage"],
+                    "completeness": overall["completeness"], "marginal_yield": yield_r})
+    history.sort(key=lambda h: h["round"])
+    prev_cov = next((h["coverage"] for h in reversed(history) if h["round"] < r), None)
+    gain = (overall["coverage"] - prev_cov) if prev_cov is not None else None
+    if verdict == "EXPAND" and gain is not None and gain < c.get("landscape.min_coverage_gain"):
+        # Diminishing returns: another round would cost scouts plus screeners for almost no coverage.
+        verdict = "STOP_UNSATURATED"
+        reasons.append("coverage gained only %.3f over round %d (min %.2f per round): diminishing returns" % (
+            gain, r - 1, c.get("landscape.min_coverage_gain")))
+    history[-1]["verdict"] = verdict
     expand = None
     if verdict == "EXPAND":
         t_need = overall.get("units_for_coverage")
         lo = c.get("landscape.scouts")
-        hi = max(lo, overall["T"])
+        hi = min(max(lo, overall["T"]), lo * c.get("landscape.max_units_per_scout"))
         expand = int(min(hi, max(lo, t_need if t_need is not None else lo * c.get("landscape.units_per_scout"))))
     correlated = bool(mean_j is not None and mean_j > 0.85 and overall["S_obs"] < 15)
     doc = {"computed_at": now_iso(), "round": r, "verdict": verdict, "reasons": reasons, "expand_units": expand,
            "overall": overall, "per_kind": kinds, "marginal_yield": yield_r, "new_in_round": new_r,
            "mean_pairwise_jaccard": mean_j, "correlated_scouts": correlated, "probe": probe,
+           "coverage_gain": gain, "history": history,
            "independence": st.get("independence", "full"),
            "note": "All estimates are lower bounds: correlated searches and hard-to-find products make coverage look higher than it is."}
     write_json(p(run, "landscape", "saturation.json"), doc)

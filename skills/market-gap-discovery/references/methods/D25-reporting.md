@@ -71,8 +71,14 @@
    - a re-check cadence
 5. **Copy every number from the script outputs** (ranking, certainty, sizing, saturation, agreement). Never recompute a number, round it differently, or describe a number no script produced.
 6. **Orchestrator:** run `gapscan.py validate RUN --report`. It checks every artifact against its schema. In the dossier and handoff it also checks that every cited EV id exists and is verified, that no raw usernames appear, and it flags single-source or stale evidence (older than `evidence.stale_months`). If the check fails, `next` creates a writer fix assignment listing the failures. Repeat until it passes.
+7. **Orchestrator:** run `gapscan.py viz RUN` (needs matplotlib; no subagent). It reads only the run's files and writes:
+   - `output/summary.md`: a one-page, plain-language verdict (what survived and why, what was killed and why, near-misses, the next experiment, the caveats)
+   - `output/dashboard/NN-*.png`: one chart per question (search funnel, saturation by round, competitor crowding, demand–supply gap map, evidence profile and domain concentration, evidence over time, coding reliability, gap-card scorecard, ranking and sizing against the founder's ambition, price ladder, demand bursts, run effort)
+   - `output/dashboard/index.html`: one offline file that embeds the summary and every chart, to open or share.
 
-**Output:** `output/dossier.md`, `output/handoff.json`, `output/watchlist.json`, `output/prisma.json`, `output/prisma.md` and `output/report-check.json`.
+   Show the human `summary.md` and the dashboard before the dossier: a live run's 300-line dossier was accurate but hard to read. If matplotlib is missing, `next` names the install command and the run still finishes.
+
+**Output:** `output/dossier.md`, `output/handoff.json`, `output/watchlist.json`, `output/prisma.json`, `output/prisma.md`, `output/report-check.json`, plus `output/summary.md` and `output/dashboard/`.
 
 **Metrics and checks**
 - `validate --report` passes.

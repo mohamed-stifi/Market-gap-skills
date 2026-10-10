@@ -8,6 +8,7 @@ Everything else is the same everywhere: the orchestrator calls `gapscan.py next 
 
 Contents
 1. Install
+- Model tiers
 2. Claude Code
 3. OpenCode
 4. Codex CLI
@@ -26,9 +27,28 @@ ln -s ../../skills/market-gap-discovery .agents/skills/market-gap-discovery
 
 The folder name must stay `market-gap-discovery`, matching the skill's `name`.
 
+## Model tiers
+Every assignment has a `model` block (`tier`: fast, standard or strong; `names`: the model name per tool), and `next` repeats it on a `NOTE model:` line after each SPAWN. Defaults come from `assets/defaults.json` → `models` and the protocol's `cost_profile`:
+
+| Profile | Scout, screener, miner, coder | Reviewer | Synthesizer, red team, writer |
+|---|---|---|---|
+| `budget` | fast | fast | standard |
+| `balanced` (default) | fast | standard | standard |
+| `quality` | standard | standard | strong |
+
+Fast-tier roles are the ones whose output a script checks (quotes, schemas, screening α, coding α), so a weak output is rejected rather than trusted. When a check fails, that role is escalated one tier automatically (`state.json` → `models.log`). If your tool cannot choose a model per subagent, every subagent runs on the session model; costs rise but the method is unchanged.
+
+| Tier | Claude Code (`Agent` tool `model`) | OpenCode (agent config `model`) | Headless CLI |
+|---|---|---|---|
+| fast | `haiku` | `anthropic/claude-haiku-5-5` | `claude -p --model haiku`, `opencode run -m anthropic/claude-haiku-5-5` |
+| standard | `sonnet` | `anthropic/claude-sonnet-5-5` | `claude -p --model sonnet` |
+| strong | `opus` | `anthropic/claude-opus-5-5` | `claude -p --model opus` |
+
+Codex: name the model when you delegate, or pass it with `codex exec -m <model>`; Codex model names change, so pick your installation's fast and default models.
+
 ## 2. Claude Code
 When `next` prints `SPAWN <role> <n> <assignments…>`:
-1. Send n Agent tool calls in **one message** so they run in parallel. Use the general-purpose subagent type for each.
+1. Send n Agent tool calls in **one message** so they run in parallel. Use the general-purpose subagent type for each, with `model` set from the `NOTE model:` line.
 2. Give each the same short prompt, varying only the paths: "You are the <role>. Read `<assignment path>` first, then exactly the files in its `read` list (paths relative to `<skill folder>`). Write only the output path(s) it names. Reply with a two-line summary and any blocks you hit."
 3. Wait for all of them, then call `next`.
 
@@ -36,6 +56,7 @@ Files in the skill's `agents/` folder are role briefs, not registered subagent t
 
 ## 3. OpenCode
 - Use the Task tool with the built-in `general` subagent and the same prompt as above.
+- To run a tier on its own model, define one agent per tier in your OpenCode config (for example `gapscan-fast` with `model: anthropic/claude-haiku-5-5`) and use it for that SPAWN.
 - If you aren't sure that several Task calls run in parallel, run them one after another.
 - Independence still holds when they run in sequence: each Task subagent starts with a fresh context and receives only its assignment.
 - The orchestrator must not paste one subagent's output into another's prompt.

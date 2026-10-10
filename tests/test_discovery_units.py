@@ -349,6 +349,46 @@ class Integrity(unittest.TestCase):
         led = read_jsonl(os.path.join(self.run, "evidence", "ledger.jsonl"))[0]
         self.assertEqual(led[0]["entity_ids"], ["app:ios:1", "dom:missing-product.com"])  # alias stored as its primary id
 
+    def test_evidence_merge_prefix_ids_and_retry(self):
+        # Live run: a miner wrote 16-char snapshot prefixes; all 39 records were rejected and the
+        # round could not be merged again after the fix.
+        st = read_json(os.path.join(self.run, "state.json"))
+        os.makedirs(os.path.join(self.run, "snapshots"), exist_ok=True)
+        for sha in ("c" * 64, "cccccccccccccccd" + "0" * 48):
+            with open(os.path.join(self.run, "snapshots", sha + ".raw"), "w") as fh:
+                fh.write("x")
+            write_json(os.path.join(self.run, "snapshots", sha + ".meta.json"), {"fetched_at": "2026-10-09T00:00:00+00:00"})
+        rel = "evidence/round-01/miner-A.jsonl"
+        base = {"url": "https://forum.example.org/t/9", "source": "web", "source_type": "forum",
+                "stance": "pain", "strength": "S2", "credibility": "independent", "author_hash": "ah_0123456789abcdef"}
+        recs = [dict(base, snapshot="c" * 16, quote="unique prefix resolves to the full hash"),
+                dict(base, snapshot="c" * 15, quote="prefix shared by two snapshots is ambiguous"),
+                dict(base, snapshot="c" * 8, quote="prefix too short to resolve")]
+        write_jsonl(os.path.join(self.run, rel), recs)
+        apath = "evidence/round-01/assign-A.json"
+        write_json(os.path.join(self.run, apath), {"assignment_id": "EV-R01-A", "scout_id": "A",
+                                                   "outputs": [{"path": rel, "schema": "evidence", "format": "jsonl"}]})
+        st["evidence"]["round"] = 1
+        st.setdefault("groups", {})["evidence-R01"] = {"phase": "evidence", "role": "miner", "paths": [apath], "merged": False}
+        write_json(os.path.join(self.run, "state.json"), st)
+        code, out_ = gs("merge", self.run, "--phase", "evidence")
+        self.assertEqual(code, 0, out_)
+        self.assertIn("1 accepted, 0 duplicates, 2 rejected", out_)
+        led = read_jsonl(os.path.join(self.run, "evidence", "ledger.jsonl"))[0]
+        self.assertEqual(led[0]["snapshot"], "c" * 64)
+        code, out_ = gs("merge", self.run, "--phase", "evidence")
+        self.assertNotEqual(code, 0)
+        self.assertIn("--retry", out_)
+        # The miner's file is fixed; a retry accepts the fixed record and counts the old one as a duplicate.
+        recs[1]["snapshot"] = "c" * 64
+        write_jsonl(os.path.join(self.run, rel), recs)
+        code, out_ = gs("merge", self.run, "--phase", "evidence", "--retry")
+        self.assertEqual(code, 0, out_)
+        self.assertIn("1 accepted, 1 duplicates, 1 rejected", out_)
+        self.assertEqual(len(read_jsonl(os.path.join(self.run, "evidence", "ledger.jsonl"))[0]), 2)
+        self.assertTrue(os.path.exists(os.path.join(self.run, "evidence", "round-01", "merge-retry-1.json")))
+        self.assertEqual(read_json(os.path.join(self.run, "evidence", "round-01", "merge.json"))["accepted"], 1)
+
     def test_revision_gets_disagreements_and_pooled_proposals(self):
         recs = [{"id": "EV-%06d" % i, "quote": "quote number %d about invoices" % i, "stance": "pain", "source_type": "forum",
                  "url": "https://forum.example.org/t/%d" % i, "strength": "S2", "entity_ids": [],

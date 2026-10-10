@@ -73,12 +73,17 @@ def build_parser():
     s.add_argument("--units", type=int)
     s.add_argument("--batch", type=int)
     s.add_argument("--revise", action="store_true")
+    s.add_argument("--targeted", action="store_true",
+                   help="evidence only: one miner per near-miss gap card, mining domains the card does not have yet")
     s.set_defaults(func=assign.cmd_assign)
 
     s = sub.add_parser("merge", help="validate and merge agent outputs")
     s.add_argument("run")
     s.add_argument("--phase", required=True, choices=["lexicon", "landscape", "probe", "snowball", "screen", "mapping",
                                                        "evidence", "coding", "supply", "redteam"])
+    s.add_argument("--retry", action="store_true",
+                   help="evidence only: merge the current round again after fixing rejected records; "
+                        "records already in the ledger count as duplicates")
     s.set_defaults(func=merge.cmd_merge)
 
     s = sub.add_parser("lexicon", help="lexicon utilities")
@@ -186,6 +191,11 @@ def build_parser():
     s.add_argument("--file", help="validate only this file (path inside RUN); agents use it to self-check their output")
     s.add_argument("--schema", help="schema name when it cannot be inferred from the path")
     s.set_defaults(func=report.cmd_validate)
+
+    s = sub.add_parser("viz", help="one-page summary.md plus dashboard charts and an offline HTML file (needs matplotlib)")
+    s.add_argument("run")
+    s.add_argument("--out", help="output folder (default RUN/output/dashboard)")
+    s.set_defaults(func=flow.cmd_viz)
 
     s = sub.add_parser("compare", help="reproducibility metrics between two runs")
     s.add_argument("run_a")

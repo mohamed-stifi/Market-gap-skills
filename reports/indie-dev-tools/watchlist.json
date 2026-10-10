@@ -1,0 +1,27 @@
+{
+  "run_id": "indie-dev-tools",
+  "generated_at": "2026-10-09T22:15:00+00:00",
+  "rerun_cadence_days": 90,
+  "items": [
+    {"kind": "competitor", "target": "https://crisp.chat/en/pricing/", "why": "GAP-001 incumbent; mobile push on low tiers with seat and feature gating. Removing caps or branding on its cheapest plan erases the wedge.", "gap_id": "GAP-001", "check": "pricing page: caps, branding removal, mobile push on free/Mini tiers"},
+    {"kind": "competitor", "target": "https://www.chatwoot.com/pricing", "why": "GAP-001 incumbent; free Hacker plan capped at 500 conversations/month, Startups 19 USD/agent/month.", "gap_id": "GAP-001", "check": "conversation cap and price of the cheapest unlimited plan"},
+    {"kind": "competitor", "target": "https://chatway.app/pricing", "why": "GAP-001 incumbent; branding removal is paid and replying stops at the plan limit (EV-000055, EV-000056).", "gap_id": "GAP-001", "check": "branding removal price and limit behaviour"},
+    {"kind": "competitor", "target": "https://www.smartsupp.com/pricing/", "why": "GAP-001 incumbent; free plan at 25 conversations per month (EV-000057).", "gap_id": "GAP-001", "check": "free-plan conversation limit"},
+    {"kind": "competitor", "target": "https://www.tawk.to/pricing/", "why": "GAP-001 free incumbent with unlimited chats; pricing page snapshot was blocked in this run.", "gap_id": "GAP-001", "check": "retry snapshot; branding-removal add-on price"},
+    {"kind": "competitor", "target": "https://umnico.com/onlinechat/", "why": "GAP-001 free chat advertising unlimited chats with push apps.", "gap_id": "GAP-001", "check": "free-tier branding policy"},
+    {"kind": "competitor", "target": "https://news.ycombinator.com/item?id=47399667", "why": "ChatSpark, a 2026 solo-focused chat entrant (free 50 conversations/month, Pro 12 USD/month).", "gap_id": "GAP-001", "check": "still active; pricing changes"},
+    {"kind": "query", "target": "hn: live chat widget (show_hn)", "why": "Red-team query for new solo-built chat entrants; crowding signal.", "gap_id": "GAP-001", "check": "count new Show HN launches since 2026-10-09"},
+    {"kind": "query", "target": "web: free live chat widget unlimited conversations no branding mobile app solo founder", "why": "Red-team query for free uncapped alternatives.", "gap_id": "GAP-001", "check": "new free unlimited offers"},
+    {"kind": "query", "target": "hn and stackoverflow: failed payment recovery dunning small SaaS", "why": "GAP-005 near-miss failed the evidence threshold on 2 domains; needs a third independent domain (e.g. Indie Hackers, dev.to, Reddit once keyed).", "gap_id": "GAP-005", "check": "new verified records on new domains"},
+    {"kind": "query", "target": "hn and dev.to: VAT OSS return manual entry script software seller", "why": "GAP-002 near-miss failed the evidence threshold on qualifying domains.", "gap_id": "GAP-002", "check": "new verified records from software sellers outside a merchant of record"},
+    {"kind": "query", "target": "hn and stackoverflow: subscriptions across multiple payment providers", "why": "GAP-007 near-miss; core pain rests on one record (EV-000063).", "gap_id": "GAP-007", "check": "records showing sellers actually running several providers"},
+    {"kind": "query", "target": "hn: status page (show_hn)", "why": "Crowding signal for killed GAP-004 (at least seven 2026 solo-built status-page launches).", "gap_id": "GAP-004", "check": "count of new launches"},
+    {"kind": "signal", "target": "SIG-hn-merchant-of-record", "why": "Significant burst (p_value 0.004975124378109453); relevant to GAP-002 and GAP-010 payments leads.", "gap_id": "GAP-002", "check": "extend the monthly series"},
+    {"kind": "signal", "target": "SIG-hn-stripe-managed-payments", "why": "Burst not significant (p_value 0.39303482587064675); tracks the WN-001 catalyst.", "gap_id": "GAP-002", "check": "extend the monthly series"},
+    {"kind": "platform", "target": "https://docs.stripe.com/payments/managed-payments", "why": "WN-007: Stripe's own merchant of record covers tax in 80+ countries, shrinking the GAP-002 segment that sells without a merchant of record.", "gap_id": "GAP-002", "check": "coverage and eligibility changes"},
+    {"kind": "competitor", "target": "https://crxpay.io/", "why": "Killed GAP-003: full-coverage extension entitlement SDK; watch only if the extension-payments lead is reopened.", "gap_id": "GAP-003", "check": "pricing and fee changes"},
+    {"kind": "competitor", "target": "https://pulsetic.com/", "why": "Killed GAP-004: free multi-region confirmed alerts and status pages.", "gap_id": "GAP-004", "check": "free-plan limits"},
+    {"kind": "pmf-survey", "target": "GAP-001 kill criteria", "why": "Stop if EXP-02 upper bound < 4% paid-checkout starts, EXP-01 upper bound < 30% reporting a missed message, push delivery < 99% within 30 s, support load > 5 h/week, or an incumbent removes caps/branding on its cheapest plan.", "gap_id": "GAP-001", "check": "evaluate after each validation experiment"},
+    {"kind": "query", "target": "coverage gaps to close before a re-run: gh login, MGD_CONTACT, directories unit R02-B3-directories, GitHub query blocks QB-041 QB-053 QB-057 QB-065 QB-069", "why": "These sources were unavailable in this run and leave the landscape under-sampled (STOP_UNSATURATED).", "gap_id": null, "check": "re-run the skipped units"}
+  ]
+}

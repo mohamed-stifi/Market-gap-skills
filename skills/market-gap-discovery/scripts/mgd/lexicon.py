@@ -183,9 +183,20 @@ def merge_lexicon(run):
         per_facet = {f: richness.jaccard(set(map(term_key, scouts[x][f])), set(map(term_key, scouts[y][f])))
                      for f in FACETS if scouts[x][f] or scouts[y][f]}
         pairs.append({"a": x, "b": y, "overall": richness.jaccard(kx, ky), "exact": exact, "per_facet": per_facet})
-    mean = sum(pp["overall"] for pp in pairs) / len(pairs) if pairs else 1.0
-    lex["rounds"].append({"round": r, "scouts": ids, "mean_jaccard": mean})
-    write_json(p(run, "lexicon", "round-%02d" % r, "overlap.json"), {"round": r, "pairs": pairs, "mean_jaccard": mean})
+    round_mean = sum(pp["overall"] for pp in pairs) / len(pairs) if pairs else 1.0
+    # Expansion rounds ask scouts for terms the union lacks, so a round's own sets are disjoint by
+    # design (a live run read 0.02). Agreement is judged on each scout letter's cumulative vocabulary.
+    cum = {}
+    for f in FACETS:
+        for e in lex["facets"].get(f, []):
+            for tag in e["found_by"]:
+                cum.setdefault(tag.split("-")[-1], set()).add(term_key(e["term"]))
+    cum_pairs = [richness.jaccard(cum[x] - {""}, cum[y] - {""}) for x, y in itertools.combinations(sorted(cum), 2)]
+    mean = sum(cum_pairs) / len(cum_pairs) if cum_pairs else round_mean
+    lex["rounds"].append({"round": r, "scouts": ids, "mean_jaccard": mean, "round_mean_jaccard": round_mean})
+    write_json(p(run, "lexicon", "round-%02d" % r, "overlap.json"), {"round": r, "pairs": pairs, "mean_jaccard": mean,
+                                                                     "round_mean_jaccard": round_mean,
+                                                                     "note": "mean_jaccard is cumulative per scout letter across rounds"})
     proto = read_json(p(run, "protocol.json"), {}) or {}
     _add_protocol_terms(lex, proto)
     write_json(p(run, "lexicon", "lexicon.json"), lex)

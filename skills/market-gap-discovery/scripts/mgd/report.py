@@ -65,8 +65,13 @@ def cmd_prisma(args):
     for r in led:
         if r.get("verification", {}).get("status") == "verified":
             by_type[r["source_type"]] = by_type.get(r["source_type"], 0) + 1
+    # A retry re-submits the same round after mechanical fixes: its accepted records move from
+    # "rejected" to "accepted"; counting the retry as new submissions would double-count.
+    retried = sum((read_json(f) or {}).get("accepted", 0)
+                  for f in glob.glob(p(run, "evidence", "round-*", "merge-retry-*.json")))
     evidence = {"submitted": sum(m.get("accepted", 0) + m.get("duplicates", 0) + len(m.get("rejected", [])) for m in ev_merges if m),
-                "rejected_at_merge": sum(len(m.get("rejected", [])) for m in ev_merges if m),
+                "rejected_at_merge": sum(len(m.get("rejected", [])) for m in ev_merges if m) - retried,
+                "accepted_on_retry": retried,
                 "duplicates": sum(m.get("duplicates", 0) for m in ev_merges if m),
                 "in_ledger": len(led), "verification": vstat, "verified_by_source_type": by_type,
                 "rounds": len(ev_merges)}

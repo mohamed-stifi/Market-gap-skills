@@ -45,6 +45,9 @@
     },
     "limits": {"type": "object"},
     "rules": {"type": "array", "items": {"type": "string"}},
+    "model": {"type": "object", "description": "Model tier for this subagent (scripts/mgd/models.py): tier, cost profile, escalation level and the name each harness uses.",
+              "properties": {"tier": {"enum": ["fast", "standard", "strong"]}, "profile": {"type": "string"},
+                             "escalated": {"type": "integer", "minimum": 0}, "names": {"type": "object"}}},
     "created_at": {"type": "string"}
   }
 }

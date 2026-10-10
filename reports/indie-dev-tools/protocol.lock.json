@@ -1,0 +1,107 @@
+{
+  "sha256": "1044d8a1ae4ba40de7704a3a020129f11de4388e4f37c8aa501222a03948ef23",
+  "frozen_at": "2026-10-09T16:46:31+00:00",
+  "amendments": [
+    {
+      "at": "2026-10-09T17:48:48+00:00",
+      "reason": "clarification after screening batches 1-2: four screeners independently flagged two ambiguities; this records the rule they applied consistently (payments: software-seller billing/MoR/dunning tools in, general processors holding funds or needing KYC out; communities and directories: kept as reach channels per D06, not as competitors)",
+      "sets": [
+        {
+          "key": "eligibility.exclude",
+          "value": [
+            "Aimed only at enterprises or teams larger than 50 (sales-only pricing, contact sales as the only plan)",
+            "Not a software product, workaround, directory or community (course, agency, newsletter); communities and directories are kept as reach channels per D06, not counted as competitors",
+            "General payment processors, banks or fintechs that hold funds or require merchant KYC; billing, merchant-of-record, dunning and license tools sold to software makers stay in scope",
+            "Dead: no activity within recency_days or announced shutdown",
+            "Outside the jobs in picos.intervention",
+            "Duplicate or rebrand of an entity already listed"
+          ]
+        }
+      ],
+      "old_sha256": "dae197f002d829b3a75eb17fc07e58247672a41e75210a68df9d08d7bebc3385",
+      "new_sha256": "8c52f81b8f64dc3aeb47e867ad0111c50d023078b494c44227f5aa5d590dd07c"
+    },
+    {
+      "at": "2026-10-09T20:04:19+00:00",
+      "reason": "human directive (2026-10-09): the user said 'if 90 hard to achieve let say accept 60-70%'; saturation/overlap targets set to 0.65 (midpoint of the stated range). Reliability thresholds (alpha) unchanged. Lower targets mean the landscape and theme sets are reported as less complete lower bounds.",
+      "sets": [
+        {
+          "key": "overrides",
+          "value": {
+            "landscape.completeness_target_theta": 0.65,
+            "landscape.coverage_target": 0.65,
+            "landscape.probe_max_new_share": 0.35,
+            "coding.theme_coverage_target": 0.65,
+            "lexicon.overlap_target": 0.65
+          }
+        }
+      ],
+      "old_sha256": "8c52f81b8f64dc3aeb47e867ad0111c50d023078b494c44227f5aa5d590dd07c",
+      "new_sha256": "5de92666e13d28b81f5ce46ae8e2bc1e78fb4a57f3bc0f885cbe46f25b91f8bf"
+    },
+    {
+      "at": "2026-10-09T20:05:16+00:00",
+      "reason": "human directive (2026-10-09): the user said 'or just let see 50% for now'; saturation/overlap targets lowered from 0.65 to 0.50 provisionally. Reliability thresholds (alpha) and the marginal-yield rule unchanged. Landscape and themes are reported as roughly half-complete lower bounds.",
+      "sets": [
+        {
+          "key": "overrides",
+          "value": {
+            "landscape.completeness_target_theta": 0.5,
+            "landscape.coverage_target": 0.5,
+            "landscape.probe_max_new_share": 0.5,
+            "coding.theme_coverage_target": 0.5,
+            "lexicon.overlap_target": 0.5
+          }
+        }
+      ],
+      "old_sha256": "5de92666e13d28b81f5ce46ae8e2bc1e78fb4a57f3bc0f885cbe46f25b91f8bf",
+      "new_sha256": "19f60c0a80bdf1958399ba87c56868196cdd61f253a968076988eeedbd6d81be"
+    },
+    {
+      "at": "2026-10-09T21:08:43+00:00",
+      "reason": "human directive (2026-10-09): after cards check (1 pass, 11 insufficient, mostly for <3 domains), the user chose one targeted evidence round (round 2 of max 4) aimed at near-miss cards GAP-003, GAP-004, GAP-007 (and GAP-002/005) on domains not yet in the ledger. Cards will be re-synthesised afterwards.",
+      "sets": [
+        {
+          "key": "notes",
+          "value": "Human constraints (2026-10-09): Claude Code builds; a human helper does only what agents cannot (accounts, payments, posting); minimal human time (~5 h/week) and budget (<$300); target >= $1,000 MRR. Viral = built-in growth loop observable in evidence (output seen by non-users). Targeted evidence round 2 requested by the user to diversify domains for near-miss gap cards GAP-003 extension payments, GAP-004 outage alerts + public status pages, GAP-007 multi-provider subscriptions, GAP-002 VAT filing, GAP-005 failed-payment recovery."
+        }
+      ],
+      "old_sha256": "19f60c0a80bdf1958399ba87c56868196cdd61f253a968076988eeedbd6d81be",
+      "new_sha256": "e416e66ec2df2e2dd5d01db909b43b4294eaf24bd8bc1904d439e28623fb7aa1"
+    },
+    {
+      "at": "2026-10-09T21:31:15+00:00",
+      "reason": "human directive (2026-10-09): user approved 20 more subagents to finish synthesis, red team, sizing and report (HT-003).",
+      "sets": [
+        {
+          "key": "budget",
+          "value": {
+            "subagents_max": 100,
+            "fetches_max": 3000
+          }
+        }
+      ],
+      "old_sha256": "e416e66ec2df2e2dd5d01db909b43b4294eaf24bd8bc1904d439e28623fb7aa1",
+      "new_sha256": "e12250c8ecc0c6472f783df492f16c1e4d0339e99e980b7192e0cdad4cfdd0e0"
+    },
+    {
+      "at": "2026-10-09T21:36:07+00:00",
+      "reason": "budget: coders handled 60-record batches in ~2 min with spare capacity; batch size raised to 100 so the v3 recode of 289 records needs 3 subagents instead of 5. Saturation overrides from amendment 3 kept.",
+      "sets": [
+        {
+          "key": "overrides",
+          "value": {
+            "landscape.completeness_target_theta": 0.5,
+            "landscape.coverage_target": 0.5,
+            "landscape.probe_max_new_share": 0.5,
+            "coding.theme_coverage_target": 0.5,
+            "lexicon.overlap_target": 0.5,
+            "coding.batch_size": 100
+          }
+        }
+      ],
+      "old_sha256": "e12250c8ecc0c6472f783df492f16c1e4d0339e99e980b7192e0cdad4cfdd0e0",
+      "new_sha256": "1044d8a1ae4ba40de7704a3a020129f11de4388e4f37c8aa501222a03948ef23"
+    }
+  ]
+}

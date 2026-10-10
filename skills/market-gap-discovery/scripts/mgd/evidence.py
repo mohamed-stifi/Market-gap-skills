@@ -6,7 +6,7 @@ import os
 from mgcore import quotes, state, stats
 from mgcore.jsonio import append_jsonl, now_iso, read_jsonl, write_json, write_jsonl
 
-from . import net
+from . import models, net
 from .common import CliError, EXIT_BLOCKED, cfg, out, p, require_run, load_state, save_state
 from .privacy import author_hash
 
@@ -77,6 +77,15 @@ def cmd_verify(args):
                                                          "failed": failed})
     st = load_state(run)
     state.touch(st, "verify")
+    # Cheap-tier miners are safe because this check catches bad quotes; if a round's quotes verify
+    # poorly, the next miners run one tier up.
+    r = st.get("evidence", {}).get("round")
+    mine = [x for x in led if x.get("round") == r]
+    if mine:
+        share = sum(1 for x in mine if x["verification"]["status"] == "verified") / float(len(mine))
+        lim = cfg(run).get("models.escalate_on").get("miner_verify_below")
+        if share < lim and models.escalate_once(st, "verify-R%02d" % r, "miner", "round %d quotes %.0f%% verified (< %.0f%%)" % (r, 100 * share, 100 * lim)):
+            out("Miners escalated one model tier for later rounds: round %d verified %.0f%% of its quotes." % (r, 100 * share))
     save_state(run, st)
     out("Quote verification: %d of %d verified (%.0f%%); %d failed; %d without snapshot. Only verified records count." % (
         counts["verified"], total, 100.0 * counts["verified"] / total if total else 0, counts["failed"], counts["no_snapshot"]))

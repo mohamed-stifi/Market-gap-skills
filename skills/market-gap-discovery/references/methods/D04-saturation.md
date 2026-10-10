@@ -16,10 +16,10 @@
 **Procedure**
 1. Run `gapscan.py saturation RUN`. It computes everything below overall and per entity kind. For each kind it uses only the units whose channel can surface that kind.
 2. Read the verdict in `landscape/saturation.json`, then call `next`. It turns the verdict into the next action:
-   - **EXPAND k**: run another landscape round with k new units. k is the estimated number of extra units needed to reach the coverage target. It is at least one unit per scout and at most T, because estimates are not extrapolated beyond twice the current sample.
+   - **EXPAND k**: run another landscape round with k new units. k is the estimated number of extra units needed to reach the coverage target. It is at least one unit per scout and at most T, because estimates are not extrapolated beyond twice the current sample. It is also at most `landscape.max_units_per_scout` (4) per scout: with a 20-call budget, a scout given 12 units (as in a live run's round 4) searches each one too thinly to count.
    - **NEEDS_PROBE**: the estimator conditions pass. Run one holdout scout through `assign --phase probe`. It gets a persona and query blocks that no scout has used yet, on the channel family with the fewest units so far.
    - **SATURATED**: every condition holds, including the probe. Move on to snowballing (D05).
-   - **STOP_UNSATURATED**: the round limit was reached without saturating. Continue to snowballing, but the run carries this as a limitation and certainty is downgraded (D22).
+   - **STOP_UNSATURATED**: the round limit was reached without saturating, or a round raised coverage Ĉ by less than `landscape.min_coverage_gain` (0.05) over the previous round (diminishing returns: a live run went 0.11 → 0.54 → 0.59 → 0.68, and round 4 cost 3 scouts and 3 screeners for +0.09). Continue to snowballing, but the run carries this as a limitation and certainty is downgraded (D22).
 3. As the probe scout, follow D03 exactly, with these additions: use only your assigned persona and blocks; do not search for products you already know; report everything you find.
 4. Never edit `saturation.json` or the incidence by hand. If a number looks wrong, check the inputs (screening decisions, entity verification) and re-run the scripts.
 
@@ -32,6 +32,7 @@
 - probe new-share
 - extra units needed (t for the coverage target, m_g for the completeness target)
 - verdict and reasons
+- `coverage_gain` over the previous round and `history` (one entry per round), which the dashboard plots
 
 **Metrics and checks** (formulas and worked examples in `references/metrics.md` §1)
 - Chao2: Ŝ = S_obs + ((T−1)/T)·Q1²/(2·Q2), or S_obs + ((T−1)/T)·Q1(Q1−1)/2 when Q2 = 0. The 95% interval is log-normal.

@@ -32,7 +32,8 @@ A second screener re-screens a random sample independently. Their agreement (Kri
 6. Write one `screening` JSON line per entity to your output path, with `entity_id`, `decision`, `reason_code`, `duplicate_of` (or null), a short `note` and `screener` (`A` or `B`).
 7. **Orchestrator:** run `gapscan.py merge RUN --phase screen`. It applies screener A's decisions to `landscape/entities.jsonl` and keeps B's decisions for the audit.
 8. **Orchestrator:** run `gapscan.py entities verify RUN`. It checks that each included entity's page answers HTTP 200 and names the entity. Only entities that are screened in **and** verified count anywhere: in saturation, mapping and evidence.
-9. **Orchestrator:** once the landscape is closed, run `gapscan.py screen-audit RUN`. If alpha is low, read the disagreements, then clarify the rule that caused them with `gapscan.py protocol amend RUN --reason "..." --set eligibility.include=[...]`, and record the low audit as a limitation.
+9. **Orchestrator:** after every screening merge, `next` runs `gapscan.py screen-audit RUN` on all double-screened entities so far. If alpha is low, read the disagreements, then clarify the rule that caused them with `gapscan.py protocol amend RUN --reason "..." --set eligibility.include=[...]`, and record the low audit as a limitation. A live run had one recurring disagreement (payment processors versus billing tools for software sellers); an amendment after the second batch resolved it.
+10. Once the cumulative audit is `accept` over at least `screening.audit_until_units` (50) entities, later batches skip screener B: the rule has been shown to be applied reliably, and each skipped audit saves a subagent (a live run reached alpha 0.90 over 162 audited entities across 7 audits). A later `revise` verdict reopens auditing. The dossier states the batches that were audited.
 
 **Output**
 - `screen-A1.jsonl`, `screen-A2.jsonl`, … and `screen-B1.jsonl`, … in `landscape/screen/batch-NN/` (schema `screening`).
@@ -40,7 +41,7 @@ A second screener re-screens a random sample independently. Their agreement (Kri
 - `landscape/screening-audit.json`.
 
 **Metrics and checks**
-- Audit sample: `screening.audit_fraction` (0.2) of the screened entities, with a minimum of `screening.audit_min_units` (10).
+- Audit sample: `screening.audit_fraction` (0.2) of the screened entities, with a minimum of `screening.audit_min_units` (10), until the audit is accepted over `screening.audit_until_units` (50). Batches hold `screening.batch_size` (60) entities.
 - Krippendorff's alpha on the include/exclude decisions of A and B:
   - ≥ `screening.alpha_accept` (0.8): accept.
   - From `screening.alpha_provisional` (0.667) up to 0.8: provisional, reported as a limitation.
