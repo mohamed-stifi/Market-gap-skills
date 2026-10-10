@@ -365,14 +365,19 @@ def cmd_next(args):
 
 
 def _spend(run, st, by):
-    """Assignments (= subagents) per phase or per model tier, from the assignment files of every group."""
+    """Assignments (= subagents) per phase or per model tier. Read from the `assign` events, which keep
+    every assignment; state.json groups keep only the latest per key (re-assigned supply, synthesis)."""
     counts = {}
-    for g in (st.get("groups") or {}).values():
-        for apath in g.get("paths", []):
+    for e in read_jsonl(p(run, "events.jsonl"))[0]:
+        if e.get("kind") != "assign":
+            continue
+        d = e.get("data") or {}
+        for apath in d.get("files", []):
             if by == "phase":
-                k = g.get("phase")
+                k = d.get("phase")
             else:
-                k = ((read_json(p(run, apath), {}) or {}).get("model") or {}).get("tier") or "unrecorded"
+                # Tier from the event when recorded; else from the file (which a re-assignment may overwrite).
+                k = (d.get("tiers") or {}).get(apath) or ((read_json(p(run, apath), {}) or {}).get("model") or {}).get("tier") or "unrecorded"
             counts[k] = counts.get(k, 0) + 1
     return dict(sorted(counts.items(), key=lambda x: -x[1]))
 

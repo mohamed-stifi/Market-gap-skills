@@ -839,7 +839,8 @@ def cmd_assign(args):
     paths = PHASES[args.phase](run, st, c, args)
     state.touch(st, "assign_" + args.phase)
     save_state(run, st)
-    state.event(run, "assign", phase=args.phase, files=paths)
+    tiers = {x: ((read_json(p(run, x), {}) or {}).get("model") or {}).get("tier") for x in paths}
+    state.event(run, "assign", phase=args.phase, files=paths, tiers=tiers)
     role = read_json(p(run, paths[0]))["role"]
     out("Wrote %d assignment(s) for %s. Spawn one %s subagent per file, in parallel:" % (len(paths), args.phase, role))
     for path in paths:
