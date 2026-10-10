@@ -192,6 +192,11 @@ def build_parser():
     s.add_argument("--schema", help="schema name when it cannot be inferred from the path")
     s.set_defaults(func=report.cmd_validate)
 
+    s = sub.add_parser("viz", help="one-page summary.md plus dashboard charts and an offline HTML file (needs matplotlib)")
+    s.add_argument("run")
+    s.add_argument("--out", help="output folder (default RUN/output/dashboard)")
+    s.set_defaults(func=flow.cmd_viz)
+
     s = sub.add_parser("compare", help="reproducibility metrics between two runs")
     s.add_argument("run_a")
     s.add_argument("run_b")

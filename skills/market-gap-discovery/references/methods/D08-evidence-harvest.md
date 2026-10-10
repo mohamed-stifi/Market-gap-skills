@@ -65,8 +65,9 @@ Large result pools are screened in rank order and stopped by a statistical test.
 
 **Metrics and checks**
 - Only verified records count. `verify` reports the verified share, and so does the PRISMA flow.
-- A gap card needs at least `gap_card.min_records` (5) verified records, from at least `gap_card.min_domains` (3) domains, `gap_card.min_source_types` (2) source types and `gap_card.min_authors` (2) authors (D20). So mine across sources rather than deep inside one thread.
+- A gap card needs at least `gap_card.min_records` (5) verified records, from at least `gap_card.min_domains` (3) domains, `gap_card.min_source_types` (2) source types and `gap_card.min_authors` (2) authors (D20). So mine across sources rather than deep inside one thread. Your assignment's `inputs.diversity` lists the ledger's domain shares and the domains to avoid. In a live run, 158 of the first 165 records came from two sites, and 11 of 12 gap cards then failed on domain count alone.
 - Theme saturation, not the miner, decides whether another evidence round is needed (`gapscan.py themes RUN`, D14).
+- **Targeted round.** After `cards check`, if fewer than `evidence.target_candidates` (3) cards pass and some insufficient cards fail only on evidence counts (domains, source types, records, authors, missing demand), `next` runs one targeted round (`evidence.max_targeted_rounds`, 1). Each miner gets one such card (`mode` = `evidence:targeted`): its codes, shortfall and current domains. Mine those jobs only, from domains the card does not have, and record praise and contra as honestly as pain. In the live run this lifted passing cards from 1 to 3, and the red team then killed two of them: the targeted round tests near-misses, it does not rescue them.
 
 **Pitfalls**
 - **Paraphrasing.** A paraphrase fails verification and counts for nothing.

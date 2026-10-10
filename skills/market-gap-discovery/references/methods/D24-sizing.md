@@ -17,7 +17,8 @@
 **Procedure**
 1. **`accounts`** (low, base, high): estimate the number of target accounts in the card's population and setting.
    - Source each count from something you can snapshot: official business statistics or registers, professional-association membership counts, marketplace install counts (WordPress active installs, Atlassian installs), community sizes, job-post counts.
-   - Snapshot it with `gapscan.py snapshot RUN URL`. Put the URL and a description in `source`, and the hash in `snapshot`.
+   - For marketplace counts, use the API adapters, which return installs, ratings and totals and log the query: `gapscan.py fetch RUN wp-plugin --slug S`, `wp-search --query Q`, `apple-search --query Q`, `atl-search --query Q`; `hn-counts` and `se-counts` give mention and question volumes. Do not `snapshot` API URLs: robots.txt blocks several of them (a live sizer was blocked on api.wordpress.org, while `fetch wp-plugin` returned the same install counts).
+   - For a web page, snapshot it with `gapscan.py snapshot RUN URL`. Put the URL and a description in `source`, and the hash (printed by fetch or snapshot) in `snapshot`.
 2. **`arpa_year_usd`** (annual revenue per account), from the price ladder:
    - low: the cheapest relevant paid tier × 12
    - base: the median relevant tier × 12

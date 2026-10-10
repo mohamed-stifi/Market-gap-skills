@@ -17,7 +17,8 @@ This skill turns a topic ("invoicing for freelance translators", "tools for smal
 - report as a lower bound what was and was not covered
 
 Deliverables, in `RUN/output/`:
-- `dossier.md`: the human report
+- `summary.md` and `dashboard/index.html`: a one-page plain-language verdict and charts (PNG plus one offline HTML file); show these to the human first
+- `dossier.md`: the full human report
 - `handoff.json`: for the market-gap-validation skill and any build agent
 - `prisma.md`: the search and screening flow
 - `watchlist.json`: for future monitoring
@@ -39,8 +40,10 @@ Deliverables, in `RUN/output/`:
 ## Quick start
 SKILL_DIR is the folder containing this file; `G` stands for `python3 SKILL_DIR/scripts/gapscan.py`.
 1. `G init gap-runs/<short-slug> --topic "<the user's topic>" [--autonomy gated]`. Use gated when the user wants to approve the protocol, the landscape and the shortlist.
+   - **Keep the topic narrow:** one segment and at most three jobs. Each job is its own sub-market; a broad topic spends the budget mapping competitors and leaves evidence too thin to pass gap cards. `protocol check` warns when the intervention names many jobs. For a broad wish ("any SaaS I can build"), first agree with the user on one niche, or plan one run per job.
+   - **Cost:** `cost_profile` in the protocol picks model tiers (`budget`, `balanced` default, `quality`); see "Spawning subagents".
 2. Loop: run `G next gap-runs/<slug>` and do exactly what its first line says (see below), then call `next` again. Keep looping until `DONE`.
-3. When `DONE`, summarise the dossier for the user: the top opportunities with their certainty labels, the coverage limits, and any open human tasks. Offer the market-gap-validation skill as the next step.
+3. When `DONE`, open `output/summary.md` and point the user to `output/dashboard/index.html`; then summarise: the top opportunities with their certainty labels, what was killed and why, the coverage limits, and any open human tasks. Offer the market-gap-validation skill as the next step. `G status RUN` shows spend by phase and model tier.
 
 ## The `next` loop
 | First line | Do this |
@@ -56,11 +59,12 @@ Never skip ahead or reorder steps. `next` encodes the method's order, and the sc
 ## Spawning subagents
 Each assignment file (JSON) tells one subagent its role, the files to read (`read`, relative to SKILL_DIR), its inputs, its exact output paths and its limits. Give every subagent this prompt, filled in:
 
-> You are the `<role>` in a market-gap discovery run. First read the assignment file `<absolute assignment path>`. Then read exactly the files in its `read` list (relative to `<SKILL_DIR>`) and the inputs it names, and nothing else from the run folder. Follow the role brief and method cards. Write only the paths in `outputs`, using `python3 <SKILL_DIR>/scripts/gapscan.py` for fetch, snapshot, log-query and hash-author as the brief says. Finish with one line: `done` or `blocked: <reason>`.
+> You are the `<role>` in a market-gap discovery run. First read the assignment file `<absolute assignment path>`. Then read exactly the files in its `read` list (relative to `<SKILL_DIR>`) and the inputs it names, and nothing else from the run folder. Follow the role brief and method cards. Write only the paths in `outputs`, using `python3 <SKILL_DIR>/scripts/gapscan.py` for fetch, snapshot, log-query and hash-author as the brief says. Run each shell command as one plain line with absolute paths, and keep any helper scripts in `<RUN>/scratch/<assignment_id>/`; read only fetch and snapshot files your own commands created. Validate your outputs with `gapscan.py validate RUN --file <path>` before finishing. Finish with one line: `done` or `blocked: <reason>`.
 
-- **Claude Code:** use the Agent tool (general-purpose), with all subagents of one SPAWN started in a single message so they run in parallel.
-- **OpenCode:** use the Task tool with the general subagent.
-- **Codex:** delegate explicitly ("spawn N subagents, one per assignment, in parallel"). Network access must be enabled.
+**Model per subagent.** Every SPAWN is followed by `NOTE model: <tier> tier = <name> in Claude Code`. Start that SPAWN's subagents on that model. Roles whose output scripts check (scout, screener, miner, coder) default to the fast tier: a bad quote, label or decision is rejected by `verify`, `merge`, `screen-audit` or `agreement`, never trusted. Judgment roles (synthesizer, red-team, writer) get the standard tier. When a check fails, the scripts escalate that role one tier for its next assignments.
+- **Claude Code:** use the Agent tool (general-purpose) with its `model` parameter set from the NOTE (`haiku`, `sonnet` or `opus`); start all subagents of one SPAWN in a single message so they run in parallel.
+- **OpenCode:** use the Task tool with the general subagent; map the tier to a model as in `references/portability.md`.
+- **Codex:** delegate explicitly ("spawn N subagents, one per assignment, in parallel"), naming the model for the tier. Network access must be enabled.
 - **No subagents available:** run each assignment through a headless CLI (`claude -p`, `codex exec`, `opencode run`) with the prompt above. If even that is impossible, do the assignments yourself one at a time. Before each one, re-read only that assignment and its files, and record the loss of isolation with `G protocol amend RUN --reason "independence degraded: no subagents" --set 'independence="degraded"'`. The probe becomes decisive and certainty is downgraded. `references/portability.md` has the details.
 
 ## Phase checklist
@@ -74,11 +78,11 @@ Copy this into your notes and tick it off as `next` advances:
   - [ ] saturation with Chao2, coverage and probe (**D04**)
   - [ ] snowballing (**D05**)
   - [ ] systematic map (**D07**)
-- [ ] P3 Evidence: harvest by stance (**D08**), integrity (**D09**), strength S0–S4 (**D10**), demand signals and bursts (**D11**), why-now log (**D12**).
+- [ ] P3 Evidence: harvest by stance across many domains (**D08**), integrity (**D09**), strength S0–S4 (**D10**), demand signals and bursts (**D11**), why-now log (**D12**); after the card check, one targeted round for near-miss cards if too few pass.
 - [ ] P4 Synthesis: codebook (**D13**), double coding and α (**D14**), theme saturation, supply and matrices (**D15**), gap map (**D16**).
 - [ ] P5 Gaps: gap spotting (**D17**), problematization (**D18**), variation (**D19**), gap cards and their check (**D20**).
 - [ ] P6 Appraisal: red team (**D21**), certainty (**D22**), sizing (**D24**), gates, scores and sensitivity (**D23**).
-- [ ] P7 Report: PRISMA flow, dossier, handoff and watchlist, report check (**D25**).
+- [ ] P7 Report: PRISMA flow, dossier, handoff and watchlist, report check (**D25**); then `viz` builds `summary.md` and the dashboard (needs matplotlib; if it is missing, `next` says how to install it and the run still finishes).
 
 ## Method library
 Each card in `references/methods/` gives one method as a procedure: origin, when to use it, numbered steps, output, metrics and pitfalls. Assignments list the cards each subagent needs. As orchestrator, read a card when `next` says `DO <card>` or when a step surprises you.
@@ -100,7 +104,7 @@ Each card in `references/methods/` gives one method as a procedure: origin, when
 
 ## When blocked or surprised
 - **Exit 2 on a fetch or snapshot:** the source refused (excluded, robots.txt, 401/403/429) or the network failed. Do not retry around it. Continue with other sources; the gap is already in `coverage-gaps.jsonl` and will appear in the limitations.
-- **Exit 3:** the budget is exhausted. Tell the user; raising it is a protocol amendment they decide.
+- **Exit 3:** the budget is exhausted. Tell the user; raising it is a protocol amendment they decide. Show `G status RUN` (spend by phase and tier) with the question.
 - **A merge rejects records:** read the listed reasons. Re-spawn the subagent with that list, or fix the outputs yourself if the fixes are mechanical. For evidence, then run `merge RUN --phase evidence --retry`; records already in the ledger count as duplicates.
 - **STOP_UNSATURATED, correlated scouts, low α or unsaturated themes:** these are findings, not failures. They lower certainty and must appear in the dossier.
 - **No gap passes the thresholds:** that is a valid, honest result. The writer reports it, and the handoff lists no opportunities.

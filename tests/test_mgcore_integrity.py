@@ -42,6 +42,15 @@ class CanonTests(unittest.TestCase):
         self.assertEqual(k("https://stackoverflow.com/questions/tagged/invoicing"), "se:stackoverflow:invoicing")
         self.assertEqual(k("https://community.vendor.com/c/feature-requests", "community"), "site:community.vendor.com")
         self.assertEqual(k("https://alternativeto.net/software/foo/about/"), "alt:foo")
+        # Live-run defects: a Google redirect keyed Honeybadger as dom:google.com, and a Firefox add-on
+        # listing keyed Userback as dom:mozilla.org.
+        self.assertEqual(k("https://www.google.com/url?q=https://www.honeybadger.io/pricing&sa=U"), "dom:honeybadger.io")
+        self.assertEqual(k("https://duckduckgo.com/l/?uddg=https%3A%2F%2Fwww.userback.io%2F"), "dom:userback.io")
+        self.assertEqual(k("https://addons.mozilla.org/en-US/firefox/addon/userback/"), "ext:firefox:userback")
+        self.assertEqual(k("https://microsoftedge.microsoft.com/addons/detail/tool/abcdefghijklmnopabcdefghijklmnop"),
+                         "ext:edge:abcdefghijklmnopabcdefghijklmnop")
+        self.assertEqual(k("https://sites.google.com/view/someapp"), "site:sites.google.com/view")
+        self.assertNotEqual(k("https://www.apple.com/app-store/"), "dom:apple.com")
 
     def test_union_find_prefers_domain_keys(self):
         uf = canon.UnionFind()

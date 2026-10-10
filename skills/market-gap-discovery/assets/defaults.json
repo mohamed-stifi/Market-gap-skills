@@ -662,5 +662,11 @@
       },
       "source": "Same thresholds the method already uses (D09 >= 95% quotes verified, D06/D14 alpha bands); a failed check bumps the role one tier."
     }
+  },
+  "scope": {
+    "broad_jobs_warning": {
+      "value": 5,
+      "source": "Live run indie-dev-tools (2026-10-09): an intervention naming 7 jobs gave lexicon overlap 0.02-0.05, a 395-entity landscape that never saturated and evidence too thin for 11 of 12 gap cards. protocol check warns at this many jobs (non-blocking)."
+    }
   }
 }

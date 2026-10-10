@@ -773,7 +773,12 @@ def assign_sizing(run, st, c, args):
         "inputs": {"protocol": "protocol.json", "cards": cards, "price_ladder": "analysis/price_ladder.csv",
                    "ambition": protocol(run).get("ambition")},
         "outputs": [{"path": "gaps/sizing-inputs.json", "schema": "sizing-inputs", "format": "json"}],
-        "limits": {"max_tool_calls": 10 * len(cards)}, "rules": ["Every account count needs a source; conversion and win rate are assumptions."]})
+        "limits": {"max_tool_calls": 10 * len(cards)},
+        "rules": ["Every account count needs a source; conversion and win rate are assumptions.",
+                  # A live sizer used `snapshot` on api.wordpress.org, which robots.txt blocks; the API adapters are the sanctioned route.
+                  "Get counts through the tier-1 API adapters (`gapscan.py fetch RUN wp-plugin --slug S`, `wp-search`, `apple-search`, "
+                  "`atl-search`, `hn-counts`, `se-counts`): they return install counts, ratings and totals and log the query. "
+                  "Do not `snapshot` API URLs; robots.txt blocks several of them."]})
     _group(st, "sizing", "sizing", "synthesizer", [path])
     return [path]
 
@@ -789,7 +794,11 @@ def assign_writer(run, st, c, args):
               "saturation": "landscape/saturation.json", "themes": "coding/themes.json",
               "agreement": "coding/agreement.json", "screening_audit": "landscape/screening-audit.json",
               "coverage_gaps": "coverage-gaps.jsonl", "doctor": "doctor.json", "ledger": "evidence/ledger.jsonl",
-              "why_now": "evidence/why-now.jsonl", "bursts": "evidence/bursts.json", "template": "assets/templates/dossier.md"}
+              "why_now": "evidence/why-now.jsonl", "bursts": "evidence/bursts.json", "template": "assets/templates/dossier.md",
+              # A live writer could not cite the strategy canvas, ERRC grids or orchestrator events it was not given.
+              "analysis": "analysis/ (gapmap.json, strategy canvas, price ladder, matrices)", "card_check": "gaps/card-check.json",
+              "protocol_lock": "protocol.lock.json (amendments)", "events": "events.jsonl (orchestrator notes, merges, escalations)",
+              "landscape_map": "landscape/classification.json", "state_models": "state.json -> models (tier escalations)"}
     if check and not check.get("ok"):
         inputs["fix_list"] = check.get("errors", []) + check.get("warnings", [])
     rel_path = "output/writer-assign-%02d.json" % n

@@ -94,6 +94,8 @@ _PLATFORM = [
     (re.compile(r"^(?:[a-z]+\.)?wordpress\.org$"), re.compile(r"^/(?:support/)?plugins?/([^/]+)"), lambda m: "wp:%s" % m.group(1).lower()),
     (re.compile(r"^apps\.apple\.com$"), re.compile(r"/id(\d+)"), lambda m: "app:ios:%s" % m.group(1)),
     (re.compile(r"^(?:chromewebstore\.google\.com|chrome\.google\.com)$"), re.compile(r"/detail/(?:[^/]+/)?([a-p]{32})"), lambda m: "ext:chrome:%s" % m.group(1)),
+    (re.compile(r"^addons\.mozilla\.org$"), re.compile(r"/addon/([^/?#]+)"), lambda m: "ext:firefox:%s" % m.group(1).lower()),
+    (re.compile(r"^microsoftedge\.microsoft\.com$"), re.compile(r"/addons/detail/(?:[^/]+/)?([a-z]{32})"), lambda m: "ext:edge:%s" % m.group(1)),
     (re.compile(r"^marketplace\.atlassian\.com$"), re.compile(r"^/apps/(\d+)"), lambda m: "atl:%s" % m.group(1)),
     (re.compile(r"^apps\.shopify\.com$"), re.compile(r"^/([^/?#]+)"), lambda m: "shopify:%s" % m.group(1).lower()),
     (re.compile(r"^(?:www\.)?zapier\.com$"), re.compile(r"^/apps/([^/]+)"), lambda m: "zapier:%s" % m.group(1).lower()),
@@ -130,8 +132,34 @@ def platform_key(url):
     return None
 
 
+# Redirect wrappers seen in search results: the real target sits in a query parameter.
+_REDIRECTS = [
+    (re.compile(r"^(?:www\.)?google\.[a-z.]+$"), re.compile(r"^/url$"), ("q", "url")),
+    (re.compile(r"^(?:html\.|lite\.)?duckduckgo\.com$"), re.compile(r"^/l/?$"), ("uddg",)),
+    (re.compile(r"^l\.facebook\.com$|^lm\.facebook\.com$"), re.compile(r"^/l\.php$"), ("u",)),
+]
+# Big shared hosts: many unrelated products live on them, so their registrable domain must never
+# become a product key (a live run keyed Honeybadger as dom:google.com and Userback as dom:mozilla.org).
+_SHARED = {"google.com", "apple.com", "mozilla.org", "microsoft.com", "amazon.com", "medium.com", "notion.site",
+           "substack.com", "youtube.com", "linkedin.com", "x.com", "twitter.com", "facebook.com", "news.ycombinator.com"}
+
+
+def unwrap_redirect(url):
+    """Return the target of a known redirect wrapper URL, or the URL unchanged."""
+    parts = urlsplit(normalize_url(url))
+    host = (parts.hostname or "").lower()
+    for host_re, path_re, params in _REDIRECTS:
+        if host_re.match(host) and path_re.match(parts.path):
+            q = dict(parse_qsl(parts.query))
+            for k in params:
+                if q.get(k, "").startswith(("http://", "https://")):
+                    return q[k]
+    return url
+
+
 def entity_key(url, kind, psl):
     """Canonical key for an entity URL: platform id if any, else dom:/site: keys."""
+    url = unwrap_redirect(url)
     pk = platform_key(url)
     if pk:
         return pk
@@ -139,7 +167,12 @@ def entity_key(url, kind, psl):
     if kind == "community":
         h = host[4:] if host.startswith("www.") else host
         return "site:%s" % h
-    return "dom:%s" % psl.registrable(host)
+    reg = psl.registrable(host)
+    if reg in _SHARED or host in _SHARED:
+        # Keep the host plus the first path segment so different products on one platform stay apart.
+        seg = (urlsplit(normalize_url(url)).path.strip("/").split("/") or [""])[0].lower()
+        return "site:%s%s" % (host[4:] if host.startswith("www.") else host, ("/" + seg) if seg else "")
+    return "dom:%s" % reg
 
 
 class UnionFind(object):

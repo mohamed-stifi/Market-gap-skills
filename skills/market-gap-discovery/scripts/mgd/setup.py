@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import secrets
 import shutil
 import subprocess
@@ -11,7 +12,7 @@ from mgcore import hq, state
 from mgcore.jsonio import append_jsonl, now_iso, read_json, sha256_json, today, write_json
 
 from . import net
-from .common import (CliError, EXIT_BLOCKED, channels, out, p, protocol, require_run, save_state, load_state,
+from .common import (CliError, EXIT_BLOCKED, cfg, channels, out, p, protocol, require_run, save_state, load_state,
                      validate)
 
 RUN_DIRS = ["lexicon", "landscape", "snapshots", "raw", "evidence", "evidence/signals", "coding", "analysis",
@@ -85,6 +86,23 @@ def protocol_errors(run, proto=None):
     return errs
 
 
+def protocol_warnings(run, proto=None):
+    """Non-blocking advice: settings that make a run expensive or its evidence thin."""
+    proto = proto if proto is not None else protocol(run)
+    c = cfg(run)
+    warns = []
+    inter = (proto.get("picos") or {}).get("intervention") or ""
+    jobs = [x for x in re.split(r"[,;]", inter.split(":", 1)[-1]) if len(x.strip()) > 2]
+    if len(jobs) >= c.get("scope.broad_jobs_warning"):
+        warns.append(("picos.intervention names about %d jobs. Each job is its own sub-market: a broad run spends most of its budget "
+                      "mapping supply and spreads evidence thin (live run: 7 jobs -> 395 competitors, 1 weak surviving gap). "
+                      "Prefer one run per job, or keep at most 3.") % len(jobs))
+    if not proto.get("cost_profile"):
+        warns.append("cost_profile not set: using '%s' (fast tier for scouts, screeners, miners, coders; standard for synthesis, "
+                     "red team, writer). Set budget or quality with `protocol amend` if needed." % c.get("models.profile"))
+    return warns
+
+
 def cmd_protocol(args):
     run = args.run
     require_run(run)
@@ -100,6 +118,8 @@ def cmd_protocol(args):
                 out("  - " + e)
             return 1
         out("protocol.json is valid.")
+        for w in protocol_warnings(run):
+            out("  warning: " + w)
         return 0
     if action == "freeze":
         errs = protocol_errors(run)

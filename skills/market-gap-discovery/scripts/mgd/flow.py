@@ -11,7 +11,7 @@ from mgcore.jsonio import read_json, read_jsonl, sha256_json, sha256_file
 
 from . import gaps, models
 from .common import SCRIPTS_DIR, cfg, entities, out, p, protocol, require_run, load_state, save_state
-from .setup import protocol_errors
+from .setup import protocol_errors, protocol_warnings
 
 GAPSCAN = os.path.join(SCRIPTS_DIR, "gapscan.py")
 
@@ -104,7 +104,8 @@ def decide(run):
         _gate(run, st, "protocol", sha256_file(p(run, "protocol.json")), "Approve the research protocol",
               "Gated run: the protocol (question, scope, eligibility, sources, thresholds) is the pre-registration.",
               "Read protocol.json; approve or decline with a note.", "P0")
-        RUN("protocol freeze %s" % run, "pre-registration: the protocol is hashed before any search", phase="P0")
+        RUN("protocol freeze %s" % run, "pre-registration: the protocol is hashed before any search",
+            *["advice before freezing: " + w for w in protocol_warnings(run)], phase="P0")
     if sha256_json(proto) != lock["sha256"]:
         DO("D01", "protocol.json changed after freezing: restore it and record changes with `gapscan.py protocol amend`", phase="P0")
     used = st.get("budget", {}).get("subagents_used", 0)
@@ -309,8 +310,33 @@ def decide(run):
         if n < 3:
             RUN("assign %s --phase writer" % run, "report check failed: writer fix pass", *check.get("errors", [])[:5], phase="P7")
         DO("D25", "the report check still fails after 3 writer passes: fix output/ yourself, then `validate --report`", *check.get("errors", [])[:5], phase="P7")
-    raise Act("DONE", "", ["deliverables: %s" % ", ".join(os.path.join(run, "output", f) for f in ("dossier.md", "handoff.json", "prisma.md", "watchlist.json")),
-                           "next skill: market-gap-validation reads output/handoff.json"], "P7")
+    # Readable outputs: a one-page summary and charts, built by a script from the run's files (no subagent).
+    notes = []
+    if _stale(st, "viz", ["report_check", "score", "prisma", "cards_check"]):
+        if viz_available():
+            RUN("viz %s" % run, "one-page summary.md and dashboard charts for the human (D25)", phase="P7")
+        notes.append("dashboard skipped: matplotlib is not installed. Install it (`pip install matplotlib`), then run "
+                     "`gapscan.py viz %s` for output/summary.md and output/dashboard/index.html" % run)
+    show = ["summary.md", "dashboard/index.html"] if not notes else []
+    raise Act("DONE", "", ["deliverables: %s" % ", ".join(os.path.join(run, "output", f) for f in show + ["dossier.md", "handoff.json", "prisma.md", "watchlist.json"])]
+              + notes + [("show the human output/summary.md and the dashboard first; " if show else "") + "spend: `gapscan.py status %s`" % run,
+                         "next skill: market-gap-validation reads output/handoff.json"], "P7")
+
+
+def viz_available():
+    import importlib.util
+    return importlib.util.find_spec("matplotlib") is not None
+
+
+def cmd_viz(args):
+    """`gapscan.py viz RUN`: summary.md + dashboard (mgd/viz.py). Imported lazily so the core stays stdlib-only."""
+    require_run(args.run)
+    from . import viz
+    rc = viz.cmd_viz(args)
+    st = load_state(args.run)
+    state.touch(st, "viz")
+    save_state(args.run, st)
+    return rc
 
 
 def cmd_next(args):
@@ -338,6 +364,19 @@ def cmd_next(args):
     return 0
 
 
+def _spend(run, st, by):
+    """Assignments (= subagents) per phase or per model tier, from the assignment files of every group."""
+    counts = {}
+    for g in (st.get("groups") or {}).values():
+        for apath in g.get("paths", []):
+            if by == "phase":
+                k = g.get("phase")
+            else:
+                k = ((read_json(p(run, apath), {}) or {}).get("model") or {}).get("tier") or "unrecorded"
+            counts[k] = counts.get(k, 0) + 1
+    return dict(sorted(counts.items(), key=lambda x: -x[1]))
+
+
 def cmd_status(args):
     run = args.run
     require_run(run)
@@ -361,6 +400,8 @@ def cmd_status(args):
         "codebook_version": st["coding"].get("version"), "agreement": agr.get("verdict"), "themes_saturated": th.get("saturated"),
         "ranked_gaps": [(x["rank"], x["gap_id"], round(x["total"], 1)) for x in rk.get("ranked", [])],
         "budget": {"subagents": "%d/%d" % (st.get("budget", {}).get("subagents_used", 0), c.get("budget.subagents_max"))},
+        "spend_by_phase": _spend(run, st, "phase"), "spend_by_tier": _spend(run, st, "tier"),
+        "model_escalations": [(x["role"], x["level"], x["reason"]) for x in (st.get("models") or {}).get("log", [])],
         "open_human_tasks": [t["id"] + " " + t["title"] for t in hq.open_tasks(run)],
         "coverage_gaps": len(gaps_cov),
     }

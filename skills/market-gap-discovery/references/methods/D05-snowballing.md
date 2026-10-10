@@ -4,7 +4,9 @@
 |---|---|---|---|
 | Snowballing guidelines for systematic literature studies (Wohlin 2014): iterate backward (reference lists) and forward (citing papers) from a diverse start set until an iteration adds nothing | P2 Landscape | scout | core |
 
-**Use when:** after the sampling loop ends with SATURATED or STOP_UNSATURATED. Run up to `snowball.max_iterations` (3) iterations.
+**Use when:** after the sampling loop ends with SATURATED or STOP_UNSATURATED. Run up to `snowball.max_iterations` (1 by default) iterations.
+
+**Why one iteration by default:** in a live run on a broad topic, three iterations added 67, 80 and 82 verified entities without converging, because every competitor's "alternatives" page opens another sub-market. They cost 9 scouts and 14 screeners, yet snowball finds never enter the estimators, and the red team (D21) already searches for existing solutions per candidate gap, which is where completeness matters. Raise the limit with `protocol amend` for a narrow niche where the first iteration's yield is small and complete supply is the question.
 
 **Why:** Keyword searches miss products described with words the lexicon never saw. Software products reference each other much as papers cite each other. Vendors publish "alternatives" and "vs" pages, integration directories list their partners, and comparison posts and "alternative to X" threads link competitors. Following those links backward (from an entity's own pages) and forward (to whoever mentions the entity) reaches products that keyword searches cannot.
 
