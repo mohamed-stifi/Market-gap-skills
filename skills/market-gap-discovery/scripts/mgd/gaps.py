@@ -9,6 +9,7 @@ import random
 from mgcore import state, stats
 from mgcore.jsonio import now_iso, read_json, read_jsonl, write_json, write_jsonl
 
+from . import opportunities
 from .common import CliError, alias_map, cfg, entities, resolve_ids, included_verified, out, p, protocol, require_run, load_state, save_state, validate
 
 LEVELS = ["Very low", "Low", "Moderate", "High"]
@@ -91,6 +92,13 @@ def cmd_variants(args):
 
 
 # ---------------------------------------------------------------- cards check
+def _opp_ctx(run, cards):
+    """Opportunity context (traction percentiles, prices) only when some card has a lens other than gap."""
+    if any((x.get("lens") or "gap") != "gap" for x in cards):
+        return opportunities.Ctx(run)
+    return None
+
+
 def near_misses(run, limit=3):
     """Insufficient cards that more evidence could fix, closest to passing first.
 
@@ -140,6 +148,7 @@ def cmd_cards_check(args):
     cells = {j["code"]: j["cell"] for j in gm.get("jobs", [])}
     results = {}
     seen_ids = set()
+    octx = _opp_ctx(run, recs)
     for i, card in enumerate(recs, 1):
         e = validate(card, "gap-card")
         if e:
@@ -181,11 +190,20 @@ def cmd_cards_check(args):
         if len(authors) < c.get("gap_card.min_authors"):
             reasons.append("%d distinct authors (need %d)" % (len(authors), c.get("gap_card.min_authors")))
         if c.get("gap_card.require_triangulation"):
+            lens = card.get("lens") or "gap"
             pain = any(r["stance"] in ("pain", "wish", "workaround", "switch") for r in sup)
             demand = bool(set(card.get("demand_signals") or []) & series) or any(
                 r["stance"] == "wtp" or r["strength"] == "S4" or r["source_type"] == "job-post" for r in sup)
-            supply = (bool(card["incumbents"]) and all(ents.get(x, {}).get("verified", {}).get("status") == "ok" for x in card["incumbents"])) \
-                or any(cells.get(x) == "absolute" for x in card["codes"])
+            base = list(card.get("base_entities") or []) + list(card["incumbents"])
+            if lens != "gap":
+                # Other lenses build on proven products: their installs and ratings (script-made traction) are demand.
+                prov = opportunities.proven(octx, base)
+                nums["proven_products"] = len(prov)
+                demand = demand or len(prov) >= c.get("opportunity.min_proven_products")
+                supply = bool(base) and all(ents.get(x, {}).get("verified", {}).get("status") == "ok" for x in base)
+            else:
+                supply = (bool(card["incumbents"]) and all(ents.get(x, {}).get("verified", {}).get("status") == "ok" for x in card["incumbents"])) \
+                    or any(cells.get(x) == "absolute" for x in card["codes"])
             nums["triangulation"] = {"pain": pain, "demand": demand, "supply": supply}
             if not (pain and demand and supply):
                 reasons.append("triangulation incomplete (pain=%s, demand=%s, supply=%s)" % (pain, demand, supply))
@@ -250,7 +268,9 @@ def cmd_certainty(args):
     low_cov = (sat.get("overall", {}).get("coverage", 0) < c.get("certainty.coverage_moderate_below")) or sat.get("verdict") == "STOP_UNSATURATED"
     verified_ids = [k for k, r in led.items() if r.get("verification", {}).get("status") == "verified"]
     out_doc = {}
-    for card in read_jsonl(p(run, "gaps", "cards.jsonl"))[0]:
+    all_cards = read_jsonl(p(run, "gaps", "cards.jsonl"))[0]
+    octx = _opp_ctx(run, all_cards)
+    for card in all_cards:
         if card["status"] in ("insufficient", "killed"):
             continue
         sup = [led[x] for x in card["supporting_evidence"] if x in led and led[x].get("verification", {}).get("status") == "verified"]
@@ -300,9 +320,14 @@ def cmd_certainty(args):
         magnitude = len(s4_auth) >= c.get("certainty.magnitude_min_authors") and len(set(r.get("domain") for r in s4)) >= 2
         scale_auth = set(_author(r) for r in sup if _author(r) and "X-SCALE" in (codes_a.get(r["id"], {}).get("codes") or []))
         dose = len(scale_auth) >= c.get("certainty.dose_response_min_authors")
-        lvl = min(lvl + (1 if magnitude else 0) + (1 if dose else 0), 2)
+        # Market spend (lenses other than gap): proven products with paid plans show money already flows for this job.
+        spend = False
+        if (card.get("lens") or "gap") != "gap" and octx is not None:
+            spend = len(opportunities.proven(octx, list(card.get("base_entities") or []) + card["incumbents"], paid_only=True)) \
+                >= c.get("certainty.market_spend_min_products")
+        lvl = min(lvl + (1 if (magnitude or spend) else 0) + (1 if dose else 0), 2)
         out_doc[card["gap_id"]] = {"pain": pain_cert, "demand": LEVELS[lvl], "demand_strength": "weak", "concerns": conc,
-                                   "pain_points": pts, "upgrades": {"magnitude": magnitude, "dose_response": dose},
+                                   "pain_points": pts, "upgrades": {"magnitude": magnitude, "dose_response": dose, "market_spend": spend},
                                    "note": "Desk-only: demand strength stays weak until validation experiments."}
     write_json(p(run, "gaps", "certainty.json"), {"computed_at": now_iso(), "gaps": out_doc})
     state.touch(st, "certainty")
@@ -390,6 +415,7 @@ def cmd_score(args):
     weights = c.get("scoring.weights")
     gates = c.get("scoring.gates")
     rows, scored, excluded = [], [], []
+    octx = _opp_ctx(run, cards)
     for card in cards:
         gid = card["gap_id"]
         if card["status"] == "killed":
@@ -413,15 +439,19 @@ def cmd_score(args):
         pay_recs = [r for r in sup if r["strength"] == "S4" or r["stance"] == "wtp"]
         job_codes = set(card["codes"])
         paid_inc = [s["entity_id"] for s in supply if set(s["jobs_served"]) & job_codes and (attrs.get(s["entity_id"], {}).get("pricing", {}).get("min_paid_month") or 0) > 0]
+        lens = card.get("lens") or "gap"
+        spend = opportunities.proven(octx, list(card.get("base_entities") or []) + card["incumbents"], paid_only=True) \
+            if (lens != "gap" and octx is not None) else []
         if len(auth(pay_recs)) >= 3 and len(set(r.get("domain") for r in pay_recs)) >= 2:
             sc["pay"] = 3
-        elif pay_recs:
+        elif pay_recs or len(spend) >= c.get("certainty.market_spend_min_products"):
             sc["pay"] = 2
         elif paid_inc:
             sc["pay"] = 1
         else:
             sc["pay"] = 0
-        why["pay"] = "%d wtp/S4 records from %d authors; %d paid incumbents" % (len(pay_recs), len(auth(pay_recs)), len(paid_inc))
+        why["pay"] = "%d wtp/S4 records from %d authors; %d paid incumbents%s" % (
+            len(pay_recs), len(auth(pay_recs)), len(paid_inc), "; %d proven paid products (market spend)" % len(spend) if spend else "")
         som = ((sizing.get(gid) or {}).get("usd_per_year") or {}).get("base", {}).get("som")
         if som is None or not target:
             sc["size"] = 0
@@ -431,9 +461,12 @@ def cmd_score(args):
         cell_types = set(cells.get(x) for x in card["codes"])
         if card["status"] == "weakened":
             sc["competition"] = 1
+        elif lens != "gap":
+            # Clone-wedge, port, bundle and the rest enter markets with incumbents by design: an open wedge earns 2, never 3.
+            sc["competition"] = 2
         else:
             sc["competition"] = 3 if (cell_types & {"absolute", "synthesis"}) else 2
-        why["competition"] = "red team %s; cells %s" % (card["status"], ", ".join(sorted(x for x in cell_types if x)))
+        why["competition"] = "red team %s; lens %s; cells %s" % (card["status"], lens, ", ".join(sorted(x for x in cell_types if x)))
         strengths = [wn[x]["strength"] for x in card["why_now"] if x in wn]
         strong = [s for s in strengths if s in ("moderate", "strong")]
         burst = bool(set(card.get("demand_signals") or []) & burst_sig)
@@ -448,7 +481,7 @@ def cmd_score(args):
         why["right_to_win"] = j["rationale"]["right_to_win"]
         total = 100.0 * sum(weights[k] * sc[k] for k in weights) / 3.0
         ct = cert.get(gid, {})
-        scored.append({"gap_id": gid, "title": card["title"], "scores": sc, "why": why, "total": total,
+        scored.append({"gap_id": gid, "title": card["title"], "lens": lens, "scores": sc, "why": why, "total": total,
                        "certainty": {"pain": ct.get("pain"), "demand": ct.get("demand"), "demand_strength": ct.get("demand_strength", "weak")},
                        "authors": len(auth(sup))})
         for k in weights:

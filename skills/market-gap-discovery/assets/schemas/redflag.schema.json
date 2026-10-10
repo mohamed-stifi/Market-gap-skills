@@ -1,0 +1,49 @@
+{
+  "$id": "redflag",
+  "description": "Quick red-flag check of one scan opportunity, written to opportunities/redflags/OPP-NNN.json (method card D28). Lighter than the D21 red team: is the option already taken, blocked, or impractical for this founder?",
+  "type": "object",
+  "required": ["opp_id", "verdict", "existing", "searches", "gates", "note"],
+  "properties": {
+    "opp_id": {"type": "string", "pattern": "^OPP-[0-9]{3}$"},
+    "verdict": {"enum": ["clear", "flag", "killed"]},
+    "existing": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "url", "covers"],
+        "properties": {
+          "name": {"type": "string"},
+          "url": {"type": "string", "pattern": "^https?://"},
+          "snapshot": {"type": ["string", "null"]},
+          "covers": {"enum": ["full", "partial", "none"]},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "searches": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"type": "object", "required": ["source", "query"], "properties": {"source": {"type": "string"}, "query": {"type": "string"}, "results": {"type": ["integer", "null"]}}}
+    },
+    "gates": {
+      "type": "object",
+      "required": ["regulatory_load", "human_ops_burden", "agent_buildability", "platform_risk", "tos_feasible"],
+      "properties": {
+        "regulatory_load": {"enum": ["low", "medium", "high"]},
+        "human_ops_burden": {"enum": ["low", "medium", "high"]},
+        "agent_buildability": {"enum": ["yes", "partial", "no"]},
+        "platform_risk": {"type": "integer", "minimum": 0, "maximum": 3},
+        "tos_feasible": {"type": "boolean"}
+      }
+    },
+    "growth_loop": {
+      "type": ["object", "null"],
+      "properties": {
+        "type": {"enum": ["powered-by", "public-page", "invite", "marketplace-listing", "integration-directory", "content-seo", "none"]},
+        "note": {"type": "string"}
+      }
+    },
+    "license_ok": {"type": ["boolean", "null"]},
+    "note": {"type": "string", "minLength": 10, "maxLength": 600}
+  }
+}

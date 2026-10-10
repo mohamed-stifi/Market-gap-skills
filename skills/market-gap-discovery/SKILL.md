@@ -1,6 +1,6 @@
 ---
 name: market-gap-discovery
-description: Finds and ranks evidence-backed market gaps and SaaS opportunities with an auditable, research-grade pipeline - independent parallel scouts, statistical search saturation (capture-recapture / Chao2, the doctoral ~90% overlap rule), verbatim quotes verified against page snapshots, double-coded jobs-to-be-done analysis, demand-supply gap maps, red-teaming, GRADE-style certainty and sensitivity-tested scoring. Use when the user wants to find market gaps, SaaS or software opportunities, unmet needs, underserved segments, niche or startup ideas backed by evidence, a competitor landscape, or an opportunity dossier and handoff to build from. For general research reports use deep-research; to test a chosen idea with experiments use market-gap-validation.
+description: Finds and ranks evidence-backed SaaS opportunities - unmet gaps and also proven products to rebuild with one fix, tools to merge or split, proven models to port to a new platform or language, cheaper tiers, replacements after shutdowns, hosted open source and software for paid human work - with an auditable pipeline - a cheap scan mode, independent scouts, capture-recapture saturation (the doctoral ~90% overlap rule), quotes verified against page snapshots, marketplace traction, double-coded jobs-to-be-done, red-teaming, GRADE-style certainty and sensitivity-tested scoring. Use when the user wants SaaS or software ideas, market gaps, unmet needs, underserved segments, clone-and-improve or niche ideas backed by evidence, a competitor landscape, or an opportunity dossier to build from. For general research reports use deep-research; to test a chosen idea with experiments use market-gap-validation.
 compatibility: Python 3.8+ standard library and web access. Parallel subagents recommended (Claude Code Agent tool, OpenCode Task tool, Codex delegation). Optional - gh CLI, MGD_CONTACT env var, tier-2 API keys.
 metadata:
   version: "1.0.0"
@@ -9,19 +9,24 @@ metadata:
 
 # Market gap discovery
 
-This skill turns a topic ("invoicing for freelance translators", "tools for small dental clinics") into a ranked set of market gaps. Each gap rests on verified evidence, with its certainty stated and a machine-readable handoff for building and validating. It translates how doctoral teams find research gaps into a system agents can run:
+This skill turns a topic ("invoicing for freelance translators", "tools for small dental clinics") into ranked opportunities. Each rests on verified evidence, with its certainty stated and a machine-readable handoff for building and validating. It translates how doctoral teams find research gaps into a system agents can run:
 - search independently
 - compare overlap statistically
 - code evidence in pairs
 - red-team every claim
 - report as a lower bound what was and was not covered
 
+A gap (a need nobody serves) is one of nine **opportunity lenses** (**D26**). The others start from proven demand: a proven product with one fix users keep asking for (`clone-wedge`), two tools merged (`bundle`) or one part of a suite done simply (`unbundle`), a proven model on a new platform, language or segment (`port`), a cheaper tier (`down-market`), a replacement after a shutdown or price rise (`replace`), a hosted open-source tool (`hosted-oss`), software for work people pay a person to do (`productize`). Scripts generate options from every lens; evidence decides.
+
+**Two depths.**
+- **scan** (default for new runs, **D28**): one landscape pass, options from every lens, evidence spent on the best by successive halving, a quick red-flag check. About 15-20 subagents, mostly fast tier. Use it for broad topics and when the question is not yet sharp.
+- **deep**: the full method on one narrow question, usually drafted from a scan option.
+
 Deliverables, in `RUN/output/`:
 - `summary.md` and `dashboard/index.html`: a one-page plain-language verdict and charts (PNG plus one offline HTML file); show these to the human first
-- `dossier.md`: the full human report
-- `handoff.json`: for the market-gap-validation skill and any build agent
-- `prisma.md`: the search and screening flow
-- `watchlist.json`: for future monitoring
+- scan: `opportunities.md` and `opportunities.json` (ranked options with evidence, red flags and ambition math) and `next-runs/OPP-NNN.protocol.json` (narrow deep-run drafts)
+- deep: `dossier.md` (the full report) and `handoff.json` (for market-gap-validation and any build agent)
+- both: `prisma.md` (search and screening flow); deep also `watchlist.json` (future monitoring)
 
 ## Principles
 1. **Agents gather and label; scripts count, merge, verify, score and decide.** Every number in the output comes from `scripts/gapscan.py`. Never estimate a number the script can compute.
@@ -39,11 +44,13 @@ Deliverables, in `RUN/output/`:
 
 ## Quick start
 SKILL_DIR is the folder containing this file; `G` stands for `python3 SKILL_DIR/scripts/gapscan.py`.
-1. `G init gap-runs/<short-slug> --topic "<the user's topic>" [--autonomy gated]`. Use gated when the user wants to approve the protocol, the landscape and the shortlist.
-   - **Keep the topic narrow:** one segment and at most three jobs. Each job is its own sub-market; a broad topic spends the budget mapping competitors and leaves evidence too thin to pass gap cards. `protocol check` warns when the intervention names many jobs. For a broad wish ("any SaaS I can build"), first agree with the user on one niche, or plan one run per job.
+1. `G init gap-runs/<short-slug> --topic "<the user's topic>" [--depth scan|deep] [--autonomy gated]`. Use gated when the user wants to approve the protocol, the landscape and the shortlist.
+   - **Broad wish ("a SaaS I can build with little effort") → scan first.** It ranks options across lenses and drafts narrow deep runs. Then `G init gap-runs/<new-slug> --from-run gap-runs/<scan> --opportunity OPP-NNN` starts the deep run on the option the user picks.
+   - **Deep runs need a narrow question:** one segment and at most three jobs. `protocol check` warns when a deep run's intervention names many jobs.
+   - **Lenses:** `protocol.lenses` limits the kinds of opportunity (default all nine).
    - **Cost:** `cost_profile` in the protocol picks model tiers (`budget`, `balanced` default, `quality`); see "Spawning subagents".
 2. Loop: run `G next gap-runs/<slug>` and do exactly what its first line says (see below), then call `next` again. Keep looping until `DONE`.
-3. When `DONE`, open `output/summary.md` and point the user to `output/dashboard/index.html`; then summarise: the top opportunities with their certainty labels, what was killed and why, the coverage limits, and any open human tasks. Offer the market-gap-validation skill as the next step. `G status RUN` shows spend by phase and model tier.
+3. When `DONE`, open `output/summary.md` and point the user to `output/dashboard/index.html`; then summarise: the top opportunities with their kind and evidence (scan) or certainty labels (deep), what was killed and why, the coverage limits, and any open human tasks. After a scan, offer the drafted deep runs; after a deep run, offer market-gap-validation. `G status RUN` shows spend by phase and model tier.
 
 ## The `next` loop
 | First line | Do this |
@@ -79,10 +86,11 @@ Copy this into your notes and tick it off as `next` advances:
   - [ ] entity verification
   - [ ] saturation with Chao2, coverage and probe (**D04**)
   - [ ] snowballing (**D05**)
-  - [ ] systematic map (**D07**)
+  - [ ] systematic map (**D07**) and traction from marketplace numbers (**D27**)
+- [ ] Scan runs (**D28**) branch here: options from every lens (**D26**), evidence round 1 plus a leads miner, re-scan and score, round 2 on the better half, red flags, rank, report, `viz`. Deep runs continue below.
 - [ ] P3 Evidence: harvest by stance across many domains (**D08**), integrity (**D09**), strength S0–S4 (**D10**), demand signals and bursts (**D11**), why-now log (**D12**); after the card check, one targeted round for near-miss cards if too few pass.
 - [ ] P4 Synthesis: codebook (**D13**), double coding and α (**D14**), theme saturation, supply and matrices (**D15**), gap map (**D16**).
-- [ ] P5 Gaps: gap spotting (**D17**), problematization (**D18**), variation (**D19**), gap cards and their check (**D20**).
+- [ ] P5 Gaps: gap spotting (**D17**), problematization (**D18**), variation (**D19**), options from every lens (**D26**), cards for any lens and their check (**D20**).
 - [ ] P6 Appraisal: red team (**D21**), certainty (**D22**), sizing (**D24**), gates, scores and sensitivity (**D23**).
 - [ ] P7 Report: PRISMA flow, dossier, handoff and watchlist, report check (**D25**); then `viz` builds `summary.md` and the dashboard (needs matplotlib; if it is missing, `next` says how to install it and the run still finishes).
 
@@ -97,6 +105,7 @@ Each card in `references/methods/` gives one method as a procedure: origin, when
 | D13–D16 | JTBD codebook (job map, ODI outcomes, Forces of Progress); reliability; matrices and strategy canvas; demand–supply gap map |
 | D17–D20 | gap spotting (confusion, neglect, application); problematization (ERRC, Six Paths); change one dimension; gap card |
 | D21–D25 | red team and pre-mortem; certainty (GRADE-CERQual); scoring; bottom-up sizing; reporting |
+| D26–D28 | opportunity lenses (clone-wedge, bundle, unbundle, port, down-market, replace, hosted-oss, productize, gap); traction from marketplace numbers; scan depth and the successive-halving funnel |
 
 ## Human operator
 - `autonomous` (default): the run continues on its own. Optional human tasks (contact string, gh login, tier-2 keys) never block; their fallbacks are recorded as coverage gaps.
@@ -110,6 +119,7 @@ Each card in `references/methods/` gives one method as a procedure: origin, when
 - **A merge rejects records:** read the listed reasons. Re-spawn the subagent with that list, or fix the outputs yourself if the fixes are mechanical. For evidence, then run `merge RUN --phase evidence --retry`; records already in the ledger count as duplicates.
 - **STOP_UNSATURATED, correlated scouts, low α or unsaturated themes:** these are findings, not failures. They lower certainty and must appear in the dossier.
 - **No gap passes the thresholds:** that is a valid, honest result. The writer reports it, and the handoff lists no opportunities.
+- **A scan generates no options, or none reaches the thin tier:** `opportunities/scan.json` says which lenses could not fire and why (no traction numbers, no prices, no named platforms). Report it; widen the protocol or run deep on a narrower question.
 
 ## Reference files
 - `references/cli.md`: every command, the pipeline order and the run layout.

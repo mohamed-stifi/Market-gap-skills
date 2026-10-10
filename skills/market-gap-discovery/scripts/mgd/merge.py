@@ -271,6 +271,8 @@ def merge_evidence(run, retry=False):
     ps = psl(run)
     led = read_jsonl(p(run, "evidence", "ledger.jsonl"))[0]
     seen = set((x["url"], _norm_quote(x["quote"])) for x in led)
+    by_key = {(x["url"], _norm_quote(x["quote"])): x for x in led}
+    opp_ids = set(x["opp_id"] for x in read_jsonl(p(run, "opportunities", "candidates.jsonl"))[0])
     _wn_key = lambda x: json.dumps({k: v for k, v in x.items() if k not in ("id", "miner", "round")}, sort_keys=True)
     wn_seen = set(_wn_key(x) for x in read_jsonl(p(run, "evidence", "why-now.jsonl"))[0])
     amap = alias_map(run)
@@ -322,7 +324,16 @@ def merge_evidence(run, retry=False):
                 report["rejected"].append("%s: snapshot %s was not created by gapscan" % (where, rec["snapshot"]))
                 continue
             k = (rec["url"], _norm_quote(rec["quote"]))
+            tags = [x for x in rec.get("candidate_ids") or [] if x in opp_ids]
+            if rec.get("candidate_ids") and len(tags) < len(rec["candidate_ids"]):
+                report.setdefault("unknown_candidate_ids", []).append(where)
+            if "candidate_ids" in rec:
+                rec = dict(rec, candidate_ids=tags)
             if k in seen:
+                # The same quote can test a second option (scan rounds): keep one record, union its tags.
+                old = by_key.get(k)
+                if old is not None and tags:
+                    old["candidate_ids"] = sorted(set(old.get("candidate_ids") or []) | set(tags))
                 report["duplicates"] += 1
                 continue
             seen.add(k)
@@ -340,6 +351,7 @@ def merge_evidence(run, retry=False):
                 for x in unknown:
                     report.setdefault("unknown_entities", {}).setdefault(x, []).append(rec["id"])
             led.append(rec)
+            by_key[k] = rec
             report["accepted"] += 1
     write_jsonl(p(run, "evidence", "ledger.jsonl"), led)
     name = "merge.json"
@@ -493,6 +505,44 @@ def merge_redteam(run):
     return 0
 
 
+def merge_redflag(run):
+    """Scan red flags (D28): validate, resolve snapshot prefixes, require evidence for every kill."""
+    st = load_state(run)
+    g = _group(st, "redflag")
+    known = set(x["opp_id"] for x in read_jsonl(p(run, "opportunities", "candidates.jsonl"))[0])
+    problems, rows = [], []
+    for a, o in _outputs(run, g):
+        doc = read_json(p(run, o["path"]))
+        e = validate(doc, "redflag")
+        if e:
+            problems.append("%s: %s" % (o["path"], "; ".join(e[:4])))
+            continue
+        if doc["opp_id"] not in known:
+            problems.append("%s: unknown option %s" % (o["path"], doc["opp_id"]))
+            continue
+        for ex in doc["existing"]:
+            if ex.get("snapshot"):
+                ex["snapshot"] = _snapshot_id(run, ex["snapshot"])
+                if not os.path.exists(p(run, "snapshots", ex["snapshot"] + ".raw")):
+                    problems.append("%s: snapshot %s does not exist" % (o["path"], ex["snapshot"]))
+        if doc["verdict"] == "killed" and doc.get("license_ok") is not False and not any(
+                ex["covers"] == "full" and ex.get("snapshot") for ex in doc["existing"]):
+            problems.append("%s: killed needs the snapshot of a product that fully covers the option (or license_ok false)" % o["path"])
+            continue
+        rows.append(doc)
+    if problems:
+        raise CliError("red-flag outputs need fixing:\n  " + "\n  ".join(problems[:15]))
+    write_jsonl(p(run, "opportunities", "redflags.jsonl"), sorted(rows, key=lambda d: d["opp_id"]))
+    g["merged"] = True
+    state.touch(st, "redflag")
+    save_state(run, st)
+    counts = {}
+    for d in rows:
+        counts[d["verdict"]] = counts.get(d["verdict"], 0) + 1
+    out("Red flags merged: %s." % ", ".join("%d %s" % (n, v) for v, n in sorted(counts.items())))
+    return 0
+
+
 def cmd_merge(args):
     run = args.run
     require_run(run)
@@ -515,4 +565,6 @@ def cmd_merge(args):
         return merge_supply(run)
     if ph == "redteam":
         return merge_redteam(run)
+    if ph == "redflag":
+        return merge_redflag(run)
     raise CliError("unknown merge phase %s" % ph)

@@ -18,6 +18,7 @@
     "credibility": {"enum": ["independent", "vendor", "incentivized", "affiliate", "unknown"]},
     "indirect": {"type": "boolean"},
     "entity_ids": {"type": "array", "items": {"type": "string"}},
+    "candidate_ids": {"type": "array", "items": {"type": "string", "pattern": "^OPP-[0-9]{3}$"}, "description": "Scan runs: the opportunity options this record supports or contradicts (D28)."},
     "author_hash": {"type": "string", "pattern": "^(ah_[0-9a-f]{16}|unknown)$"},
     "posted_at": {"type": ["string", "null"], "pattern": "^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$"},
     "retrieved_at": {"type": "string"},

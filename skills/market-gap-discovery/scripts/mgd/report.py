@@ -98,6 +98,34 @@ def cmd_prisma(args):
     gaps = {"cards_proposed": len(cards), "by_status": st_c, "gated_out": len(rk.get("excluded", [])) - st_c.get("killed", 0),
             "ranked": len(rk.get("ranked", []))}
     doc = {"computed_at": now_iso(), "landscape": landscape, "searches": searches, "evidence": evidence, "coding": coding, "gaps": gaps}
+    opp_md = []
+    if os.path.exists(p(run, "opportunities", "candidates.jsonl")):
+        # Opportunity lenses (D26) and the scan funnel (D28): generated -> tested -> by evidence tier -> red flags -> ranked.
+        oc = read_jsonl(p(run, "opportunities", "candidates.jsonl"))[0]
+        osc = (read_json(p(run, "opportunities", "scores.json"), {}) or {}).get("candidates", {})
+        ork = read_json(p(run, "opportunities", "ranking.json"), {}) or {}
+        orf = read_jsonl(p(run, "opportunities", "redflags.jsonl"))[0]
+        by_lens, by_tier, rf_v = {}, {}, {}
+        for x in oc:
+            by_lens[x["lens"]] = by_lens.get(x["lens"], 0) + 1
+        for v in osc.values():
+            by_tier[v["status"]] = by_tier.get(v["status"], 0) + 1
+        for x in orf:
+            rf_v[x["verdict"]] = rf_v.get(x["verdict"], 0) + 1
+        doc["opportunities"] = {"generated": len(oc), "by_lens": by_lens, "by_evidence_tier": by_tier,
+                                "tested": sum(n for k, n in by_tier.items() if k not in ("untested", "excluded")),
+                                "redflag_checked": len(orf), "redflag_verdicts": rf_v,
+                                "excluded": len(ork.get("excluded", [])), "ranked": len(ork.get("ranked", []))}
+        o = doc["opportunities"]
+        opp_md = ["", "## Opportunities", "", "| Stage | Count |", "|---|---|",
+                  "| Options generated (all lenses) | %d |" % o["generated"],
+                  "| Tested with evidence | %d |" % o["tested"],
+                  "| Promising | %d |" % by_tier.get("promising", 0),
+                  "| Contradicted | %d |" % by_tier.get("contradicted", 0),
+                  "| Red-flag checked | %d |" % o["redflag_checked"],
+                  "| Killed by red flags, gates or the protocol | %d |" % o["excluded"],
+                  "| Ranked | %d |" % o["ranked"], "",
+                  "Options by lens: " + ", ".join("%s %d" % kv for kv in sorted(by_lens.items()))]
     write_json(p(run, "output", "prisma.json"), doc)
     md = ["# PRISMA-style flow", "",
           "## Landscape", "",
@@ -126,7 +154,7 @@ def cmd_prisma(args):
           "| Killed by red team | %d |" % st_c.get("killed", 0),
           "| Gated out | %d |" % max(gaps["gated_out"], 0),
           "| Ranked | %d |" % gaps["ranked"], "",
-          "## Searches (PRISMA-S log)", ""] + ["- %s: %d" % (k, v) for k, v in sorted(searches.items())]
+          "## Searches (PRISMA-S log)", ""] + ["- %s: %d" % (k, v) for k, v in sorted(searches.items())] + opp_md
     with open(p(run, "output", "prisma.md"), "w", encoding="utf-8") as fh:
         fh.write("\n".join(md) + "\n")
     st = load_state(run)
@@ -167,6 +195,10 @@ CHECKS = [
     ("gaps/sizing-inputs.json", "sizing-inputs", "json"),
     ("output/handoff.json", "handoff", "json"),
     ("output/watchlist.json", "watchlist", "json"),
+    ("opportunities/candidates.jsonl", "opportunity", "jsonl"),
+    ("opportunities/redflags/OPP-*.json", "redflag", "json"),
+    ("opportunities/redflags.jsonl", "redflag", "jsonl"),
+    ("output/next-runs/OPP-*.protocol.json", "protocol", "json"),
     ("**/assign*.json", "assignment", "json"),
 ]
 

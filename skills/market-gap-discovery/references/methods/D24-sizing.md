@@ -36,6 +36,8 @@
 - `size` rejects accounts or ARPA without a source, shares outside 0–1, and any range where low ≤ base ≤ high does not hold.
 - SOM is never "x% of TAM". It is built from funnel steps that each have a rationale, and conversion and win rate are listed as assumptions.
 
+**Lenses (D26):** for clone-wedge, port, down-market, replace and hosted-oss cards, count accounts bottom-up from the base products' users where a source gives them (installs and rating counts in `landscape/traction.jsonl`, with their snapshots), then apply a switching share as an assumption. The scan's ambition math (customers needed at the incumbents' median price) is a reach check, not a size.
+
 **Pitfalls**
 - **Counting the whole category instead of the card's population**: all freelancers, when the card is about freelance translators who invoice foreign clients.
 - **Aspirational ARPA.** Use prices you observed. A premium tier nobody in the segment buys is not ARPA.

@@ -26,7 +26,7 @@ if HAVE_MPL:
     from mgd import viz  # noqa: E402
 
 PNG = b"\x89PNG\r\n\x1a\n"
-ALL_IDS = ["%02d" % i for i in range(1, 13)]
+ALL_IDS = ["%02d" % i for i in range(1, 14)]  # 13 = options by lens (D26), skipped without a scan
 
 
 def make_run(base):
@@ -195,7 +195,7 @@ class VizBuild(unittest.TestCase):
             code = viz.cmd_viz(argparse.Namespace(run=self.rdir, out=None))
         self.assertEqual(code, 0)
         lines = buf.getvalue().strip().splitlines()
-        self.assertEqual(len(lines), 14)
+        self.assertEqual(len(lines), 15)  # 13 charts + dashboard + summary
         self.assertTrue(any(ln.startswith("skipped") and "Demand bursts" in ln for ln in lines))
         self.assertTrue(lines[-2].startswith("dashboard") and lines[-2].endswith("index.html"))
         self.assertTrue(lines[-1].startswith("summary") and lines[-1].endswith("summary.md"))
@@ -216,7 +216,7 @@ class VizEdgeCases(unittest.TestCase):
         run = os.path.join(self.tmp, "empty")
         os.makedirs(run)
         man = viz.build(run)
-        self.assertEqual(len(man["charts"]), 12)
+        self.assertEqual(len(man["charts"]), 13)
         for c in man["charts"]:
             self.assertIsNone(c["file"])
             self.assertTrue(c["skipped_reason"])
@@ -280,6 +280,64 @@ class VizEdgeCases(unittest.TestCase):
             with self.assertRaises(viz.CliError) as ctx:
                 viz.build(run)
         self.assertIn("pip install matplotlib", str(ctx.exception))
+
+
+@unittest.skipUnless(HAVE_MPL, "matplotlib is not installed; the viz step is optional")
+class VizScan(unittest.TestCase):
+    """A scan-depth run (D28) gets the opportunity charts and an options-first summary."""
+
+    def setUp(self):
+        self.env = mock.patch.dict(os.environ)
+        self.env.start()
+        self.tmp = tempfile.mkdtemp()
+        run = make_run(self.tmp)
+        w = lambda rel, doc: write_json(os.path.join(run, rel), doc)  # noqa: E731
+        proto = json.load(open(os.path.join(run, "protocol.json"), encoding="utf-8"))
+        proto["depth"] = "scan"
+        w("protocol.json", proto)
+        cands = [{"opp_id": "OPP-%03d" % i, "lens": lens, "title": "Option %d" % i, "status": "candidate", "prior": 0.2 + 0.1 * i,
+                  "prior_parts": {}, "base_entities": ["dom:p%d.io" % i], "why": ["x"], "needs": [], "evidence_ids": [], "flags": [],
+                  "key": "k%d" % i, "category": "invoicing", "twist": {"dimension": "platform", "to": "shopify"} if lens == "port" else {}}
+                 for i, lens in enumerate(["clone-wedge", "port", "bundle", "replace", "port"], 1)]
+        write_jsonl(os.path.join(run, "opportunities", "candidates.jsonl"), cands)
+        w("opportunities/scores.json", {"candidates": {"OPP-001": {"status": "promising", "evidence_score": 0.7},
+                                                       "OPP-002": {"status": "thin", "evidence_score": 0.2}}})
+        w("opportunities/ranking.json", {"ranked": [{"opp_id": c["opp_id"], "lens": c["lens"], "title": c["title"], "rank": i,
+                                                     "prior": c["prior"], "evidence_score": [0.7, 0.2, 0, 0][i - 1],
+                                                     "status": ["promising", "thin", "untested", "untested"][i - 1]}
+                                                    for i, c in enumerate(cands[:4], 1)],
+                                         "excluded": [{"opp_id": "OPP-005", "reasons": ["red flag: killed"]}]})
+        w("output/opportunities.json", {"counts": {"candidates": 5, "tested": 2, "promising": 1}, "limitations": ["A scan is a breadth sample."],
+                                        "opportunities": [{"rank": 1, "opp_id": "OPP-001", "title": "Option 1", "lens_label": "Proven product + one improvement",
+                                                           "status": "promising", "evidence": {"support": 5, "authors": 4, "domains": 2},
+                                                           "redflag": {"verdict": "clear"},
+                                                           "ambition": {"customers_needed": 100, "price_ref_month": 10, "target_mrr": 1000},
+                                                           "next_run": {"command": "gapscan.py init gap-runs/x --from-run R --opportunity OPP-001",
+                                                                        "protocol": "output/next-runs/OPP-001.protocol.json"}}]})
+        self.run = run
+
+    def tearDown(self):
+        self.env.stop()
+        shutil.rmtree(self.tmp)
+
+    def test_scan_dashboard_and_summary(self):
+        man = viz.build(self.run)
+        ids = [c["id"] for c in man["charts"]]
+        self.assertEqual(ids, ["01", "03", "05", "10", "12", "13", "14", "15", "16"])
+        by = dict((c["id"], c) for c in man["charts"])
+        for cid in ("13", "14"):
+            self.assertTrue(by[cid].get("file"), by[cid].get("skipped_reason"))
+        self.assertIn("traction", by["15"]["skipped_reason"])
+        self.assertIn("platforms", by["16"]["skipped_reason"])  # the fixture maps no platforms
+        with open(os.path.join(self.run, "output", "summary.md"), encoding="utf-8") as fh:
+            text = fh.read()
+        self.assertIn("## Best options", text)
+        self.assertIn("100 paying customers at $10/month", text)
+        self.assertIn("--from-run R --opportunity OPP-001", text)
+        with open(os.path.join(self.run, "output", "dashboard", "index.html"), encoding="utf-8") as fh:
+            page = fh.read()
+        self.assertIn("The options", page)
+        self.assertIn("output/opportunities.md", page)
 
 
 def glob_pngs(folder):

@@ -72,6 +72,8 @@ PHASES = {
 }
 SECTIONS = [("The answer", ["08", "09", "04"]), ("The market", ["03", "10", "11"]),
             ("The evidence", ["05", "06", "07"]), ("How thorough was the search", ["01", "02", "12"])]
+# Deep runs also show the options every lens generated (chart 13, D26) next to the gap cards.
+DEEP_SECTIONS = [("The answer", ["08", "09", "13", "04"])] + SECTIONS[1:]
 
 
 class _Skip(Exception):
@@ -1764,7 +1766,8 @@ def _inline(text):
     return re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
 
 
-def _html(S, charts, run, generated):
+def _html(S, charts, run, generated, sections=None):
+    sections = sections or SECTIONS
     tone = {"good": "var(--good)", "warning": "var(--warn)", "critical": "var(--crit)"}
     h = ["<!doctype html>", "<html lang=\"en\">", "<head>", "<meta charset=\"utf-8\">",
          "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">",
@@ -1784,10 +1787,10 @@ def _html(S, charts, run, generated):
         h.append("<h3>%s</h3><ul>%s</ul>" % (html.escape(head), "".join("<li>%s</li>" % _inline(ln) for ln in lines)))
     h.append("</section>")
     by = dict((c["id"], c) for c in charts)
-    nav = [(name, "s%d" % i) for i, (name, ids) in enumerate(SECTIONS) if any(by.get(x, {}).get("png") for x in ids)]
+    nav = [(name, "s%d" % i) for i, (name, ids) in enumerate(sections) if any(by.get(x, {}).get("png") for x in ids)]
     if nav:
         h.append("<nav>%s</nav>" % "".join("<a href=\"#%s\">%s</a>" % (a, html.escape(n)) for n, a in nav))
-    for i, (name, ids) in enumerate(SECTIONS):
+    for i, (name, ids) in enumerate(sections):
         made = [by[x] for x in ids if by.get(x, {}).get("png")]
         if not made:
             continue
@@ -1809,7 +1812,7 @@ def _html(S, charts, run, generated):
         h.append("<h2>Charts not drawn</h2><ul class=\"skip\">%s</ul>" % "".join(
             "<li><strong>%s</strong>: %s</li>" % (html.escape(c["title"]), html.escape(c["skipped_reason"])) for c in skipped))
     h.append("<footer>Generated %s from the run folder %s. Every number is read or counted from the run's files; "
-             "the full method and quotes are in output/dossier.md.</footer>" % (html.escape(generated), html.escape(os.path.basename(os.path.abspath(run)))))
+             "the full method and quotes are in %s.</footer>" % (html.escape(generated), html.escape(os.path.basename(os.path.abspath(run))), html.escape(S.get("detail") or "output/dossier.md")))
     h += ["</main>", "</body>", "</html>"]
     return "\n".join(h) + "\n"
 
@@ -1874,9 +1877,11 @@ def build(run, out_dir=None):
     else:
         global _DOLLAR
         _DOLLAR = "\\$"
+    from . import viz_opps  # opportunity charts (D26-D28); imported here to avoid a cycle
+    chart_list, sections = viz_opps.charts_for(R)
     charts = []
     with m.mpl.rc_context(rc):
-        for num, slug, title, fn in CHARTS:
+        for num, slug, title, fn in chart_list:
             path = os.path.join(dash, "%s-%s.png" % (num, slug))
             entry = {"id": num, "file": None, "title": title}
             try:
@@ -1897,11 +1902,11 @@ def build(run, out_dir=None):
             if entry.get("skipped_reason") and os.path.exists(path):
                 os.remove(path)
             charts.append(entry)
-    S = _summary(R)
+    S = viz_opps.summary_scan(R) if sections else _summary(R)
     generated = now_iso()
     html_path = os.path.join(dash, "index.html")
     with open(html_path, "w", encoding="utf-8") as fh:
-        fh.write(_html(S, charts, run, generated))
+        fh.write(_html(S, charts, run, generated, sections or DEEP_SECTIONS))
     with open(sum_path, "w", encoding="utf-8") as fh:
         fh.write(_md(S, charts, _rel(run, dash)))
     keep = ("id", "file", "title", "subtitle", "sources", "skipped_reason")

@@ -1,0 +1,2824 @@
+{
+  "schema_version": "1.0",
+  "run_id": "indie-dev-tools-replay",
+  "generated_at": "2026-10-10T14:26:22+00:00",
+  "question": "Which jobs of indie developers, solo founders and micro-SaaS teams (1-5 people) are under-served by current developer and founder software and workarounds, and which could a small SaaS, built mostly by an AI coding agent and run with about 5 human hours a week and a budget under $300, serve profitably (>= $1,000 MRR) with growth built into the product?",
+  "depth": "deep",
+  "lenses": [
+    "gap",
+    "clone-wedge",
+    "bundle",
+    "unbundle",
+    "port",
+    "down-market",
+    "replace",
+    "hosted-oss",
+    "productize"
+  ],
+  "landscape": {
+    "products": 335,
+    "verdict": "STOP_UNSATURATED",
+    "completeness": 0.6087608751279426,
+    "coverage": 0.6941952678107124
+  },
+  "counts": {
+    "candidates": 51,
+    "ranked": 51,
+    "excluded": 0,
+    "promising": 1,
+    "tested": 8
+  },
+  "opportunities": [
+    {
+      "rank": 1,
+      "opp_id": "OPP-048",
+      "lens": "gap",
+      "lens_label": "Unmet need (gap)",
+      "title": "Unmet: Faster outage detection",
+      "status": "promising",
+      "redflag": null,
+      "prior": 0.375,
+      "evidence": {
+        "status": "promising",
+        "evidence_score": 0.312,
+        "records": 4,
+        "support": 4,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 3,
+        "domains": 3,
+        "source_types": 2,
+        "s4_authors": 0,
+        "evidence_ids": [
+          "EV-000175",
+          "EV-000177",
+          "EV-000182",
+          "EV-000187"
+        ]
+      },
+      "why": [
+        "gap-map cell synthesis: 3 demand authors, supply 37"
+      ],
+      "needs": [
+        "a red-team search for existing solutions"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": null,
+        "customers_needed": null,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Uptime.com Website Monitoring",
+        "Datadog",
+        "Grafana"
+      ],
+      "twist": {
+        "dimension": "job",
+        "from": null,
+        "to": "O-OUTAGE-DETECT-TIME"
+      },
+      "quotes": [
+        {
+          "evidence_id": "EV-000175",
+          "quote": "An uptime check is only as honest as the endpoint it hits, and a cached 200 is the most common lie.",
+          "url": "https://dev.to/libme/uptime-monitor-says-100-while-users-see-errors-what-to-check-and-when-paid-monitoring-is-worth-it-489p",
+          "stance": "pain",
+          "strength": "S1"
+        },
+        {
+          "evidence_id": "EV-000177",
+          "quote": "Pay for monitoring when the cost of a missed outage exceeds the subscription, and for most small products that line is crossed the first time a customer reports the outage before your monitor does.",
+          "url": "https://dev.to/libme/uptime-monitor-says-100-while-users-see-errors-what-to-check-and-when-paid-monitoring-is-worth-it-489p",
+          "stance": "wtp",
+          "strength": "S0"
+        },
+        {
+          "evidence_id": "EV-000182",
+          "quote": "are short outages that may not be noticed because they occour between the checks",
+          "url": "https://serverfault.com/questions/260021/uptime-monitoring-solution-that-opens-a-constant-socket-connection",
+          "stance": "pain",
+          "strength": "S1"
+        }
+      ],
+      "next_run": {
+        "protocol": "output/next-runs/OPP-048.protocol.json",
+        "run_id": "opp-048-unmet-faster-outage-detection",
+        "command": "gapscan.py init gap-runs/opp-048-unmet-faster-outage-detection --from-run gap-runs/indie-dev-tools-replay --opportunity OPP-048"
+      }
+    },
+    {
+      "rank": 2,
+      "opp_id": "OPP-032",
+      "lens": "clone-wedge",
+      "lens_label": "Proven product + one improvement",
+      "title": "Cheaper alternative to Tidio, Zoho SalesIQ - Live Chat App (Live chat and help desk)",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.637,
+      "evidence": {
+        "status": "thin",
+        "evidence_score": 0.469,
+        "records": 4,
+        "support": 4,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 4,
+        "domains": 1,
+        "source_types": 1,
+        "s4_authors": 1,
+        "evidence_ids": [
+          "EV-000026",
+          "EV-000038",
+          "EV-000047",
+          "EV-000051"
+        ]
+      },
+      "why": [
+        "8 proven product(s) in the top traction third of their store",
+        "4 author(s) complain about price"
+      ],
+      "needs": [
+        "complaints that name the wedge, from at least 2 domains",
+        "switch or willingness-to-pay records",
+        "a check that no product already sells this wedge"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Tidio",
+        "Zoho SalesIQ - Live Chat App",
+        "Crisp"
+      ],
+      "twist": {
+        "dimension": "wedge",
+        "from": "Tidio, Zoho SalesIQ - Live Chat App",
+        "to": "price"
+      },
+      "quotes": [
+        {
+          "evidence_id": "EV-000026",
+          "quote": "We had Intercom, and it was expensive and complicated. Crisp works great for our small business. It’s affordable and much more user friendly.",
+          "url": "https://itunes.apple.com/us/rss/customerreviews/page=1/id=1085770229/sortby=mostrecent/json",
+          "stance": "switch",
+          "strength": "S4"
+        },
+        {
+          "evidence_id": "EV-000038",
+          "quote": "all features of the app is restricted to paid version only which makes the non paid version useless and the cost of service (premium) is on the high side.",
+          "url": "https://itunes.apple.com/us/rss/customerreviews/page=1/id=1258723897/sortby=mostrecent/json",
+          "stance": "pain",
+          "strength": "S1"
+        },
+        {
+          "evidence_id": "EV-000047",
+          "quote": "I will definitely support them with future clients and projects that take advantage of their upgraded tier. The upgrade pricing is very competitive and affordable.",
+          "url": "https://itunes.apple.com/us/rss/customerreviews/page=2/id=6449775006/sortby=mostrecent/json",
+          "stance": "wtp",
+          "strength": "S0"
+        }
+      ],
+      "next_run": {
+        "protocol": "output/next-runs/OPP-032.protocol.json",
+        "run_id": "opp-032-cheaper-alternative-to-tidio-z",
+        "command": "gapscan.py init gap-runs/opp-032-cheaper-alternative-to-tidio-z --from-run gap-runs/indie-dev-tools-replay --opportunity OPP-032"
+      }
+    },
+    {
+      "rank": 3,
+      "opp_id": "OPP-033",
+      "lens": "clone-wedge",
+      "lens_label": "Proven product + one improvement",
+      "title": "More reliable alternative to Tidio, Zoho SalesIQ - Live Chat App (Live chat and help desk)",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.637,
+      "evidence": {
+        "status": "thin",
+        "evidence_score": 0.312,
+        "records": 3,
+        "support": 3,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 3,
+        "domains": 1,
+        "source_types": 1,
+        "s4_authors": 0,
+        "evidence_ids": [
+          "EV-000028",
+          "EV-000032",
+          "EV-000042"
+        ]
+      },
+      "why": [
+        "8 proven product(s) in the top traction third of their store",
+        "3 author(s) complain about reliability"
+      ],
+      "needs": [
+        "complaints that name the wedge, from at least 2 domains",
+        "switch or willingness-to-pay records",
+        "a check that no product already sells this wedge"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Tidio",
+        "Zoho SalesIQ - Live Chat App",
+        "Crisp"
+      ],
+      "twist": {
+        "dimension": "wedge",
+        "from": "Tidio, Zoho SalesIQ - Live Chat App",
+        "to": "reliability"
+      },
+      "quotes": [
+        {
+          "evidence_id": "EV-000028",
+          "quote": "When on the app many times chats get mixed up. I respond to one chat it goes to another.",
+          "url": "https://itunes.apple.com/us/rss/customerreviews/page=1/id=1085770229/sortby=mostrecent/json",
+          "stance": "pain",
+          "strength": "S1"
+        },
+        {
+          "evidence_id": "EV-000032",
+          "quote": "It’s been two years and you till haven’t resolved your mobile app notification issue",
+          "url": "https://itunes.apple.com/us/rss/customerreviews/page=1/id=1085770229/sortby=mostrecent/json",
+          "stance": "pain",
+          "strength": "S2"
+        },
+        {
+          "evidence_id": "EV-000042",
+          "quote": "We contacted the developer and it has been over 2 weeks now stuck with an app that doesn’t work and they refused to help no matter how many times we asked.",
+          "url": "https://itunes.apple.com/us/rss/customerreviews/page=1/id=1258723897/sortby=mostrecent/json",
+          "stance": "pain",
+          "strength": "S2"
+        }
+      ],
+      "next_run": {
+        "protocol": "output/next-runs/OPP-033.protocol.json",
+        "run_id": "opp-033-more-reliable-alternative-to-t",
+        "command": "gapscan.py init gap-runs/opp-033-more-reliable-alternative-to-t --from-run gap-runs/indie-dev-tools-replay --opportunity OPP-033"
+      }
+    },
+    {
+      "rank": 4,
+      "opp_id": "OPP-012",
+      "lens": "replace",
+      "lens_label": "Replacement after a shutdown, price rise or platform change",
+      "title": "Migration target for Lemon Squeezy users",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.75,
+      "evidence": {
+        "status": "thin",
+        "evidence_score": 0.125,
+        "records": 2,
+        "support": 2,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 2,
+        "domains": 1,
+        "source_types": 1,
+        "s4_authors": 0,
+        "evidence_ids": [
+          "EV-000111",
+          "EV-000129"
+        ]
+      },
+      "why": [
+        "2 author(s) mention Lemon Squeezy shutting down, being acquired or raising prices"
+      ],
+      "needs": [
+        "how many users are leaving",
+        "which alternatives they already chose"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 14.12,
+        "customers_needed": 71,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Lemon Squeezy"
+      ],
+      "twist": {
+        "dimension": "catalyst",
+        "from": "dom:lemonsqueezy.com",
+        "to": "replacement"
+      },
+      "quotes": [
+        {
+          "evidence_id": "EV-000111",
+          "quote": "Lemon Squeezy - it was very popular until being acquired by stripe. Full of serious bugs, bad support.",
+          "url": "https://news.ycombinator.com/item?id=43606206",
+          "stance": "pain",
+          "strength": "S1"
+        },
+        {
+          "evidence_id": "EV-000129",
+          "quote": "Lemon Squeezy is owned by Stripe and development is discontinued",
+          "url": "https://news.ycombinator.com/item?id=49555318",
+          "stance": "pain",
+          "strength": "S1"
+        }
+      ]
+    },
+    {
+      "rank": 5,
+      "opp_id": "OPP-013",
+      "lens": "replace",
+      "lens_label": "Replacement after a shutdown, price rise or platform change",
+      "title": "Migration target for TaxJar users",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.75,
+      "evidence": {
+        "status": "thin",
+        "evidence_score": 0.125,
+        "records": 2,
+        "support": 2,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 2,
+        "domains": 2,
+        "source_types": 2,
+        "s4_authors": 0,
+        "evidence_ids": [
+          "EV-000130",
+          "EV-000228"
+        ]
+      },
+      "why": [
+        "2 author(s) mention TaxJar shutting down, being acquired or raising prices"
+      ],
+      "needs": [
+        "how many users are leaving",
+        "which alternatives they already chose"
+      ],
+      "flags": [
+        "regulated-risk"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 39.0,
+        "customers_needed": 26,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "TaxJar"
+      ],
+      "twist": {
+        "dimension": "catalyst",
+        "from": "dom:taxjar.com",
+        "to": "replacement"
+      },
+      "quotes": [
+        {
+          "evidence_id": "EV-000130",
+          "quote": "TaxJar, acquired by Stripe, they ended up doubling the price",
+          "url": "https://news.ycombinator.com/item?id=49328938",
+          "stance": "pain",
+          "strength": "S1"
+        },
+        {
+          "evidence_id": "EV-000228",
+          "quote": "It’s literally printing novels of PHP Deprecated warnings in my debug log. Considering switching because of it.",
+          "url": "https://wordpress.org/support/topic/lack-of-plugin-updates-to-stay-current-with-woocomerce/",
+          "stance": "switch",
+          "strength": "S1"
+        }
+      ]
+    },
+    {
+      "rank": 6,
+      "opp_id": "OPP-036",
+      "lens": "clone-wedge",
+      "lens_label": "Proven product + one improvement",
+      "title": "More reliable alternative to License Manager for WooCommerce, Serial Numbers - Ultimate License Manager (License managem",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.605,
+      "evidence": {
+        "status": "thin",
+        "evidence_score": 0.25,
+        "records": 2,
+        "support": 2,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 2,
+        "domains": 1,
+        "source_types": 1,
+        "s4_authors": 0,
+        "evidence_ids": [
+          "EV-000225",
+          "EV-000226"
+        ]
+      },
+      "why": [
+        "3 proven product(s) in the top traction third of their store",
+        "2 author(s) complain about reliability"
+      ],
+      "needs": [
+        "complaints that name the wedge, from at least 2 domains",
+        "switch or willingness-to-pay records",
+        "a check that no product already sells this wedge"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 8.25,
+        "customers_needed": 122,
+        "base_installs": 7800,
+        "share_of_base_installs": 0.01564,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "License Manager for WooCommerce",
+        "Serial Numbers - Ultimate License Manager",
+        "Digital License Manager"
+      ],
+      "twist": {
+        "dimension": "wedge",
+        "from": "License Manager for WooCommerce, Serial Numbers - Ultimate License Manager",
+        "to": "reliability"
+      },
+      "quotes": [
+        {
+          "evidence_id": "EV-000225",
+          "quote": "Using the premium plugin, licenses were no longer emailed to our clients.",
+          "url": "https://wordpress.org/support/topic/avoid-the-premium-version/",
+          "stance": "pain",
+          "strength": "S2"
+        },
+        {
+          "evidence_id": "EV-000226",
+          "quote": "As of version 3.0 plugin triggers fatal errors and warnings which renders the plugin as almost unusable.",
+          "url": "https://wordpress.org/support/topic/version-3-0-is-disaster-no-willingness-to-fix-basic-issues-for-months/",
+          "stance": "pain",
+          "strength": "S2"
+        }
+      ]
+    },
+    {
+      "rank": 7,
+      "opp_id": "OPP-042",
+      "lens": "unbundle",
+      "lens_label": "One part of a suite, done simply",
+      "title": "Just the block payment fraud part of Lemon Squeezy, done simply",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.5,
+      "evidence": {
+        "status": "thin",
+        "evidence_score": 0.125,
+        "records": 2,
+        "support": 2,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 2,
+        "domains": 1,
+        "source_types": 1,
+        "s4_authors": 0,
+        "evidence_ids": [
+          "EV-000109",
+          "EV-000113"
+        ]
+      },
+      "why": [
+        "Lemon Squeezy serves 7 jobs; 1 standalone product(s) do 'Block payment fraud'"
+      ],
+      "needs": [
+        "users who need only this part",
+        "complaints about the suite's price or complexity"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 14.12,
+        "customers_needed": 71,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Lemon Squeezy"
+      ],
+      "twist": {
+        "dimension": "scope",
+        "from": "7 jobs",
+        "to": "J-BLOCK-PAYMENT-FRAUD"
+      },
+      "quotes": [
+        {
+          "evidence_id": "EV-000109",
+          "quote": "I'd avoid LemonSqueezy because the payouts fees if you're outside of the USA are too high",
+          "url": "https://news.ycombinator.com/item?id=42311810",
+          "stance": "pain",
+          "strength": "S1"
+        },
+        {
+          "evidence_id": "EV-000113",
+          "quote": "Lemonsqueezy is a lot more expensive than Paddle especially if you are EU based. Hidden fees and things like they only payout USD so you are paying exchange fees multiple times.",
+          "url": "https://news.ycombinator.com/item?id=43340960",
+          "stance": "pain",
+          "strength": "S1"
+        }
+      ]
+    },
+    {
+      "rank": 8,
+      "opp_id": "OPP-050",
+      "lens": "gap",
+      "lens_label": "Unmet need (gap)",
+      "title": "Unmet: Collect product feedback",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.35,
+      "evidence": {
+        "status": "thin",
+        "evidence_score": 0.094,
+        "records": 2,
+        "support": 2,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 2,
+        "domains": 1,
+        "source_types": 1,
+        "s4_authors": 0,
+        "evidence_ids": [
+          "EV-000097",
+          "EV-000100"
+        ]
+      },
+      "why": [
+        "gap-map cell synthesis: 2 demand authors, supply 50"
+      ],
+      "needs": [
+        "a red-team search for existing solutions"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 0.99,
+        "customers_needed": 1011,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "App Store Connect",
+        "Sogolytics",
+        "App Reviews - iOS & Android"
+      ],
+      "twist": {
+        "dimension": "job",
+        "from": null,
+        "to": "J-COLLECT-FEEDBACK"
+      },
+      "quotes": [
+        {
+          "evidence_id": "EV-000097",
+          "quote": "Every team collects feedback but it’s spread across Intercom, forms, emails, Slack threads, and support tickets. Most of it never gets reviewed, and when it does, it’s hard to make sense of it all.",
+          "url": "https://news.ycombinator.com/item?id=44365126",
+          "stance": "pain",
+          "strength": "S1"
+        },
+        {
+          "evidence_id": "EV-000100",
+          "quote": "I found a gap in tools to easily manage, filter, and display customer feedback.",
+          "url": "https://news.ycombinator.com/item?id=42098830",
+          "stance": "pain",
+          "strength": "S0"
+        }
+      ]
+    },
+    {
+      "rank": 9,
+      "opp_id": "OPP-001",
+      "lens": "clone-wedge",
+      "lens_label": "Proven product + one improvement",
+      "title": "Better-rated alternative to Easy Digital Downloads, SureCart (Digital storefront)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.923,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "3 proven product(s) in the top traction third of their store",
+        "low ratings, but no complaint names the wedge yet"
+      ],
+      "needs": [
+        "complaints that name the wedge, from at least 2 domains",
+        "switch or willingness-to-pay records",
+        "a check that no product already sells this wedge"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 16.58,
+        "customers_needed": 61,
+        "base_installs": 129000,
+        "share_of_base_installs": 0.00047,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Easy Digital Downloads",
+        "SureCart",
+        "FluentCart"
+      ],
+      "twist": {
+        "dimension": "wedge",
+        "from": "Easy Digital Downloads, SureCart",
+        "to": "unknown"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 10,
+      "opp_id": "OPP-002",
+      "lens": "clone-wedge",
+      "lens_label": "Proven product + one improvement",
+      "title": "Better-rated alternative to SlimStat Analytics, WP Statistics (Web analytics)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.877,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "12 proven product(s) in the top traction third of their store",
+        "low ratings, but no complaint names the wedge yet"
+      ],
+      "needs": [
+        "complaints that name the wedge, from at least 2 domains",
+        "switch or willingness-to-pay records",
+        "a check that no product already sells this wedge"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "SlimStat Analytics",
+        "WP Statistics",
+        "Burst Statistics"
+      ],
+      "twist": {
+        "dimension": "wedge",
+        "from": "SlimStat Analytics, WP Statistics",
+        "to": "unknown"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 11,
+      "opp_id": "OPP-003",
+      "lens": "port",
+      "lens_label": "Proven model on a new platform, language or segment",
+      "title": "Live chat and help desk in Brazilian Portuguese (proven in English)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.857,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "17 products on language en, 0 on pt-BR"
+      ],
+      "needs": [
+        "requests for this live chat and help desk from pt-BR users",
+        "a check that the leader has no pt-BR version",
+        "size of the pt-BR market for this job"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Tidio",
+        "Zoho SalesIQ - Live Chat App",
+        "Crisp"
+      ],
+      "twist": {
+        "dimension": "language",
+        "from": "en",
+        "to": "pt-BR"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 12,
+      "opp_id": "OPP-004",
+      "lens": "down-market",
+      "lens_label": "Cheaper, simpler tier for priced-out users",
+      "title": "Low-cost revenue recovery (paid plans start at 99/month)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.843,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "cheapest paid plan 99/month costs more than 86% of entry prices in other categories",
+        "free tier share 0%"
+      ],
+      "needs": [
+        "price complaints from small buyers",
+        "evidence that a cheaper, smaller product is enough for them"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 125.0,
+        "customers_needed": 8,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price halved for a cheaper tier; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "inai",
+        "Churnkey",
+        "Churn Buster"
+      ],
+      "twist": {
+        "dimension": "price",
+        "from": "99/month",
+        "to": "lower tier"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 13,
+      "opp_id": "OPP-005",
+      "lens": "port",
+      "lens_label": "Proven model on a new platform, language or segment",
+      "title": "App store operations in Brazilian Portuguese (proven in English)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.835,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "7 products on language en, 0 on pt-BR"
+      ],
+      "needs": [
+        "requests for this app store operations from pt-BR users",
+        "a check that the leader has no pt-BR version",
+        "size of the pt-BR market for this job"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 2.99,
+        "customers_needed": 335,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "App Store Connect",
+        "Google Play Console",
+        "LaunchBuddy - App Planner"
+      ],
+      "twist": {
+        "dimension": "language",
+        "from": "en",
+        "to": "pt-BR"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 14,
+      "opp_id": "OPP-006",
+      "lens": "bundle",
+      "lens_label": "Two tools merged into one",
+      "title": "Digital storefront + web analytics in one product",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.822,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "3 integration links or co-mentions between the two categories",
+        "joint supply 0 product(s) do both jobs"
+      ],
+      "needs": [
+        "users who use both tools and want one",
+        "a check that no product already does both well"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 9.92,
+        "customers_needed": 101,
+        "base_installs": 690000,
+        "share_of_base_installs": 0.00015,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Easy Digital Downloads",
+        "SureCart",
+        "SlimStat Analytics",
+        "WP Statistics"
+      ],
+      "twist": {
+        "dimension": "bundle",
+        "from": "digital-storefront",
+        "to": "web-analytics"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 15,
+      "opp_id": "OPP-007",
+      "lens": "port",
+      "lens_label": "Proven model on a new platform, language or segment",
+      "title": "App store analytics in Brazilian Portuguese (proven in English)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.812,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "9 products on language en, 0 on pt-BR"
+      ],
+      "needs": [
+        "requests for this app store analytics from pt-BR users",
+        "a check that the leader has no pt-BR version",
+        "size of the pt-BR market for this job"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 0.99,
+        "customers_needed": 1011,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Appfigures",
+        "App Reviews - iOS & Android",
+        "App Sales - Store Reports"
+      ],
+      "twist": {
+        "dimension": "language",
+        "from": "en",
+        "to": "pt-BR"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 16,
+      "opp_id": "OPP-008",
+      "lens": "clone-wedge",
+      "lens_label": "Proven product + one improvement",
+      "title": "Better-rated alternative to Paid Member Subscriptions, Subscriptions for WooCommerce (Subscription billing)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.799,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "3 proven product(s) in the top traction third of their store",
+        "low ratings, but no complaint names the wedge yet"
+      ],
+      "needs": [
+        "complaints that name the wedge, from at least 2 domains",
+        "switch or willingness-to-pay records",
+        "a check that no product already sells this wedge"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 9.5,
+        "customers_needed": 106,
+        "base_installs": 21000,
+        "share_of_base_installs": 0.00505,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Paid Member Subscriptions",
+        "Subscriptions for WooCommerce",
+        "Subscriptions for WooCommerce with Stripe Recurring Payments"
+      ],
+      "twist": {
+        "dimension": "wedge",
+        "from": "Paid Member Subscriptions, Subscriptions for WooCommerce",
+        "to": "unknown"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 17,
+      "opp_id": "OPP-009",
+      "lens": "bundle",
+      "lens_label": "Two tools merged into one",
+      "title": "App monetization layer + web analytics in one product",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.774,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "2 integration links or co-mentions between the two categories",
+        "joint supply 0 product(s) do both jobs"
+      ],
+      "needs": [
+        "users who use both tools and want one",
+        "a check that no product already does both well"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 9.92,
+        "customers_needed": 101,
+        "base_installs": 570000,
+        "share_of_base_installs": 0.00018,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "AddonPay",
+        "ExtensionPay",
+        "SlimStat Analytics",
+        "WP Statistics"
+      ],
+      "twist": {
+        "dimension": "bundle",
+        "from": "app-monetization",
+        "to": "web-analytics"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 18,
+      "opp_id": "OPP-010",
+      "lens": "down-market",
+      "lens_label": "Cheaper, simpler tier for priced-out users",
+      "title": "Low-cost onboarding and adoption (paid plans start at 100/month)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.764,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "cheapest paid plan 100/month costs more than 87% of entry prices in other categories",
+        "free tier share 25%"
+      ],
+      "needs": [
+        "price complaints from small buyers",
+        "evidence that a cheaper, smaller product is enough for them"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 79.0,
+        "customers_needed": 13,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price halved for a cheaper tier; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Userlens",
+        "Inline Manual",
+        "UserGuiding"
+      ],
+      "twist": {
+        "dimension": "price",
+        "from": "100/month",
+        "to": "lower tier"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 19,
+      "opp_id": "OPP-011",
+      "lens": "bundle",
+      "lens_label": "Two tools merged into one",
+      "title": "Digital storefront + live chat and help desk in one product",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.757,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "2 integration links or co-mentions between the two categories",
+        "joint supply 0 product(s) do both jobs"
+      ],
+      "needs": [
+        "users who use both tools and want one",
+        "a check that no product already does both well"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": 120000,
+        "share_of_base_installs": 0.00083,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Easy Digital Downloads",
+        "SureCart",
+        "Tidio",
+        "Zoho SalesIQ - Live Chat App"
+      ],
+      "twist": {
+        "dimension": "bundle",
+        "from": "digital-storefront",
+        "to": "live-chat-helpdesk"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 20,
+      "opp_id": "OPP-014",
+      "lens": "port",
+      "lens_label": "Proven model on a new platform, language or segment",
+      "title": "Web analytics in German (proven in English)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.745,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "28 products on language en, 0 on de"
+      ],
+      "needs": [
+        "requests for this web analytics from de users",
+        "a check that the leader has no de version",
+        "size of the de market for this job"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "SlimStat Analytics",
+        "WP Statistics",
+        "Burst Statistics"
+      ],
+      "twist": {
+        "dimension": "language",
+        "from": "en",
+        "to": "de"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 21,
+      "opp_id": "OPP-015",
+      "lens": "port",
+      "lens_label": "Proven model on a new platform, language or segment",
+      "title": "Web analytics in Spanish (proven in English)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.745,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "28 products on language en, 0 on es"
+      ],
+      "needs": [
+        "requests for this web analytics from es users",
+        "a check that the leader has no es version",
+        "size of the es market for this job"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "SlimStat Analytics",
+        "WP Statistics",
+        "Burst Statistics"
+      ],
+      "twist": {
+        "dimension": "language",
+        "from": "en",
+        "to": "es"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 22,
+      "opp_id": "OPP-016",
+      "lens": "port",
+      "lens_label": "Proven model on a new platform, language or segment",
+      "title": "Web analytics on CLI (proven on WordPress)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.745,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "14 products on platform wordpress, 0 on CLI"
+      ],
+      "needs": [
+        "requests for this web analytics from CLI users",
+        "a check that the leader has no CLI version",
+        "size of the CLI market for this job"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "SlimStat Analytics",
+        "WP Statistics",
+        "Burst Statistics"
+      ],
+      "twist": {
+        "dimension": "platform",
+        "from": "wordpress",
+        "to": "CLI"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 23,
+      "opp_id": "OPP-017",
+      "lens": "port",
+      "lens_label": "Proven model on a new platform, language or segment",
+      "title": "Web analytics on GitHub app (proven on WordPress)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.745,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "14 products on platform wordpress, 0 on GitHub app"
+      ],
+      "needs": [
+        "requests for this web analytics from GitHub app users",
+        "a check that the leader has no GitHub app version",
+        "size of the GitHub app market for this job"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "SlimStat Analytics",
+        "WP Statistics",
+        "Burst Statistics"
+      ],
+      "twist": {
+        "dimension": "platform",
+        "from": "wordpress",
+        "to": "GitHub app"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 24,
+      "opp_id": "OPP-018",
+      "lens": "port",
+      "lens_label": "Proven model on a new platform, language or segment",
+      "title": "Web analytics for wordpress and shopify plugin devs (proven for website owners)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.745,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "26 products on segment website-owners, 0 on WordPress and Shopify plugin devs"
+      ],
+      "needs": [
+        "requests for this web analytics from WordPress and Shopify plugin devs users",
+        "a check that the leader has no WordPress and Shopify plugin devs version",
+        "size of the WordPress and Shopify plugin devs market for this job"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "SlimStat Analytics",
+        "WP Statistics",
+        "Burst Statistics"
+      ],
+      "twist": {
+        "dimension": "segment",
+        "from": "website-owners",
+        "to": "WordPress and Shopify plugin devs"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 25,
+      "opp_id": "OPP-019",
+      "lens": "port",
+      "lens_label": "Proven model on a new platform, language or segment",
+      "title": "Web analytics for indie hackers (proven for website owners)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.745,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "26 products on segment website-owners, 0 on indie hackers"
+      ],
+      "needs": [
+        "requests for this web analytics from indie hackers users",
+        "a check that the leader has no indie hackers version",
+        "size of the indie hackers market for this job"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "SlimStat Analytics",
+        "WP Statistics",
+        "Burst Statistics"
+      ],
+      "twist": {
+        "dimension": "segment",
+        "from": "website-owners",
+        "to": "indie hackers"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 26,
+      "opp_id": "OPP-020",
+      "lens": "port",
+      "lens_label": "Proven model on a new platform, language or segment",
+      "title": "Live chat and help desk on CLI (proven on iOS / iPadOS)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.732,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "7 products on platform ios, 0 on CLI"
+      ],
+      "needs": [
+        "requests for this live chat and help desk from CLI users",
+        "a check that the leader has no CLI version",
+        "size of the CLI market for this job"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Tidio",
+        "Zoho SalesIQ - Live Chat App",
+        "Crisp"
+      ],
+      "twist": {
+        "dimension": "platform",
+        "from": "ios",
+        "to": "CLI"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 27,
+      "opp_id": "OPP-021",
+      "lens": "port",
+      "lens_label": "Proven model on a new platform, language or segment",
+      "title": "Live chat and help desk on GitHub app (proven on iOS / iPadOS)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.732,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "7 products on platform ios, 0 on GitHub app"
+      ],
+      "needs": [
+        "requests for this live chat and help desk from GitHub app users",
+        "a check that the leader has no GitHub app version",
+        "size of the GitHub app market for this job"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Tidio",
+        "Zoho SalesIQ - Live Chat App",
+        "Crisp"
+      ],
+      "twist": {
+        "dimension": "platform",
+        "from": "ios",
+        "to": "GitHub app"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 28,
+      "opp_id": "OPP-022",
+      "lens": "port",
+      "lens_label": "Proven model on a new platform, language or segment",
+      "title": "Live chat and help desk for wordpress and shopify plugin devs (proven for small and mid-size businesses)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.732,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "13 products on segment smb-general, 0 on WordPress and Shopify plugin devs"
+      ],
+      "needs": [
+        "requests for this live chat and help desk from WordPress and Shopify plugin devs users",
+        "a check that the leader has no WordPress and Shopify plugin devs version",
+        "size of the WordPress and Shopify plugin devs market for this job"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Tidio",
+        "Zoho SalesIQ - Live Chat App",
+        "Crisp"
+      ],
+      "twist": {
+        "dimension": "segment",
+        "from": "smb-general",
+        "to": "WordPress and Shopify plugin devs"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 29,
+      "opp_id": "OPP-023",
+      "lens": "unbundle",
+      "lens_label": "One part of a suite, done simply",
+      "title": "Just the block payment fraud part of Easy Digital Downloads, done simply",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.726,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "Easy Digital Downloads serves 5 jobs; 1 standalone product(s) do 'Block payment fraud'"
+      ],
+      "needs": [
+        "users who need only this part",
+        "complaints about the suite's price or complexity"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 8.29,
+        "customers_needed": 121,
+        "base_installs": 40000,
+        "share_of_base_installs": 0.00302,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Easy Digital Downloads"
+      ],
+      "twist": {
+        "dimension": "scope",
+        "from": "5 jobs",
+        "to": "J-BLOCK-PAYMENT-FRAUD"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 30,
+      "opp_id": "OPP-024",
+      "lens": "replace",
+      "lens_label": "Replacement after a shutdown, price rise or platform change",
+      "title": "Replacement after: After Stripe acquired Lemon Squeezy, sellers report its development is discontinued and st",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.726,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "catalyst WN-002 (economic, 2026-09)"
+      ],
+      "needs": [
+        "users looking for an alternative because of this change",
+        "who already captured them"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 14.12,
+        "customers_needed": 71,
+        "base_installs": 500,
+        "share_of_base_installs": 0.142,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Lemon Squeezy",
+        "Paddle"
+      ],
+      "twist": {
+        "dimension": "catalyst",
+        "from": "WN-002",
+        "to": "replacement"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 31,
+      "opp_id": "OPP-025",
+      "lens": "hosted-oss",
+      "lens_label": "Hosted version of an open-source tool",
+      "title": "Hosted BillingSDK (subscription billing, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.667,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "BillingSDK is self-hosted or open source (deployment self-hosted, license unknown)"
+      ],
+      "needs": [
+        "requests for a hosted version",
+        "the license text (hosting rights, trademark)",
+        "whether the maintainers sell hosting"
+      ],
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 9.52,
+        "customers_needed": 106,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "BillingSDK"
+      ],
+      "twist": {
+        "dimension": "delivery",
+        "from": "self-hosted",
+        "to": "hosted"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 32,
+      "opp_id": "OPP-026",
+      "lens": "hosted-oss",
+      "lens_label": "Hosted version of an open-source tool",
+      "title": "Hosted DeepEval (llm and agent ops, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.667,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "DeepEval is self-hosted or open source (deployment self-hosted, license unknown)"
+      ],
+      "needs": [
+        "requests for a hosted version",
+        "the license text (hosting rights, trademark)",
+        "whether the maintainers sell hosting"
+      ],
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 99.0,
+        "customers_needed": 11,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "DeepEval"
+      ],
+      "twist": {
+        "dimension": "delivery",
+        "from": "self-hosted",
+        "to": "hosted"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 33,
+      "opp_id": "OPP-027",
+      "lens": "hosted-oss",
+      "lens_label": "Hosted version of an open-source tool",
+      "title": "Hosted GoAccess (web analytics, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.667,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "GoAccess is self-hosted or open source (deployment self-hosted, license unknown)"
+      ],
+      "needs": [
+        "requests for a hosted version",
+        "the license text (hosting rights, trademark)",
+        "whether the maintainers sell hosting"
+      ],
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 9.0,
+        "customers_needed": 112,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "GoAccess"
+      ],
+      "twist": {
+        "dimension": "delivery",
+        "from": "self-hosted",
+        "to": "hosted"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 34,
+      "opp_id": "OPP-028",
+      "lens": "hosted-oss",
+      "lens_label": "Hosted version of an open-source tool",
+      "title": "Hosted Libredesk (live chat and help desk, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.667,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "Libredesk is self-hosted or open source (deployment self-hosted, license unknown)"
+      ],
+      "needs": [
+        "requests for a hosted version",
+        "the license text (hosting rights, trademark)",
+        "whether the maintainers sell hosting"
+      ],
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 18.49,
+        "customers_needed": 55,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Libredesk"
+      ],
+      "twist": {
+        "dimension": "delivery",
+        "from": "self-hosted",
+        "to": "hosted"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 35,
+      "opp_id": "OPP-029",
+      "lens": "hosted-oss",
+      "lens_label": "Hosted version of an open-source tool",
+      "title": "Hosted RunsOn (infrastructure ops, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.667,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "RunsOn is self-hosted or open source (deployment self-hosted, license unknown)"
+      ],
+      "needs": [
+        "requests for a hosted version",
+        "the license text (hosting rights, trademark)",
+        "whether the maintainers sell hosting"
+      ],
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 25.0,
+        "customers_needed": 40,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "RunsOn"
+      ],
+      "twist": {
+        "dimension": "delivery",
+        "from": "self-hosted",
+        "to": "hosted"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 36,
+      "opp_id": "OPP-030",
+      "lens": "hosted-oss",
+      "lens_label": "Hosted version of an open-source tool",
+      "title": "Hosted ShipAhead (starter code, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.667,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "ShipAhead is self-hosted or open source (deployment self-hosted, license unknown)"
+      ],
+      "needs": [
+        "requests for a hosted version",
+        "the license text (hosting rights, trademark)",
+        "whether the maintainers sell hosting"
+      ],
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": null,
+        "customers_needed": null,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "ShipAhead"
+      ],
+      "twist": {
+        "dimension": "delivery",
+        "from": "self-hosted",
+        "to": "hosted"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 37,
+      "opp_id": "OPP-031",
+      "lens": "bundle",
+      "lens_label": "Two tools merged into one",
+      "title": "App monetization layer + product analytics in one product",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.639,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "2 integration links or co-mentions between the two categories",
+        "joint supply 0 product(s) do both jobs"
+      ],
+      "needs": [
+        "users who use both tools and want one",
+        "a check that no product already does both well"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 6.99,
+        "customers_needed": 144,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "AddonPay",
+        "ExtensionPay",
+        "MiniHog",
+        "HogLite - PostHog Mobile App"
+      ],
+      "twist": {
+        "dimension": "bundle",
+        "from": "app-monetization",
+        "to": "product-analytics"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 38,
+      "opp_id": "OPP-034",
+      "lens": "clone-wedge",
+      "lens_label": "Proven product + one improvement",
+      "title": "Better-rated alternative to Zendesk Support for Jira, Zendesk Connector for Jira (Help desk integration)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.634,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "4 proven product(s) in the top traction third of their store",
+        "low ratings, but no complaint names the wedge yet"
+      ],
+      "needs": [
+        "complaints that name the wedge, from at least 2 domains",
+        "switch or willingness-to-pay records",
+        "a check that no product already sells this wedge"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": null,
+        "customers_needed": null,
+        "base_installs": 13746,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Zendesk Support for Jira",
+        "Zendesk Connector for Jira",
+        "Confluence to Zendesk Sync"
+      ],
+      "twist": {
+        "dimension": "wedge",
+        "from": "Zendesk Support for Jira, Zendesk Connector for Jira",
+        "to": "unknown"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 39,
+      "opp_id": "OPP-035",
+      "lens": "bundle",
+      "lens_label": "Two tools merged into one",
+      "title": "LLM and agent ops + observability platform in one product",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.608,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "3 integration links or co-mentions between the two categories",
+        "joint supply not measured (no supply map)"
+      ],
+      "needs": [
+        "users who use both tools and want one",
+        "a check that no product already does both well"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 49.5,
+        "customers_needed": 21,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Agnost AI",
+        "Phoenix by Arize AI",
+        "Datadog",
+        "Site24x7"
+      ],
+      "twist": {
+        "dimension": "bundle",
+        "from": "llm-ops",
+        "to": "observability-platform"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 40,
+      "opp_id": "OPP-037",
+      "lens": "hosted-oss",
+      "lens_label": "Hosted version of an open-source tool",
+      "title": "Hosted Matomo (web analytics, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.604,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "Matomo is self-hosted or open source (deployment hybrid, license unknown)"
+      ],
+      "needs": [
+        "requests for a hosted version",
+        "the license text (hosting rights, trademark)",
+        "whether the maintainers sell hosting"
+      ],
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 29.0,
+        "customers_needed": 35,
+        "base_installs": 100000,
+        "share_of_base_installs": 0.00035,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Matomo"
+      ],
+      "twist": {
+        "dimension": "delivery",
+        "from": "self-hosted",
+        "to": "hosted"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 41,
+      "opp_id": "OPP-038",
+      "lens": "clone-wedge",
+      "lens_label": "Proven product + one improvement",
+      "title": "Better-rated alternative to Datadog, Site24x7 (Observability platform)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.602,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "4 proven product(s) in the top traction third of their store",
+        "low ratings, but no complaint names the wedge yet"
+      ],
+      "needs": [
+        "complaints that name the wedge, from at least 2 domains",
+        "switch or willingness-to-pay records",
+        "a check that no product already sells this wedge"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 20.0,
+        "customers_needed": 50,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Datadog",
+        "Site24x7",
+        "New Relic"
+      ],
+      "twist": {
+        "dimension": "wedge",
+        "from": "Datadog, Site24x7",
+        "to": "unknown"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 42,
+      "opp_id": "OPP-039",
+      "lens": "clone-wedge",
+      "lens_label": "Proven product + one improvement",
+      "title": "Better-rated alternative to App Store Connect, Google Play Console (App store operations)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.597,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "3 proven product(s) in the top traction third of their store",
+        "low ratings, but no complaint names the wedge yet"
+      ],
+      "needs": [
+        "complaints that name the wedge, from at least 2 domains",
+        "switch or willingness-to-pay records",
+        "a check that no product already sells this wedge"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 2.99,
+        "customers_needed": 335,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "App Store Connect",
+        "Google Play Console",
+        "LaunchBuddy - App Planner"
+      ],
+      "twist": {
+        "dimension": "wedge",
+        "from": "App Store Connect, Google Play Console",
+        "to": "unknown"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 43,
+      "opp_id": "OPP-040",
+      "lens": "clone-wedge",
+      "lens_label": "Proven product + one improvement",
+      "title": "Better-rated alternative to Smart Forms for Jira (JSM, JWM, Confluence & JPD Feedback), Advance Customer Satisfaction (C",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.565,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "2 proven product(s) in the top traction third of their store",
+        "low ratings, but no complaint names the wedge yet"
+      ],
+      "needs": [
+        "complaints that name the wedge, from at least 2 domains",
+        "switch or willingness-to-pay records",
+        "a check that no product already sells this wedge"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 129.0,
+        "customers_needed": 8,
+        "base_installs": 1535,
+        "share_of_base_installs": 0.00521,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Smart Forms for Jira (JSM, JWM, Confluence & JPD Feedback)",
+        "Advance Customer Satisfaction (CSAT) Survey for Jira"
+      ],
+      "twist": {
+        "dimension": "wedge",
+        "from": "Smart Forms for Jira (JSM, JWM, Confluence & JPD Feedback), Advance Customer Satisfaction (CSAT) Survey for Jira",
+        "to": "unknown"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 44,
+      "opp_id": "OPP-041",
+      "lens": "bundle",
+      "lens_label": "Two tools merged into one",
+      "title": "Digital storefront + experimentation in one product",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.561,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "2 integration links or co-mentions between the two categories",
+        "joint supply not measured (no supply map)"
+      ],
+      "needs": [
+        "users who use both tools and want one",
+        "a check that no product already does both well"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 16.58,
+        "customers_needed": 61,
+        "base_installs": 124000,
+        "share_of_base_installs": 0.00049,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Easy Digital Downloads",
+        "SureCart",
+        "Sigmize",
+        "LaunchDarkly"
+      ],
+      "twist": {
+        "dimension": "bundle",
+        "from": "digital-storefront",
+        "to": "experimentation"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 45,
+      "opp_id": "OPP-043",
+      "lens": "hosted-oss",
+      "lens_label": "Hosted version of an open-source tool",
+      "title": "Hosted Phoenix by Arize AI (llm and agent ops, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.467,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "Phoenix by Arize AI is self-hosted or open source (deployment hybrid, license unknown)"
+      ],
+      "needs": [
+        "requests for a hosted version",
+        "the license text (hosting rights, trademark)",
+        "whether the maintainers sell hosting"
+      ],
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 50.0,
+        "customers_needed": 20,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Phoenix by Arize AI"
+      ],
+      "twist": {
+        "dimension": "delivery",
+        "from": "self-hosted",
+        "to": "hosted"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 46,
+      "opp_id": "OPP-044",
+      "lens": "hosted-oss",
+      "lens_label": "Hosted version of an open-source tool",
+      "title": "Hosted Chatwoot (live chat and help desk, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.467,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "Chatwoot is self-hosted or open source (deployment hybrid, license unknown)"
+      ],
+      "needs": [
+        "requests for a hosted version",
+        "the license text (hosting rights, trademark)",
+        "whether the maintainers sell hosting"
+      ],
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 19.0,
+        "customers_needed": 53,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Chatwoot"
+      ],
+      "twist": {
+        "dimension": "delivery",
+        "from": "self-hosted",
+        "to": "hosted"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 47,
+      "opp_id": "OPP-045",
+      "lens": "hosted-oss",
+      "lens_label": "Hosted version of an open-source tool",
+      "title": "Hosted Opik by Comet (llm and agent ops, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.467,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "Opik by Comet is self-hosted or open source (deployment hybrid, license unknown)"
+      ],
+      "needs": [
+        "requests for a hosted version",
+        "the license text (hosting rights, trademark)",
+        "whether the maintainers sell hosting"
+      ],
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 19.0,
+        "customers_needed": 53,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Opik by Comet"
+      ],
+      "twist": {
+        "dimension": "delivery",
+        "from": "self-hosted",
+        "to": "hosted"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 48,
+      "opp_id": "OPP-046",
+      "lens": "hosted-oss",
+      "lens_label": "Hosted version of an open-source tool",
+      "title": "Hosted Maxim AI (llm and agent ops, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.467,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "Maxim AI is self-hosted or open source (deployment hybrid, license unknown)"
+      ],
+      "needs": [
+        "requests for a hosted version",
+        "the license text (hosting rights, trademark)",
+        "whether the maintainers sell hosting"
+      ],
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 99.0,
+        "customers_needed": 11,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Maxim AI"
+      ],
+      "twist": {
+        "dimension": "delivery",
+        "from": "self-hosted",
+        "to": "hosted"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 49,
+      "opp_id": "OPP-047",
+      "lens": "hosted-oss",
+      "lens_label": "Hosted version of an open-source tool",
+      "title": "Hosted GlitchTip (error tracking and apm, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.467,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "GlitchTip is self-hosted or open source (deployment hybrid, license unknown)"
+      ],
+      "needs": [
+        "requests for a hosted version",
+        "the license text (hosting rights, trademark)",
+        "whether the maintainers sell hosting"
+      ],
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 15.0,
+        "customers_needed": 67,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "GlitchTip"
+      ],
+      "twist": {
+        "dimension": "delivery",
+        "from": "self-hosted",
+        "to": "hosted"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 50,
+      "opp_id": "OPP-049",
+      "lens": "replace",
+      "lens_label": "Replacement after a shutdown, price rise or platform change",
+      "title": "Replacement after: Stripe acquired the merchant-of-record Lemon Squeezy, folding a popular indie MoR into the",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.351,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "catalyst WN-006 (platform, 2024-07-26)"
+      ],
+      "needs": [
+        "users looking for an alternative because of this change",
+        "who already captured them"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 14.12,
+        "customers_needed": 71,
+        "base_installs": 500,
+        "share_of_base_installs": 0.142,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Lemon Squeezy"
+      ],
+      "twist": {
+        "dimension": "catalyst",
+        "from": "WN-006",
+        "to": "replacement"
+      },
+      "quotes": []
+    },
+    {
+      "rank": 51,
+      "opp_id": "OPP-051",
+      "lens": "replace",
+      "lens_label": "Replacement after a shutdown, price rise or platform change",
+      "title": "Replacement after: Google shut down Chrome Web Store payments (announced to developers 2020-09-21), leaving e",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.311,
+      "evidence": {
+        "status": "untested",
+        "evidence_score": 0.0,
+        "records": 0,
+        "support": 0,
+        "counter": 0,
+        "counter_share": 0.0,
+        "authors": 0,
+        "domains": 0,
+        "source_types": 0,
+        "s4_authors": 0,
+        "evidence_ids": []
+      },
+      "why": [
+        "catalyst WN-005 (platform, 2020-09-21)"
+      ],
+      "needs": [
+        "users looking for an alternative because of this change",
+        "who already captured them"
+      ],
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 26.0,
+        "customers_needed": 39,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "base_names": [
+        "Chrome Web Store"
+      ],
+      "twist": {
+        "dimension": "catalyst",
+        "from": "WN-005",
+        "to": "replacement"
+      },
+      "quotes": []
+    }
+  ],
+  "excluded": [],
+  "next_runs": [
+    "OPP-048",
+    "OPP-032",
+    "OPP-033"
+  ],
+  "limitations": [
+    "A scan is a breadth sample: one landscape round, single screening, no codebook and no double coding. Treat each opportunity as a lead to test, not a finding.",
+    "Landscape search stopped before saturation (STOP_UNSATURATED): product counts are lower bounds.",
+    "Traction numbers exist for 151 of 335 products (marketplace listings only); products without them are never ranked as proven.",
+    "211 coverage gaps logged (blocked or empty sources); see coverage-gaps.jsonl."
+  ]
+}

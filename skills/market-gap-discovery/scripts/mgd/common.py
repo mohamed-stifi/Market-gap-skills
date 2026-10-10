@@ -52,7 +52,13 @@ def protocol(run):
 
 
 def cfg(run):
-    return config.Config(os.path.join(ASSETS, "defaults.json"), protocol(run))
+    proto = protocol(run)
+    c = config.Config(os.path.join(ASSETS, "defaults.json"), proto)
+    # A depth profile (D28) sits between defaults and the protocol's own overrides.
+    prof = (c.get("depth.profiles") or {}).get(proto.get("depth") or c.get("depth.default")) or {}
+    for k, v in prof.items():
+        c.overrides.setdefault(k, v)
+    return c
 
 
 def load_state(run):

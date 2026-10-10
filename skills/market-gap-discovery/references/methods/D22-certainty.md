@@ -50,6 +50,8 @@ Rating them separately, and capping desk-only demand strength at weak, stops a v
 - GRADE and CERQual are judgment frameworks with no fixed numeric thresholds. The operationalisation above is this skill's own adaptation; its thresholds live in `defaults.json`, and changing one requires a protocol amendment.
 - The ranking (D23) uses certainty to break ties, and the dossier (D25) shows both labels beside each score.
 
+**Lenses (D26):** for a card with a lens other than gap, market spend (at least `certainty.market_spend_min_products` proven products with paid plans among its base products and incumbents) counts like the magnitude upgrade. The Moderate cap for desk evidence still holds.
+
 **Pitfalls**
 - **Treating many posts as precision.** Imprecision counts distinct authors: 50 posts by 4 people are 4 authors.
 - **An empty counter-evidence list.** No coherence concern can arise if nobody looked. Existing solutions found by the red team belong in the card's `counter_evidence` before you rate it.

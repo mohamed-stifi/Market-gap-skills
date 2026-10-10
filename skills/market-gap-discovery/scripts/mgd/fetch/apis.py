@@ -432,6 +432,24 @@ def apple_search(ctx):
     return {"query": q, "filters": {"country": cc}, "total_hits": data.get("resultCount"), "items": items, "snapshot": sha}
 
 
+def apple_lookup(ctx):
+    """One app by id (iTunes Search API lookup): rating, rating count and price. Used by `traction`."""
+    a = ctx.args
+    app_id = _require(a.id, "id")
+    cc = a.country or "us"
+    url = "https://itunes.apple.com/lookup?" + urllib.parse.urlencode({"id": app_id, "country": cc})
+    data, sha = ctx.get_json(url, "apple", 3.0)
+    items = []
+    for r in data.get("results", []):
+        items.append({"source": "apple", "id": r.get("trackId"), "url": r.get("trackViewUrl"), "title": r.get("trackName"),
+                      "text": _excerpt(r.get("description")), "author_hash": None, "posted_at": _date(r.get("currentVersionReleaseDate")),
+                      "metrics": {"rating": r.get("averageUserRating"), "ratings": r.get("userRatingCount"),
+                                  "price": r.get("formattedPrice"), "seller": r.get("sellerName")},
+                      "snapshot": sha, "kind_hint": "product", "entity_url": r.get("sellerUrl") or r.get("trackViewUrl"),
+                      "listing_url": r.get("trackViewUrl")})
+    return {"query": app_id, "filters": {"country": cc}, "total_hits": data.get("resultCount"), "items": items, "snapshot": sha}
+
+
 def apple_reviews(ctx):
     a = ctx.args
     app_id = _require(a.id, "id")

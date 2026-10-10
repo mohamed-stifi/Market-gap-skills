@@ -60,6 +60,8 @@
 - Every referenced EV id exists and is verified, and every WN id exists.
 - Cards that fail are treated as `insufficient` downstream and counted in the PRISMA flow. Cards that pass go to the red team. Variants with no card are reported as discarded.
 
+**Lenses (D26):** a card can claim any lens in `protocol.lenses`. Set `lens` (missing means gap), `opportunity_id` when it builds on a scan option, `base_entities` (the proven products) and `wedge` (what differs and why users would switch). For lenses other than gap, `cards check` accepts proven base products (top traction third, D27) as the demand leg and requires the base products to be verified for the supply leg; pain still needs verified records, and `why_empty` explains why the wedge or target is still open.
+
 **Pitfalls**
 - **Padding the evidence** with loosely related records. Each id must show this population's pain with this job.
 - **Writing the solution into the statement.** The card describes the hole. Solutions belong to the validation skill's Opportunity Solution Tree.

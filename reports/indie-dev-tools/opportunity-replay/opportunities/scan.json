@@ -1,0 +1,76 @@
+{
+  "computed_at": "2026-10-10T14:26:21+00:00",
+  "depth": "deep",
+  "lenses": {
+    "gap": {
+      "generated": 2,
+      "kept": 2,
+      "note": null
+    },
+    "clone-wedge": {
+      "generated": 10,
+      "kept": 10,
+      "note": null
+    },
+    "bundle": {
+      "generated": 6,
+      "kept": 6,
+      "note": null
+    },
+    "unbundle": {
+      "generated": 2,
+      "kept": 2,
+      "note": null
+    },
+    "port": {
+      "generated": 190,
+      "kept": 12,
+      "note": null
+    },
+    "down-market": {
+      "generated": 2,
+      "kept": 2,
+      "note": null
+    },
+    "replace": {
+      "generated": 5,
+      "kept": 5,
+      "note": null
+    },
+    "hosted-oss": {
+      "generated": 12,
+      "kept": 12,
+      "note": null
+    },
+    "productize": {
+      "generated": 0,
+      "kept": 0,
+      "note": null
+    }
+  },
+  "inputs": {
+    "products": 335,
+    "with_attributes": 335,
+    "with_traction": 151,
+    "with_rating_percentile": 51,
+    "with_price": 171,
+    "verified_records": 289,
+    "coded_records": 289,
+    "supply_map": true,
+    "gap_map": true,
+    "why_now": 7
+  },
+  "candidates": 51,
+  "by_lens": {
+    "gap": 2,
+    "clone-wedge": 10,
+    "bundle": 6,
+    "unbundle": 2,
+    "port": 12,
+    "down-market": 2,
+    "replace": 5,
+    "hosted-oss": 12,
+    "productize": 0
+  },
+  "note": "Prior = mean of each lens's structural signals (0..1), never evidence; evidence is scored separately."
+}

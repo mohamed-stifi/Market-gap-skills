@@ -1,0 +1,99 @@
+{
+  "generated_at": "2026-10-10T14:29:31+00:00",
+  "charts": [
+    {
+      "id": "01",
+      "file": "output/dashboard/01-funnel.png",
+      "title": "Search and screening funnel",
+      "subtitle": "Read each block top to bottom: every bar is one step of the pipeline, the number is what was left after it, and the grey note says what that step removed.",
+      "sources": [
+        "output/prisma.json",
+        "landscape/screening-audit.json"
+      ]
+    },
+    {
+      "id": "03",
+      "file": "output/dashboard/03-crowding.png",
+      "title": "Competitor crowding by category",
+      "subtitle": "Each bar counts the verified products in one category; longer bars mean a more crowded market. Colours split each category by how products charge.",
+      "sources": [
+        "landscape/entity-attributes.jsonl",
+        "landscape/entities.jsonl",
+        "landscape/classification.json"
+      ]
+    },
+    {
+      "id": "05",
+      "file": "output/dashboard/05-evidence-profile.png",
+      "title": "Evidence profile",
+      "subtitle": "Four views of the same quotes: what people said, how strong the evidence is (S0 opinion up to S4 money spent), what kind of page it came from, and which websites supplied it.",
+      "sources": [
+        "evidence/ledger.jsonl (verified records)"
+      ]
+    },
+    {
+      "id": "10",
+      "file": "output/dashboard/10-price-ladder.png",
+      "title": "Price ladder",
+      "subtitle": "Each dot is one product's cheapest paid plan per month (USD); the dark tick and the number on the right are the category median. Cheapest categories at the top. The scale is logarithmic, so equal distances mean equal price ratios.",
+      "sources": [
+        "analysis/price_ladder.csv",
+        "landscape/entity-attributes.jsonl"
+      ]
+    },
+    {
+      "id": "12",
+      "file": "output/dashboard/12-run-effort.png",
+      "title": "Run effort and amendments",
+      "subtitle": "Left: subagents assigned per pipeline phase, in the order they ran. Right: the running total over the run, with each protocol amendment marked by its number (listed below).",
+      "sources": [
+        "events.jsonl",
+        "state.json (budget)",
+        "protocol.lock.json (amendments)"
+      ]
+    },
+    {
+      "id": "13",
+      "file": "output/dashboard/13-opportunity-options.png",
+      "title": "Options by kind and evidence",
+      "subtitle": "Each bar is one lens (kind of opportunity); its segments show how far the evidence got: promising, thin, not tested yet, contradicted, or excluded by red flags, gates or the protocol. 8 were tested with evidence.",
+      "sources": [
+        "opportunities/candidates.jsonl",
+        "opportunities/scores.json",
+        "opportunities/ranking.json"
+      ]
+    },
+    {
+      "id": "14",
+      "file": "output/dashboard/14-opportunity-map.png",
+      "title": "Opportunity map",
+      "subtitle": "Each dot is one option. Right = stronger signals in the market map (traction, prices, platforms, catalysts); up = more verified evidence (distinct authors, weighted by evidence strength). The best options sit top right; the top 10 by rank are labelled.",
+      "sources": [
+        "opportunities/ranking.json",
+        "opportunities/scores.json"
+      ]
+    },
+    {
+      "id": "15",
+      "file": "output/dashboard/15-proven-products.png",
+      "title": "Proven but poorly rated products",
+      "subtitle": "Each dot is one marketplace product. Right = more installs or ratings than others in its store (percentile); down = lower average rating. Products right of the line are proven; ringed ones are also in the bottom third of their store's ratings, the raw material of 'proven product + one fix' options.",
+      "sources": [
+        "landscape/traction.jsonl",
+        "opportunities/candidates.jsonl"
+      ]
+    },
+    {
+      "id": "16",
+      "file": "output/dashboard/16-platform-coverage.png",
+      "title": "Platform coverage",
+      "subtitle": "Rows are categories, columns are platforms; each cell counts the mapped products. Empty cells next to full ones are candidate ports; outlined cells are the ones the scan turned into options.",
+      "sources": [
+        "landscape/entity-attributes.jsonl",
+        "opportunities/candidates.jsonl"
+      ]
+    }
+  ],
+  "html": "output/dashboard/index.html",
+  "summary": "output/summary.md"
+}

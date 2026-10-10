@@ -1,0 +1,1057 @@
+{
+  "computed_at": "2026-10-10T14:26:22+00:00",
+  "ranked": [
+    {
+      "opp_id": "OPP-048",
+      "lens": "gap",
+      "title": "Unmet: Faster outage detection",
+      "status": "promising",
+      "redflag": null,
+      "prior": 0.375,
+      "evidence_score": 0.312,
+      "combined": 0.344,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": null,
+        "customers_needed": null,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 1
+    },
+    {
+      "opp_id": "OPP-032",
+      "lens": "clone-wedge",
+      "title": "Cheaper alternative to Tidio, Zoho SalesIQ - Live Chat App (Live chat and help desk)",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.637,
+      "evidence_score": 0.469,
+      "combined": 0.553,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 2
+    },
+    {
+      "opp_id": "OPP-033",
+      "lens": "clone-wedge",
+      "title": "More reliable alternative to Tidio, Zoho SalesIQ - Live Chat App (Live chat and help desk)",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.637,
+      "evidence_score": 0.312,
+      "combined": 0.475,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 3
+    },
+    {
+      "opp_id": "OPP-012",
+      "lens": "replace",
+      "title": "Migration target for Lemon Squeezy users",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.75,
+      "evidence_score": 0.125,
+      "combined": 0.438,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 14.12,
+        "customers_needed": 71,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 4
+    },
+    {
+      "opp_id": "OPP-013",
+      "lens": "replace",
+      "title": "Migration target for TaxJar users",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.75,
+      "evidence_score": 0.125,
+      "combined": 0.438,
+      "flags": [
+        "regulated-risk"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 39.0,
+        "customers_needed": 26,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 5
+    },
+    {
+      "opp_id": "OPP-036",
+      "lens": "clone-wedge",
+      "title": "More reliable alternative to License Manager for WooCommerce, Serial Numbers - Ultimate License Manager (License managem",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.605,
+      "evidence_score": 0.25,
+      "combined": 0.427,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 8.25,
+        "customers_needed": 122,
+        "base_installs": 7800,
+        "share_of_base_installs": 0.01564,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 6
+    },
+    {
+      "opp_id": "OPP-042",
+      "lens": "unbundle",
+      "title": "Just the block payment fraud part of Lemon Squeezy, done simply",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.5,
+      "evidence_score": 0.125,
+      "combined": 0.312,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 14.12,
+        "customers_needed": 71,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 7
+    },
+    {
+      "opp_id": "OPP-050",
+      "lens": "gap",
+      "title": "Unmet: Collect product feedback",
+      "status": "thin",
+      "redflag": null,
+      "prior": 0.35,
+      "evidence_score": 0.094,
+      "combined": 0.222,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 0.99,
+        "customers_needed": 1011,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 8
+    },
+    {
+      "opp_id": "OPP-001",
+      "lens": "clone-wedge",
+      "title": "Better-rated alternative to Easy Digital Downloads, SureCart (Digital storefront)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.923,
+      "evidence_score": 0.0,
+      "combined": 0.462,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 16.58,
+        "customers_needed": 61,
+        "base_installs": 129000,
+        "share_of_base_installs": 0.00047,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 9
+    },
+    {
+      "opp_id": "OPP-002",
+      "lens": "clone-wedge",
+      "title": "Better-rated alternative to SlimStat Analytics, WP Statistics (Web analytics)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.877,
+      "evidence_score": 0.0,
+      "combined": 0.439,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 10
+    },
+    {
+      "opp_id": "OPP-003",
+      "lens": "port",
+      "title": "Live chat and help desk in Brazilian Portuguese (proven in English)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.857,
+      "evidence_score": 0.0,
+      "combined": 0.428,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 11
+    },
+    {
+      "opp_id": "OPP-004",
+      "lens": "down-market",
+      "title": "Low-cost revenue recovery (paid plans start at 99/month)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.843,
+      "evidence_score": 0.0,
+      "combined": 0.421,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 125.0,
+        "customers_needed": 8,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price halved for a cheaper tier; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 12
+    },
+    {
+      "opp_id": "OPP-005",
+      "lens": "port",
+      "title": "App store operations in Brazilian Portuguese (proven in English)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.835,
+      "evidence_score": 0.0,
+      "combined": 0.417,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 2.99,
+        "customers_needed": 335,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 13
+    },
+    {
+      "opp_id": "OPP-006",
+      "lens": "bundle",
+      "title": "Digital storefront + web analytics in one product",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.822,
+      "evidence_score": 0.0,
+      "combined": 0.411,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 9.92,
+        "customers_needed": 101,
+        "base_installs": 690000,
+        "share_of_base_installs": 0.00015,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 14
+    },
+    {
+      "opp_id": "OPP-007",
+      "lens": "port",
+      "title": "App store analytics in Brazilian Portuguese (proven in English)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.812,
+      "evidence_score": 0.0,
+      "combined": 0.406,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 0.99,
+        "customers_needed": 1011,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 15
+    },
+    {
+      "opp_id": "OPP-008",
+      "lens": "clone-wedge",
+      "title": "Better-rated alternative to Paid Member Subscriptions, Subscriptions for WooCommerce (Subscription billing)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.799,
+      "evidence_score": 0.0,
+      "combined": 0.4,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 9.5,
+        "customers_needed": 106,
+        "base_installs": 21000,
+        "share_of_base_installs": 0.00505,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 16
+    },
+    {
+      "opp_id": "OPP-009",
+      "lens": "bundle",
+      "title": "App monetization layer + web analytics in one product",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.774,
+      "evidence_score": 0.0,
+      "combined": 0.387,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 9.92,
+        "customers_needed": 101,
+        "base_installs": 570000,
+        "share_of_base_installs": 0.00018,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 17
+    },
+    {
+      "opp_id": "OPP-010",
+      "lens": "down-market",
+      "title": "Low-cost onboarding and adoption (paid plans start at 100/month)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.764,
+      "evidence_score": 0.0,
+      "combined": 0.382,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 79.0,
+        "customers_needed": 13,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price halved for a cheaper tier; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 18
+    },
+    {
+      "opp_id": "OPP-011",
+      "lens": "bundle",
+      "title": "Digital storefront + live chat and help desk in one product",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.757,
+      "evidence_score": 0.0,
+      "combined": 0.379,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": 120000,
+        "share_of_base_installs": 0.00083,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 19
+    },
+    {
+      "opp_id": "OPP-014",
+      "lens": "port",
+      "title": "Web analytics in German (proven in English)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.745,
+      "evidence_score": 0.0,
+      "combined": 0.372,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 20
+    },
+    {
+      "opp_id": "OPP-015",
+      "lens": "port",
+      "title": "Web analytics in Spanish (proven in English)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.745,
+      "evidence_score": 0.0,
+      "combined": 0.372,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 21
+    },
+    {
+      "opp_id": "OPP-016",
+      "lens": "port",
+      "title": "Web analytics on CLI (proven on WordPress)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.745,
+      "evidence_score": 0.0,
+      "combined": 0.372,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 22
+    },
+    {
+      "opp_id": "OPP-017",
+      "lens": "port",
+      "title": "Web analytics on GitHub app (proven on WordPress)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.745,
+      "evidence_score": 0.0,
+      "combined": 0.372,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 23
+    },
+    {
+      "opp_id": "OPP-018",
+      "lens": "port",
+      "title": "Web analytics for wordpress and shopify plugin devs (proven for website owners)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.745,
+      "evidence_score": 0.0,
+      "combined": 0.372,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 24
+    },
+    {
+      "opp_id": "OPP-019",
+      "lens": "port",
+      "title": "Web analytics for indie hackers (proven for website owners)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.745,
+      "evidence_score": 0.0,
+      "combined": 0.372,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 7.0,
+        "customers_needed": 143,
+        "base_installs": 770000,
+        "share_of_base_installs": 0.00019,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 25
+    },
+    {
+      "opp_id": "OPP-020",
+      "lens": "port",
+      "title": "Live chat and help desk on CLI (proven on iOS / iPadOS)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.732,
+      "evidence_score": 0.0,
+      "combined": 0.366,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 26
+    },
+    {
+      "opp_id": "OPP-021",
+      "lens": "port",
+      "title": "Live chat and help desk on GitHub app (proven on iOS / iPadOS)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.732,
+      "evidence_score": 0.0,
+      "combined": 0.366,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 27
+    },
+    {
+      "opp_id": "OPP-022",
+      "lens": "port",
+      "title": "Live chat and help desk for wordpress and shopify plugin devs (proven for small and mid-size businesses)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.732,
+      "evidence_score": 0.0,
+      "combined": 0.366,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 10.0,
+        "customers_needed": 100,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 28
+    },
+    {
+      "opp_id": "OPP-023",
+      "lens": "unbundle",
+      "title": "Just the block payment fraud part of Easy Digital Downloads, done simply",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.726,
+      "evidence_score": 0.0,
+      "combined": 0.363,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 8.29,
+        "customers_needed": 121,
+        "base_installs": 40000,
+        "share_of_base_installs": 0.00302,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 29
+    },
+    {
+      "opp_id": "OPP-024",
+      "lens": "replace",
+      "title": "Replacement after: After Stripe acquired Lemon Squeezy, sellers report its development is discontinued and st",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.726,
+      "evidence_score": 0.0,
+      "combined": 0.363,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 14.12,
+        "customers_needed": 71,
+        "base_installs": 500,
+        "share_of_base_installs": 0.142,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 30
+    },
+    {
+      "opp_id": "OPP-025",
+      "lens": "hosted-oss",
+      "title": "Hosted BillingSDK (subscription billing, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.667,
+      "evidence_score": 0.0,
+      "combined": 0.334,
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 9.52,
+        "customers_needed": 106,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 31
+    },
+    {
+      "opp_id": "OPP-026",
+      "lens": "hosted-oss",
+      "title": "Hosted DeepEval (llm and agent ops, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.667,
+      "evidence_score": 0.0,
+      "combined": 0.334,
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 99.0,
+        "customers_needed": 11,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 32
+    },
+    {
+      "opp_id": "OPP-027",
+      "lens": "hosted-oss",
+      "title": "Hosted GoAccess (web analytics, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.667,
+      "evidence_score": 0.0,
+      "combined": 0.334,
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 9.0,
+        "customers_needed": 112,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 33
+    },
+    {
+      "opp_id": "OPP-028",
+      "lens": "hosted-oss",
+      "title": "Hosted Libredesk (live chat and help desk, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.667,
+      "evidence_score": 0.0,
+      "combined": 0.334,
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 18.49,
+        "customers_needed": 55,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 34
+    },
+    {
+      "opp_id": "OPP-029",
+      "lens": "hosted-oss",
+      "title": "Hosted RunsOn (infrastructure ops, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.667,
+      "evidence_score": 0.0,
+      "combined": 0.334,
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 25.0,
+        "customers_needed": 40,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 35
+    },
+    {
+      "opp_id": "OPP-030",
+      "lens": "hosted-oss",
+      "title": "Hosted ShipAhead (starter code, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.667,
+      "evidence_score": 0.0,
+      "combined": 0.334,
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": null,
+        "customers_needed": null,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 36
+    },
+    {
+      "opp_id": "OPP-031",
+      "lens": "bundle",
+      "title": "App monetization layer + product analytics in one product",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.639,
+      "evidence_score": 0.0,
+      "combined": 0.32,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 6.99,
+        "customers_needed": 144,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 37
+    },
+    {
+      "opp_id": "OPP-034",
+      "lens": "clone-wedge",
+      "title": "Better-rated alternative to Zendesk Support for Jira, Zendesk Connector for Jira (Help desk integration)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.634,
+      "evidence_score": 0.0,
+      "combined": 0.317,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": null,
+        "customers_needed": null,
+        "base_installs": 13746,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 38
+    },
+    {
+      "opp_id": "OPP-035",
+      "lens": "bundle",
+      "title": "LLM and agent ops + observability platform in one product",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.608,
+      "evidence_score": 0.0,
+      "combined": 0.304,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 49.5,
+        "customers_needed": 21,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 39
+    },
+    {
+      "opp_id": "OPP-037",
+      "lens": "hosted-oss",
+      "title": "Hosted Matomo (web analytics, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.604,
+      "evidence_score": 0.0,
+      "combined": 0.302,
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 29.0,
+        "customers_needed": 35,
+        "base_installs": 100000,
+        "share_of_base_installs": 0.00035,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 40
+    },
+    {
+      "opp_id": "OPP-038",
+      "lens": "clone-wedge",
+      "title": "Better-rated alternative to Datadog, Site24x7 (Observability platform)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.602,
+      "evidence_score": 0.0,
+      "combined": 0.301,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 20.0,
+        "customers_needed": 50,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 41
+    },
+    {
+      "opp_id": "OPP-039",
+      "lens": "clone-wedge",
+      "title": "Better-rated alternative to App Store Connect, Google Play Console (App store operations)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.597,
+      "evidence_score": 0.0,
+      "combined": 0.298,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 2.99,
+        "customers_needed": 335,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 42
+    },
+    {
+      "opp_id": "OPP-040",
+      "lens": "clone-wedge",
+      "title": "Better-rated alternative to Smart Forms for Jira (JSM, JWM, Confluence & JPD Feedback), Advance Customer Satisfaction (C",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.565,
+      "evidence_score": 0.0,
+      "combined": 0.282,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 129.0,
+        "customers_needed": 8,
+        "base_installs": 1535,
+        "share_of_base_installs": 0.00521,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 43
+    },
+    {
+      "opp_id": "OPP-041",
+      "lens": "bundle",
+      "title": "Digital storefront + experimentation in one product",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.561,
+      "evidence_score": 0.0,
+      "combined": 0.281,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 16.58,
+        "customers_needed": 61,
+        "base_installs": 124000,
+        "share_of_base_installs": 0.00049,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 44
+    },
+    {
+      "opp_id": "OPP-043",
+      "lens": "hosted-oss",
+      "title": "Hosted Phoenix by Arize AI (llm and agent ops, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.467,
+      "evidence_score": 0.0,
+      "combined": 0.234,
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 50.0,
+        "customers_needed": 20,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 45
+    },
+    {
+      "opp_id": "OPP-044",
+      "lens": "hosted-oss",
+      "title": "Hosted Chatwoot (live chat and help desk, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.467,
+      "evidence_score": 0.0,
+      "combined": 0.234,
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 19.0,
+        "customers_needed": 53,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 46
+    },
+    {
+      "opp_id": "OPP-045",
+      "lens": "hosted-oss",
+      "title": "Hosted Opik by Comet (llm and agent ops, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.467,
+      "evidence_score": 0.0,
+      "combined": 0.234,
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 19.0,
+        "customers_needed": 53,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 47
+    },
+    {
+      "opp_id": "OPP-046",
+      "lens": "hosted-oss",
+      "title": "Hosted Maxim AI (llm and agent ops, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.467,
+      "evidence_score": 0.0,
+      "combined": 0.234,
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 99.0,
+        "customers_needed": 11,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 48
+    },
+    {
+      "opp_id": "OPP-047",
+      "lens": "hosted-oss",
+      "title": "Hosted GlitchTip (error tracking and apm, license unknown)",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.467,
+      "evidence_score": 0.0,
+      "combined": 0.234,
+      "flags": [
+        "license-check"
+      ],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 15.0,
+        "customers_needed": 67,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 49
+    },
+    {
+      "opp_id": "OPP-049",
+      "lens": "replace",
+      "title": "Replacement after: Stripe acquired the merchant-of-record Lemon Squeezy, folding a popular indie MoR into the",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.351,
+      "evidence_score": 0.0,
+      "combined": 0.175,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 14.12,
+        "customers_needed": 71,
+        "base_installs": 500,
+        "share_of_base_installs": 0.142,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 50
+    },
+    {
+      "opp_id": "OPP-051",
+      "lens": "replace",
+      "title": "Replacement after: Google shut down Chrome Web Store payments (announced to developers 2020-09-21), leaving e",
+      "status": "untested",
+      "redflag": null,
+      "prior": 0.311,
+      "evidence_score": 0.0,
+      "combined": 0.155,
+      "flags": [],
+      "ambition": {
+        "target_mrr": 1000.0,
+        "price_ref_month": 26.0,
+        "customers_needed": 39,
+        "base_installs": null,
+        "share_of_base_installs": null,
+        "note": "Customers needed at the incumbents' median entry price; share of the base products' installs is a reach check, not a forecast."
+      },
+      "rank": 51
+    }
+  ],
+  "excluded": [],
+  "weights": {
+    "prior": 0.5,
+    "evidence": 0.5
+  },
+  "note": "Order: evidence tier (promising, thin, untested, contradicted), then red-flag status, then prior x weight + evidence x weight. A scan ranks options to test next; it is not a verdict."
+}

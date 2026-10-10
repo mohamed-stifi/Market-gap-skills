@@ -54,6 +54,11 @@
       }
     },
     "variant_of": {"type": ["string", "null"]},
+    "lens": {"enum": ["gap", "clone-wedge", "bundle", "unbundle", "port", "down-market", "replace", "hosted-oss", "productize"], "description": "Kind of opportunity (D26); missing means gap. gap_id is the card id for every lens."},
+    "opportunity_id": {"type": ["string", "null"], "pattern": "^OPP-[0-9]{3}$"},
+    "base_entities": {"type": "array", "items": {"type": "string"}, "description": "Proven products the opportunity builds on (clone-wedge, port, down-market, unbundle, replace, hosted-oss)."},
+    "wedge": {"type": ["object", "null"], "properties": {"dimension": {"type": "string"}, "statement": {"type": "string"}}, "description": "What is different from the base products, and why users would switch."},
+    "growth_loop": {"type": ["object", "null"], "properties": {"type": {"type": "string"}, "evidence": {"type": "array", "items": {"type": "string"}}}},
     "errc": {"type": "object", "properties": {"eliminate": {"type": "array"}, "reduce": {"type": "array"}, "raise": {"type": "array"}, "create": {"type": "array"}}},
     "origin_methods": {"type": "array", "items": {"type": "string", "pattern": "^D[0-9]{2}$"}, "minItems": 1},
     "status": {"enum": ["candidate", "insufficient", "survives", "weakened", "killed"]},

@@ -47,6 +47,7 @@ Write one line per entity to `analysis/supply.jsonl` (`supply.schema.json`). Cla
    - typed assumptions, each with its riskiest test
    - `origin_methods`
 4. Meet the thresholds before claiming a gap: `gap_card.min_records` 5, `min_domains` 3, `min_source_types` 2, `min_authors` 2, and triangulation of pain, demand and supply. Record discarded variants the way D19 specifies.
+5. **Every lens, not only gaps (D26).** Read `opportunities/candidates.jsonl` and the lenses in your assignment. A card may build on a scan option: set `lens`, `opportunity_id`, `base_entities` (the proven products) and `wedge` (what is different and why users would switch). For these lenses `cards check` counts proven base products (top traction third, `landscape/traction.jsonl`) as the demand leg; pain and supply still need verified records, and `why_empty` explains why the wedge or target is still open. A clone copies the job, never code, text or brand: say so in the assumptions.
 
 ## Mode: sizing (D24)
 For each surviving gap, write `gaps/sizing-inputs.json` (`sizing-inputs.schema.json`):
