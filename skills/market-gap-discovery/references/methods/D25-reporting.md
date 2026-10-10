@@ -85,6 +85,8 @@
 - The handoff validates against handoff.schema.json.
 - Every opportunity has at least three verified quotes, and every experiment links to an assumption id.
 
+**Scan runs (D28):** there is no writer. `opportunities report` writes `output/opportunities.md`, `output/opportunities.json` and `output/next-runs/OPP-NNN.protocol.json` from the run's files, PRISMA adds an Opportunities section, and `viz` draws charts 13-16 (options by lens and evidence tier, opportunity map, proven but poorly rated products, platform coverage). Deep dashboards also show chart 13.
+
 **Pitfalls**
 - **Hiding the limits.** A dossier without its coverage section overstates what was found.
 - **Inflated language.** Never write "validated", "proven demand" or "underserved (ODI)" about desk-only results. Write "the evidence suggests", with the certainty label.

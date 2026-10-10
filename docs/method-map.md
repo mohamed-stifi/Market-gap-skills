@@ -195,6 +195,9 @@ Method cards are `D01–D25` (discovery, in `skills/market-gap-discovery/referen
 | Test Cards / Learning Cards | V04 `prereg new`, `prereg freeze`; V10 | Structured hypotheses and an audit trail of what was learned |
 | XYZ hypothesis (Savoia) | V04 | Falsifiable numeric thresholds, with X derived from unit economics |
 | Wilson decision rule | V09 `stats` | Honest pass / fail / inconclusive calls at small samples |
+| Opportunity lenses: innovative imitation, new combinations, bundling and unbundling, low-end disruption, ports, replacements, hosted open source, productized services | D26 `gapscan.py opportunities scan` | A gap is the hardest opportunity to evidence; most small software businesses start from proven demand (a crowded market is a good sign: Graham 2012). Each lens is a script rule over the run's own data |
+| App-store traction (installs, ratings) as revealed use | D27 `gapscan.py traction` | Demand evidence at zero subagent cost from responses the scouts already saved; within-store percentiles |
+| Stage-gate screening + successive halving | D28 `assign --phase scan-evidence`, `opportunities score` | A cheap scan ranks many options and spends evidence only on the better half; deep runs then start from one sharp question |
 
 ## 5. Summary counts
 | Source | Items mapped | Core | Conditional | Validation | Deferred | Excluded |

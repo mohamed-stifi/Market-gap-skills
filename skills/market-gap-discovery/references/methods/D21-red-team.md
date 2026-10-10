@@ -60,6 +60,8 @@
 - Killed cards are excluded from scoring. The dossier lists them with the evidence that killed them.
 - A judgment without a rationale fails the schema check.
 
+**Lenses (D26):** for a card with a lens other than gap, incumbents are the premise. Apply that lens's question and kill rule from the D26 table: kill only when a product already delivers the card's wedge, port, bundle or price to this segment, or the license forbids hosting. Scan runs use a lighter `redflag` mode (D28).
+
 **Pitfalls**
 - **Searching only in English, or only with the card's own words.** Use the lexicon's synonyms and competitor names, and the segment's languages.
 - **Going easy on the card.** Your role is adversarial. "Survives" should cost effort; if three quick searches found nothing, try two more channels before deciding.

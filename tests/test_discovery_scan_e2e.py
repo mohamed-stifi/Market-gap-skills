@@ -180,7 +180,13 @@ class ScanE2E(unittest.TestCase):
         prisma = read_json(os.path.join(run, "output", "prisma.json"))
         self.assertIn("opportunities", prisma)
         self.assertTrue(any("opportunities.md" in n for n in done.notes))
-        self.assertEqual(gs("validate", run)[0], 0)
+        code, out_ = gs("validate", run)
+        self.assertEqual(code, 0, out_)
+        # Red-flag subagents self-check their own file; the schema is inferred from the path.
+        rf = sorted(f for f in os.listdir(os.path.join(run, "opportunities", "redflags")) if f.startswith("OPP-"))
+        code, out_ = gs("validate", run, "--file", os.path.join("opportunities", "redflags", rf[0]))
+        self.assertEqual(code, 0, out_)
+        self.assertIn("redflag", out_)
         # A narrow deep run drafted from the best option: valid protocol, depth deep, its lens first.
         opp = rep["next_runs"][0]
         deep = os.path.join(self.tmp, "deep-from-scan")

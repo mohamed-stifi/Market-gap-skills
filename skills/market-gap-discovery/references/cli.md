@@ -53,6 +53,14 @@ The lines after the first start with `NOTE`: the phase, the methodological reaso
   6. `screen-audit`. If α is too low, `DO D06` (clarify eligibility with `protocol amend`).
   7. Gated runs: the human approves.
   8. `assign --phase mapping` → SPAWN → `merge --phase mapping`.
+  9. `traction`: installs and ratings from saved marketplace responses, then lookups (D27).
+- **Scan runs (`depth: scan`, D28)** use the scan profile above (one lexicon round, no PRESS, one landscape round, no snowball, no screening audit) and branch here:
+  1. `opportunities scan` → `assign --phase scan-evidence` (round 1 plus a leads miner) → SPAWN miners → `merge --phase evidence` → `verify`.
+  2. `opportunities scan` again (evidence-led lenses) → `opportunities score`.
+  3. `assign --phase scan-evidence` (round 2: the better half) → SPAWN → merge → verify → scan → score.
+  4. `assign --phase redflag` → SPAWN red-team → `merge --phase redflag` → `opportunities rank`.
+  5. Gated runs: the human approves the ranking.
+  6. `prisma` → `opportunities report` → `viz` → `DONE`.
 - **P3 Evidence:**
   1. `assign --phase evidence` → SPAWN miners → `merge --phase evidence`.
   2. `verify`.
@@ -66,7 +74,7 @@ The lines after the first start with `NOTE`: the phase, the methodological reaso
   4. `themes`. If themes are unsaturated and evidence rounds remain, return to P3.
   5. `assign --phase supply` → SPAWN → `merge --phase supply` → `matrix` → `gapmap`.
   6. After a codebook revision, `assign --phase supply` again in update mode (only changed codes are re-judged).
-- **P5 Gaps:** `variants` → `assign --phase synthesis` → SPAWN → `cards check`. If it lists problems: `DO D20`.
+- **P5 Gaps:** `variants` → `opportunities scan` (options from every lens, D26) → `assign --phase synthesis` → SPAWN → `cards check`. If it lists problems: `DO D20`.
   - If fewer than `evidence.target_candidates` cards pass and near-miss cards fail only on evidence counts: `assign --phase evidence --targeted` (once per run), then the new records are coded, the gap map is recomputed and the cards are updated (`assign --phase synthesis` in update mode) before the red team.
 - **P6 Appraisal:**
   1. `assign --phase redteam` → SPAWN → `merge --phase redteam` → `certainty`.
@@ -97,12 +105,15 @@ The lines after the first start with `NOTE`: the phase, the methodological reaso
 
 **Assignments and merges**
 - `assign RUN --phase PHASE [--units K] [--batch N] [--revise] [--targeted]`: seeded assignment files.
-  - PHASE: lexicon, press, landscape, probe, snowball, screen, mapping, evidence, coding-open, coding-closed, coding-reliability, supply, synthesis, redteam, sizing, writer.
+  - PHASE: lexicon, press, landscape, probe, snowball, screen, mapping, evidence, coding-open, coding-closed, coding-reliability, supply, synthesis, redteam, sizing, writer, scan-evidence, redflag.
   - `--targeted` (evidence): one miner per near-miss gap card from `gaps/card-check.json`, mining only domains the card lacks.
+  - `scan-evidence` (scan runs): round 1 tests the best options by prior plus a leads miner; round 2 the better half of the options with support (D28). `redflag`: one red-team subagent per 5 top options.
   - Every assignment carries a `model` block: the tier from `models.profiles[cost_profile][role]`, raised one step per escalation (`state.json` → `models`).
   - Fails with exit 3 when `budget.subagents_max` would be exceeded.
 - `merge RUN --phase PHASE`: validate agent outputs against their schemas, then fold them into the ledgers. `--retry` (evidence only) merges the current round again after rejected records were fixed; the retry report is `merge-retry-N.json`, and PRISMA counts its accepted records as `accepted_on_retry`. A unique snapshot-id prefix of 12 or more hex characters resolves to the full hash.
-  - PHASE: lexicon, landscape, probe, snowball, screen, mapping, evidence, coding, supply, redteam.
+  - PHASE: lexicon, landscape, probe, snowball, screen, mapping, evidence, coding, supply, redteam, redflag.
+  - Evidence records may carry `candidate_ids` (scan): unknown option ids are dropped, and a duplicate quote adds its tags to the record already in the ledger.
+  - `redflag` refuses a `killed` verdict without the snapshot of a product that fully covers the option (or `license_ok: false`).
   - Evidence records are rejected (and listed) when they have: a raw author field, a username in the quote, an excluded source, a snapshot not made by gapscan, a quote over 280 characters, or a schema error.
 - `lexicon apply-press RUN`, `entities verify RUN [--limit N]`, `codebook freeze RUN`.
 - `entities verify RUN --recheck` re-runs only the name check against the snapshots it already has, with no new fetch. Use it after the matching rules change.
@@ -122,7 +133,7 @@ The lines after the first start with `NOTE`: the phase, the methodological reaso
   - `gh-issues --query Q [--limit N]`, `gh-repos --query Q [--limit N]` (need `gh auth login`)
   - `wiki-views --article TITLE --from YYYY-MM --to YYYY-MM [--project en.wikipedia]` (needs `MGD_CONTACT`; absolute series)
   - `wp-search --query Q`, `wp-plugin --slug S`, `wp-reviews --slug S`
-  - `apple-search --query Q [--country us]`, `apple-reviews --id APPID [--country us] [--pages N]`
+  - `apple-search --query Q [--country us]`, `apple-lookup --id APPID [--country us]`, `apple-reviews --id APPID [--country us] [--pages N]`
   - `atl-search --query Q`, `atl-reviews --key ADDON_KEY`
   - `yc --query Q`
 - `snapshot RUN URL [URL ...] [--by AGENT] [--refresh]`: robots-checked, rate-limited raw fetch.
@@ -138,6 +149,13 @@ The lines after the first start with `NOTE`: the phase, the methodological reaso
 - `verify RUN`: check every evidence quote against its snapshot. Only verified records count.
 - `screen-audit RUN`, `agreement RUN`, `themes RUN`, `bursts RUN`, `matrix RUN`, `gapmap RUN`, `variants RUN`, `cards check RUN`, `certainty RUN`, `size RUN`, `score RUN`, `prisma RUN`: see the matching method cards.
 - `validate RUN [--report] [--file PATH [--schema NAME]]`: check every artifact against its schema. `--report` also checks the dossier and handoff against the ledger and ranking, and writes `output/report-check.json`. `--file` checks only one file (the schema is inferred from its path); subagents use it to self-check their own output.
+- `traction RUN [--offline]`: installs, rating counts and ratings for marketplace products into `landscape/traction.jsonl`, from saved API responses first, then lookups up to `traction.max_lookups` (D27).
+- `opportunities scan|score|rank|report RUN` (D26, D28):
+  - `scan`: options from every lens in `protocol.lenses` → `opportunities/candidates.jsonl` (stable `OPP-NNN` ids) and `scan.json`.
+  - `score`: evidence tier and score per option from the verified ledger → `scores.json`.
+  - `rank`: tiers, red flags, gates and ambition math → `ranking.json`.
+  - `report`: `output/opportunities.md`, `output/opportunities.json` and `output/next-runs/OPP-NNN.protocol.json`.
+- `init RUN --from-run SCAN_RUN --opportunity OPP-NNN [--seed N] [--autonomy gated]`: a deep run whose protocol is drafted from one scan option (depth deep, the option's lens first, its products as `seed_entities`). `init RUN --topic T --depth scan|deep` starts from a blank draft (scan by default).
 - `viz RUN [--out DIR]`: `output/summary.md` (one-page plain-language verdict) and `output/dashboard/` (PNG charts, `index.html` embedding all of them, `manifest.json`). Needs matplotlib; every other command is stdlib-only. Reads only the run's files; charts whose inputs are missing are skipped with a reason.
 - `compare RUN_A RUN_B [--out FILE]`: entity Jaccard, the Webster–Kemp estimate of missed items, top-k gap matches, rank-biased overlap, and pass/fail.
 - `purge RUN [--days N]`: delete snapshot bodies older than `evidence.retention_days`. Hashes, metadata and the ledger quotes are kept.
@@ -154,7 +172,9 @@ RUN/
   landscape/snowball/iter-NN/{assign-X.json, scout-X.json, merge.json}
   landscape/screen/batch-NN/{assign-A1.json, assign-A2.json, ..., assign-B1.json, screen-A1.jsonl, ..., screen-B1.jsonl}  (batches of screening.batch_size)
   landscape/{entities.jsonl, units.json, saturation.json, screening.jsonl, screening-audit.json,
-             mapping-assign.json, classification.json, entity-attributes.jsonl}
+             mapping-assign.json, classification.json, entity-attributes.jsonl, traction.jsonl}
+  opportunities/{candidates.jsonl, ids.json, scan.json, scores.json, ranking.json, redflags.jsonl, redflags/OPP-NNN.json}
+  output/{opportunities.md, opportunities.json, next-runs/OPP-NNN.protocol.json}   (scan runs)
   snapshots/<sha256>.raw|.txt|.meta.json        raw/<source>/<sha16>.jsonl
   evidence/round-NN/{assign-X.json, miner-X.jsonl, why-now-C.jsonl, merge.json}
   evidence/{ledger.jsonl, verify-report.json, why-now.jsonl, signals/SIG-*.json, bursts.json}

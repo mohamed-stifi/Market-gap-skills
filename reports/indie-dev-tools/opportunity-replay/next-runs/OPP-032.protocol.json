@@ -1,0 +1,163 @@
+{
+  "schema_version": "1.0",
+  "run_id": "opp-032-cheaper-alternative-to-tidio-z",
+  "title": "Cheaper alternative to Tidio, Zoho SalesIQ - Live Chat App (Live chat and help desk)",
+  "topic": "Cheaper alternative to Tidio, Zoho SalesIQ - Live Chat App (Live chat and help desk)",
+  "question": "Would small and mid-size businesses switch from Tidio, Zoho SalesIQ - Live Chat App, Crisp to a cheaper alternative, and could a small agent-built product reach $1,000/month with it?",
+  "picos": {
+    "population": "Small and mid-size businesses",
+    "intervention": "Cheaper alternative to Tidio, Zoho SalesIQ - Live Chat App (Live chat and help desk)",
+    "comparator": "Tidio, Zoho SalesIQ - Live Chat App, Crisp; workarounds and doing nothing",
+    "outcomes": "Less time spent on non-coding work, lower tool cost, fewer outages and errors, faster launch and first revenue, more users and signups, less churn and failed payments, less support load",
+    "setting": "Global, English-speaking online communities; web, browser, GitHub, app stores and plugin marketplaces; companies of 1-5 people"
+  },
+  "scope": {
+    "in": [
+      "Live chat and help desk"
+    ],
+    "out": [
+      "Enterprise developer platforms sold through sales teams",
+      "Courses, communities, consulting and agencies",
+      "General-purpose AI coding assistants and IDEs (frontier-lab territory)",
+      "Products that need regulated data (health, payments custody, KYC) or hardware"
+    ]
+  },
+  "business_models": [
+    "b2b-saas",
+    "prosumer-saas",
+    "api",
+    "browser-extension",
+    "marketplace-app",
+    "open-core"
+  ],
+  "geography": [
+    "global"
+  ],
+  "languages": [
+    "en"
+  ],
+  "as_of": "2026-10-10",
+  "recency_days": 730,
+  "eligibility": {
+    "include": [
+      "Products and services that do live chat and help desk for small and mid-size businesses",
+      "Workarounds people use for the same job (spreadsheets, scripts, freelancers)"
+    ],
+    "exclude": [
+      "Aimed only at enterprises or teams larger than 50 (sales-only pricing, contact sales as the only plan)",
+      "Not a software product, workaround, directory or community (course, agency, newsletter); communities and directories are kept as reach channels per D06, not counted as competitors",
+      "General payment processors, banks or fintechs that hold funds or require merchant KYC; billing, merchant-of-record, dunning and license tools sold to software makers stay in scope",
+      "Dead: no activity within recency_days or announced shutdown",
+      "Outside the jobs in picos.intervention",
+      "Duplicate or rebrand of an entity already listed"
+    ]
+  },
+  "founder_fit": {
+    "skills": [
+      "product built by an AI coding agent (Claude Code) with web, API and browser-extension stacks",
+      "human helper for accounts, payments, posting and support triage"
+    ],
+    "budget_usd": 300,
+    "hours_per_week": 5,
+    "exclusions": [
+      "sales-led or high-touch onboarding",
+      "regulated or sensitive data",
+      "heavy ongoing manual operations or content moderation",
+      "two-sided marketplaces needing liquidity",
+      "products needing paid ads to grow"
+    ],
+    "schlep_tolerance": "low",
+    "unfair_advantages": [
+      "can ship and iterate fast with coding agents",
+      "willing to build in public"
+    ]
+  },
+  "ambition": {
+    "min_arr_usd": 12000
+  },
+  "variation_dimensions": {
+    "segment": [
+      "indie hackers",
+      "solo SaaS founders",
+      "open-source maintainers",
+      "mobile app indie devs",
+      "no-code / AI-app builders",
+      "WordPress and Shopify plugin devs"
+    ],
+    "language": [
+      "en",
+      "es",
+      "pt-BR",
+      "fr",
+      "de"
+    ],
+    "platform": [
+      "web app",
+      "browser extension",
+      "GitHub app",
+      "CLI",
+      "Slack/Discord bot",
+      "VS Code extension"
+    ],
+    "price_tier": [
+      "free + paid tier",
+      "$5-19/mo",
+      "$20-49/mo",
+      "one-time license",
+      "usage-based"
+    ],
+    "delivery": [
+      "self-serve",
+      "done-for-you automated"
+    ],
+    "integration": [
+      "GitHub",
+      "Stripe",
+      "Vercel/Netlify",
+      "Product Hunt / launch sites",
+      "X / Bluesky",
+      "Slack/Discord"
+    ],
+    "ai_native": [
+      true,
+      false
+    ]
+  },
+  "competing_factors": [],
+  "sources": {
+    "allowed_tiers": [
+      0,
+      1
+    ],
+    "tier2_enabled": [],
+    "excluded_extra": []
+  },
+  "autonomy": "autonomous",
+  "budget": {
+    "subagents_max": 60,
+    "fetches_max": 2500
+  },
+  "overrides": {},
+  "seed": 843868215,
+  "notes": "Drafted from scan run indie-dev-tools-replay, OPP-032 (Proven product + one improvement). Review the question, PICOS and eligibility, then freeze.",
+  "depth": "deep",
+  "lenses": [
+    "clone-wedge",
+    "gap"
+  ],
+  "cost_profile": "balanced",
+  "seed_entities": [
+    {
+      "name": "Tidio",
+      "url": "https://apps.apple.com/us/app/tidio/id916822567"
+    },
+    {
+      "name": "Zoho SalesIQ - Live Chat App",
+      "url": "https://apps.apple.com/us/app/zoho-salesiq-live-chat-app/id1094699978?uo=4"
+    },
+    {
+      "name": "Crisp",
+      "url": "https://apps.apple.com/us/app/crisp/id1085770229"
+    }
+  ]
+}

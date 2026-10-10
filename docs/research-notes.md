@@ -505,3 +505,46 @@ A complete discovery run on "low-touch SaaS tools for indie developers and solo 
 
 ### Expected effect on the same run (estimate, not measured)
 Replaying the live run's numbers through the new defaults: lexicon 4 (was 7), landscape 9 (12), screening about 12 (30), snowball 3 (9), coding about 9 (12) and the rest unchanged, so about 55 assignments instead of 91. With about 45 of them on the fast tier, subagent token cost falls by roughly an order of magnitude at list prices, if fast-tier quality holds; the scripts' checks (verify, merge rejections, screening and coding alpha) detect it when it does not and escalate the role. The orchestrator's own context is the other large cost, addressed by short replies and a cheaper orchestrator model. Re-run a narrow topic to measure the real numbers.
+
+## Opportunity lenses and scan depth (2026-10-10)
+**Why.** The first live run searched only for gaps (a need with little supply). That is the hardest kind of opportunity to evidence: the red team killed two of the three cards that passed, each time by finding a product that already did the job. Meanwhile the run's own data held easier, evidence-backed options (proven products with poor ratings, missing platforms, priced-out buyers, products being shut down) that the method never looked at. The run was also expensive because breadth (mapping seven sub-markets) and depth (coding and red-teaming one question) shared one budget.
+
+**What changed.** Nine opportunity lenses (D26), a script-only traction step (D27), and a scan depth with a successive-halving evidence funnel (D28). A scan ranks options from every lens and drafts narrow deep-run protocols; deep runs are lens-aware (card check, red team, certainty, scoring).
+
+### Sources verified for D26-D28 (2026-10-10)
+| Claim | Source | Status |
+|---|---|---|
+| "A crowded market is actually a good sign, because it means both that there's demand and that none of the existing solutions are good enough." | Graham, P. (Nov 2012). How to Get Startup Ideas. https://paulgraham.com/startupideas.html | Verified (quote joined from two fetched fragments) |
+| Much innovation is imitation | Levitt, T. (1966). Innovative imitation. Harvard Business Review 44(5): 63-70 (Sept 1966). https://hbr.org/1966/09/innovative-imitation | Author and date verified; volume and pages from secondary lists only |
+| Imitation as strategy | Shenkar, O. (2010). Copycats: How Smart Companies Use Imitation to Gain a Strategic Edge. Harvard Business Press. ISBN 978-1-4221-2673-8 | Verified (catalogue) |
+| Seven sources of innovation (the unexpected; incongruities; process need; industry and market structure; demographics; perception; new knowledge) | Drucker, P. F. (1985). Innovation and Entrepreneurship. Harper & Row | Edition verified; the list from consistent secondary summaries |
+| Low-end disruption: "addressing an over-served customer with a lower-cost business model" | Christensen, C. M. & Raynor, M. E. (2003). The Innovator's Solution. HBS Press. Quote: HBS Working Knowledge, April 2003 | Citation verified; definition via the HBS preview and secondary sources |
+| Development as "the carrying out of new combinations" (five cases: new good, method, market, supply source, organisation) | Schumpeter, J. A. (1934). The Theory of Economic Development. Harvard University Press | Edition verified; wording from a secondary page only |
+| Opportunity recognition as pattern recognition | Baron, R. A. (2006). Academy of Management Perspectives 20(1): 104-119. doi:10.5465/amp.2006.19873412 | Verified (Crossref) |
+| Successive halving: "throw out the worst half, and repeat" | Karnin, Koren & Somekh (2013), ICML, PMLR 28(3): 1238-1246; Jamieson & Talwalkar (2016), AISTATS, PMLR 51: 240-248; Li et al. (2018), Hyperband, JMLR 18(185) | Verified |
+| Stage-gate with go/kill gates | Cooper, R. G. (1990). Business Horizons 33(3): 44-54. doi:10.1016/0007-6813(90)90040-I | Verified (Crossref) |
+| App-store data as evidence of user needs | Harman, Jia & Zhang (2012), MSR 2012, doi:10.1109/MSR.2012.6224306; Guzman & Maalej (2014), RE 2014, doi:10.1109/RE.2014.6912257; Martin et al. (2017), IEEE TSE 43(9): 817-847, doi:10.1109/TSE.2016.2630689 | Metadata verified; abstracts not read |
+| Bundling information goods | Bakos & Brynjolfsson (1999). Management Science 45(12): 1613-1630. doi:10.1287/mnsc.45.12.1613 | Verified |
+| "Two ways to make money: bundling and unbundling" | Attributed to Jim Barksdale (Netscape, c. 1995) | Unverified primary; cite only as "attributed to" |
+| Licenses that restrict hosting as a service | SSPL v1 §13 (mongodb.com/legal/licensing/server-side-public-license); Elastic License 2.0 (elastic.co/licensing/elastic-license: "You may not provide the software to third parties as a hosted or managed service"); BSL 1.1 (mariadb.com/bsl11; HashiCorp's grant excludes hosted offerings that compete with its paid versions); Commons Clause (commonsclause.com, a condition that bars selling hosting whose value derives from the software) | Verified |
+| AGPL-3.0 §13: hosting allowed; modified versions must offer source to network users | gnu.org/licenses/agpl-3.0.html | Verified |
+| MIT, Apache-2.0, BSD-3, MPL-2.0 place no hosting restriction | opensource.org; apache.org; mozilla.org MPL FAQ (server-side code is not "distributed") | Verified; the MPL reading is ours |
+| Stair-step bootstrapping (start in one ecosystem, one channel, then step up to SaaS) | Walling, R. The Stair Step Approach to Bootstrapping. microconf.com (re-shared March 2015; named 2013) | Verified; the "one-time sale" wording is secondary |
+
+### Replay on the first run's data (no new subagents)
+`traction --offline` and `opportunities scan` ran on a copy of `gap-runs/indie-dev-tools`:
+- **Traction:** saved API responses gave numbers for 127 of 151 marketplace products, with no network and no subagent.
+- **Options:** 51 from 8 lenses (gap 2, clone-wedge 10, bundle 6, unbundle 2, port 12, down-market 2, replace 5, hosted-oss 12). Eight had linked evidence from the deep run.
+- **Independent hits:**
+  - From price data alone, without the codebook or gap cards, the scan re-found the deep run's best near-miss (GAP-005, failed-payment recovery) as a down-market option: "Low-cost revenue recovery (paid plans start at 99/month)".
+  - It surfaced options the gap framing could not express: cheaper or more reliable alternatives to Tidio and Zoho SalesIQ (4 price-complaint authors, "100 paying customers at $10/month reach $1,000/month"), and migration targets for Lemon Squeezy users after its acquisition.
+  - It flagged proven but poorly rated products as raw material for clones: Tawk.to, Zendesk Support for Jira, Smartsupp, New Relic.
+- **Rule bugs found by the replay and the unit tests, all fixed before commit:**
+  - **Unmeasured signals inflated priors.** Dropping unknown prior parts put every language port at 1.00. Unknown parts now count as 0.5.
+  - **Weak language evidence.** "No German product" is weak evidence when mapped products list one UI language; absence counts as unknown unless the category's language data varies.
+  - **Plugins treated as servers.** WordPress plugins were proposed as hosted open source; plugins and marketplace apps are now excluded.
+  - **Down-market compared a category with itself.** It used all prices, including the category's own, so a large category could never qualify. It now compares with other categories' entry prices.
+  - **Productize matched names, not purchases.** "too expensive for a solo freelancer" matched; the rule now needs a paying or hiring verb.
+
+### Expected cost of a scan (simulated, not measured live)
+The end-to-end simulation used 14 subagents (12 fast tier, 2 standard): lexicon 3, landscape 3, screening 1, mapping 1, evidence 5 (two rounds plus a leads miner), red flags 1. A live scan screens more batches (about 2-4 at 100 entities each), so 15-20 subagents is the realistic range, against 91 for the first deep run. A narrow deep run drafted from the best option then needs about 40-55 subagents on the new defaults. Measure both on the next live test.

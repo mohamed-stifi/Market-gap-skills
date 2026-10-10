@@ -195,6 +195,10 @@ CHECKS = [
     ("gaps/sizing-inputs.json", "sizing-inputs", "json"),
     ("output/handoff.json", "handoff", "json"),
     ("output/watchlist.json", "watchlist", "json"),
+    ("opportunities/candidates.jsonl", "opportunity", "jsonl"),
+    ("opportunities/redflags/OPP-*.json", "redflag", "json"),
+    ("opportunities/redflags.jsonl", "redflag", "jsonl"),
+    ("output/next-runs/OPP-*.protocol.json", "protocol", "json"),
     ("**/assign*.json", "assignment", "json"),
 ]
 

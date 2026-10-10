@@ -77,6 +77,8 @@
 - Reach → reach.
 - "Right to win" and "feasible" → right_to_win, plus the agent-buildability and human-ops gates.
 
+**Lenses (D26):** for a card with a lens other than gap, competition scores at most 2 (the lens enters a market with incumbents by design; an open wedge earns 2, a weakened card 1), and market spend (2+ proven products with paid plans) lifts pay to at least 2. `ranking.json` records each card's lens.
+
 **Pitfalls**
 - **Hand-adjusting scores.** Change the inputs (evidence, judgments) and re-run, or change the weights with `protocol amend` and a reason.
 - **Reading totals as precise.** Report the rank together with p_top3. A card with p_top3 of 0.4 is a coin flip, not a winner.

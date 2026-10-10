@@ -1,5 +1,8 @@
 [
   {"query": "find market gaps in project management software for small architecture firms", "should_trigger": true},
+  {"query": "find SaaS products that already make money but have bad reviews, so I can copy one and add the missing feature", "should_trigger": true},
+  {"query": "which two tools do small agencies glue together that I could merge into one product?", "should_trigger": true},
+  {"query": "quick cheap scan of SaaS ideas a solo founder could build with an AI coding agent, ranked by evidence", "should_trigger": true},
   {"query": "what SaaS opportunities exist for independent dental clinics? I want evidence, not guesses", "should_trigger": true},
   {"query": "look for underserved segments in invoicing tools and rank them", "should_trigger": true},
   {"query": "give me evidence-backed startup ideas in HR software for companies under 50 people", "should_trigger": true},

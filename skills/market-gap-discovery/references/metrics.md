@@ -13,6 +13,7 @@ Contents
 8. Scoring and sensitivity (D23)
 9. Sizing (D24)
 10. Reproducibility between runs
+11. Opportunity lenses, traction and the scan funnel (D26–D28)
 
 ## 1. Search saturation (D04)
 **Sampling unit:** one scout × one channel family in one round. **Incidence:** which units found each verified, included entity. Snowball-only finds are excluded.
@@ -134,6 +135,7 @@ This is an operationalisation adapted from GRADE and GRADE-CERQual. Its threshol
 - Downgrade one level per serious concern, and one level per two moderate concerns.
 - Upgrade one level for magnitude: S4 records from ≥3 authors in ≥2 domains.
 - Upgrade one level for dose–response: X-SCALE coded for ≥3 authors.
+- Lenses other than gap (D26): market spend (≥2 proven base products or incumbents with paid plans) counts like the magnitude upgrade.
 - The cap is Moderate for desk-only evidence.
 
 **Demand strength** stays "weak" until validation experiments raise it.
@@ -148,6 +150,8 @@ This is an operationalisation adapted from GRADE and GRADE-CERQual. Its threshol
 - the source terms make it infeasible
 
 **Anchored 0–3 scores** (full anchors in D23): pain, pay, size, competition, why_now, reach, right_to_win.
+
+**Lenses (D26):** for cards with a lens other than gap, competition is at most 2 (they enter markets with incumbents by design), and market spend (≥2 proven paid products) lifts pay to at least 2.
 
 **Total** = 100 × Σ(weight × score)/3. Default weights: pain .22, pay .18, size .12, competition .14, why-now .10, reach .14, right-to-win .10.
 
@@ -173,3 +177,30 @@ Counts need a source. Conversion and win rate are assumptions that validation te
 - the Webster–Kemp estimate of items missed by both runs
 - top-5 gap matches, where gaps match when the Jaccard of their incumbents and evidence URLs is ≥ 0.3 (target: at least 3 of 5 match)
 - rank-biased overlap with p = 0.9: RBO = (X_k/k)·p^k + ((1−p)/p)·Σ_{d≤k}(X_d/d)·p^d
+
+## 11. Opportunity lenses, traction and the scan funnel (D26–D28)
+**Percentiles** are mid-rank: pct(v) = (#values below v + ½ #values equal to v) / n, computed within one store (WordPress.org, App Store, Atlassian) because raw counts differ by orders of magnitude between stores.
+- **Traction percentile** = max(pct of installs, pct of rating count) within the store (needs ≥3 products with that number).
+- **Rating percentile** = pct of the average rating within the store, over products with at least `opportunity.min_ratings_for_rating` (20) ratings.
+- **Proven:** traction percentile ≥ 0.67. **Poorly rated:** rating percentile ≤ 0.33.
+
+**Prior** of an option = mean of its lens's structural parts, each in 0..1, with unknown parts counted as 0.5. Parts per lens:
+- clone-wedge: best traction percentile of the base products, 1 − worst rating percentile, share of base products with a paid plan
+- port: source strength min(1, n_source/6), category traction, target size (products on the target ÷ products on the biggest platform or segment), absence (1 if none, 0.5 if one; 0.5 for languages unless 20% of the category lists several languages)
+- down-market: share of other categories' entry prices at or below the category's cheapest paid plan, 1 − free-tier share, min(1, paid products/6)
+- bundle: min(1, links/6), joint-supply absence (1 if no product does both jobs, 0.5 if one), mean traction
+- unbundle: suite traction, standalone scarcity (1 if no focused product, 0.5 otherwise)
+- replace: recency (1 within 12 months of `as_of`, 0.5 within 24, else 0.25), traction of the affected product
+- hosted-oss: traction, no official cloud (1 if self-hosted only, else 0.4), license (1 permissive, 0.6 AGPL, 0.5 unknown)
+- productize: min(1, authors/5)
+- gap: min(1, demand authors/20), supply absence (1 absolute, 0.6 synthesis)
+
+**Evidence score** = min(1, Σ over distinct supporting authors of their best strength weight ÷ `scan.evidence_full` (8)), with D10 weights S0 .25, S1 .5, S2 1, S3 1.5, S4 2.
+
+**Evidence tier:** promising (≥4 supporting records, ≥2 domains, ≥2 authors); contradicted (≥2 counter records and counter ÷ (support + counter) > 0.5); thin (any support); untested (none).
+
+**Rank** = tier first (promising, thin, untested, contradicted), then red-flag status (clear before flag), then 0.5 × prior + 0.5 × evidence score. Killed, gated or protocol-excluded options are listed separately with reasons.
+
+**Successive halving:** round 1 tests the 8 best options by prior, at most 2 per lens first. Round 2 tests the better half, ⌈0.5 × n⌉, of the n options with any support (round-1 tests plus evidence-led options), on domains they do not have yet.
+
+**Ambition math:** customers needed = ⌈(ambition ÷ 12) ÷ median entry price of the base products⌉ (of the category when the base has no prices; halved for down-market). Share of base installs = customers needed ÷ the base products' installs. It is a reach check, not a forecast.
