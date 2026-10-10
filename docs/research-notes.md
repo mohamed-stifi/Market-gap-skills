@@ -465,3 +465,43 @@ Quote verification was re-checked on a real App Store review snapshot: a verbati
 - Some vendor sites block AI agents in robots.txt.
 - The built-in web search is US-indexed.
 - Translator-specific evidence is scarce in general channels: most records are indirect, which is correctly penalised in certainty.
+
+## Full live run and critique: indie-dev-tools (2026-10-09)
+A complete discovery run on "low-touch SaaS tools for indie developers and solo founders" (`gap-runs/indie-dev-tools`, report in `reports/indie-dev-tools/`). Operator cost reported by the user: about $250, every subagent on the session model (Opus 5.5), about 4 hours.
+
+### What it produced
+| Measure | Value |
+|---|---|
+| Assignments (subagents) | 91: screening 30, landscape 12, coding 19, snowball 9, lexicon 7, evidence 6, other 8 |
+| Verified competitors | 395 (Chao2 ~281, coverage 0.69, STOP_UNSATURATED) |
+| Screening reliability | alpha 0.90 over 162 double-screened entities |
+| Evidence | 289 quotes, 100% verified verbatim; round 1 drew 158 of 165 from two sites |
+| Coding | codebook v3, all 22 eligible codes measured, provisional (none weak) |
+| Gap cards | 12; 1 passed after round 1, 3 after a targeted round; red team killed 2, weakened 1 |
+
+### Strengths worth keeping (and amplifying)
+- Script-side integrity held under load: 100% of quotes verified, schema-checked merges, rejected bad snapshot references instead of trusting them.
+- Independence and agreement statistics worked as designed: screening alpha 0.90; the coding revision loop raised a weak code to accepted.
+- The red team was honest: it killed two near-miss cards with dated, verified competitors (crxpay, ExtensionPay; Pulsetic, OnePageStatus).
+- Every human directive (saturation targets, targeted round, budget) became a hashed amendment that the dossier reports.
+
+### Weaknesses found, and what changed
+| # | Weakness | Fix |
+|---|---|---|
+| 1 | Cost: every subagent ran on the session model | Model tier per role (`models` in defaults, `cost_profile` in the protocol); machine-checked roles on the fast tier (Haiku 5.5 lists at $0.10/$0.50 per MTok against Opus 5.5's $4/$20), escalation on failed checks |
+| 2 | Screening was a third of all spend | Batches of 60; B audit after every merge and retired once alpha is accepted over 50 units |
+| 3 | Snowball never converged on a broad topic (67/80/82 new) | `snowball.max_iterations` 1; red team does per-gap existence searches |
+| 4 | Landscape round 4 bought +0.09 coverage; 12 units per scout | Stop when a round adds < 0.05 coverage; cap 4 units per scout; per-round history in `saturation.json` |
+| 5 | Lexicon round 2 added 650 terms, ~4% used; overlap read 0.02 by construction | One round by default; overlap computed on cumulative per-scout vocabularies |
+| 6 | Evidence concentrated in two domains; 11 of 12 cards failed on domains; the targeted round needed a human decision | Miners get a diversity rule with ledger domain shares; `cards check` records structured shortfalls; `next` runs one targeted round for near-miss cards automatically |
+| 7 | Broad topic (7 jobs) was the root cause of thin evidence | `protocol check` and freeze warn at >= 5 jobs; SKILL.md tells the orchestrator to narrow first |
+| 8 | Truncated snapshot ids rejected 39 records with no way to re-merge | Unique-prefix resolution and `merge --phase evidence --retry` |
+| 9 | Supply map stale after a codebook revision (license keys would have looked unserved; 24 products serve it) | Supply records its codebook version; `next` re-maps in update mode |
+| 10 | Gap cards stale after new evidence; flow went straight to red team | Synthesis is stale when the gap map is newer than the card check; update mode keeps previous cards |
+| 11 | Canonicalisation: Honeybadger keyed `dom:google.com`, Userback `dom:mozilla.org` | Redirect unwrapping, Firefox/Edge add-on keys, shared hosts never become product keys |
+| 12 | Writer lacked analysis/, amendments and events; sizer snapshotted a robots-blocked API | Writer inputs widened; sizer told to use the API adapters |
+| 13 | 300-line dossier hard to read | `viz`: `summary.md` and a dashboard (PNG charts + offline HTML) from the run's files |
+| 14 | Subagent replies (20-40 lines) bloated the orchestrator's context | Replies capped at three lines (assignment rule and SKILL.md); orchestrator may run on Sonnet and resume in a fresh session |
+
+### Expected effect on the same run (estimate, not measured)
+Replaying the live run's numbers through the new defaults: lexicon 4 (was 7), landscape 9 (12), screening about 12 (30), snowball 3 (9), coding about 9 (12) and the rest unchanged, so about 55 assignments instead of 91. With about 45 of them on the fast tier, subagent token cost falls by roughly an order of magnitude at list prices, if fast-tier quality holds; the scripts' checks (verify, merge rejections, screening and coding alpha) detect it when it does not and escalate the role. The orchestrator's own context is the other large cost, addressed by short replies and a cheaper orchestrator model. Re-run a narrow topic to measure the real numbers.

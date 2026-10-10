@@ -40,7 +40,7 @@ Fast-tier roles are the ones whose output a script checks (quotes, schemas, scre
 
 | Tier | Claude Code (`Agent` tool `model`) | OpenCode (agent config `model`) | Headless CLI |
 |---|---|---|---|
-| fast | `haiku` | `anthropic/claude-haiku-4-5` | `claude -p --model haiku`, `opencode run -m anthropic/claude-haiku-4-5` |
+| fast | `haiku` | `anthropic/claude-haiku-5-5` | `claude -p --model haiku`, `opencode run -m anthropic/claude-haiku-5-5` |
 | standard | `sonnet` | `anthropic/claude-sonnet-5-5` | `claude -p --model sonnet` |
 | strong | `opus` | `anthropic/claude-opus-5-5` | `claude -p --model opus` |
 
@@ -56,7 +56,7 @@ Files in the skill's `agents/` folder are role briefs, not registered subagent t
 
 ## 3. OpenCode
 - Use the Task tool with the built-in `general` subagent and the same prompt as above.
-- To run a tier on its own model, define one agent per tier in your OpenCode config (for example `gapscan-fast` with `model: anthropic/claude-haiku-4-5`) and use it for that SPAWN.
+- To run a tier on its own model, define one agent per tier in your OpenCode config (for example `gapscan-fast` with `model: anthropic/claude-haiku-5-5`) and use it for that SPAWN.
 - If you aren't sure that several Task calls run in parallel, run them one after another.
 - Independence still holds when they run in sequence: each Task subagent starts with a fresh context and receives only its assignment.
 - The orchestrator must not paste one subagent's output into another's prompt.

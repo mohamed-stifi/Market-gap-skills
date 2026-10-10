@@ -65,7 +65,9 @@ The lines after the first start with `NOTE`: the phase, the methodological reaso
      - If the verdict is revise, `assign --phase coding-open --revise`, then refreeze and recode.
   4. `themes`. If themes are unsaturated and evidence rounds remain, return to P3.
   5. `assign --phase supply` → SPAWN → `merge --phase supply` → `matrix` → `gapmap`.
+  6. After a codebook revision, `assign --phase supply` again in update mode (only changed codes are re-judged).
 - **P5 Gaps:** `variants` → `assign --phase synthesis` → SPAWN → `cards check`. If it lists problems: `DO D20`.
+  - If fewer than `evidence.target_candidates` cards pass and near-miss cards fail only on evidence counts: `assign --phase evidence --targeted` (once per run), then the new records are coded, the gap map is recomputed and the cards are updated (`assign --phase synthesis` in update mode) before the red team.
 - **P6 Appraisal:**
   1. `assign --phase redteam` → SPAWN → `merge --phase redteam` → `certainty`.
   2. `assign --phase sizing` → SPAWN → `size` → `score`.
@@ -73,7 +75,8 @@ The lines after the first start with `NOTE`: the phase, the methodological reaso
 - **P7 Report:**
   1. `prisma` → `assign --phase writer` → SPAWN → `validate --report`.
   2. If it fails, run up to two writer fix passes, then `DO D25`.
-  3. `DONE`.
+  3. `viz` (when matplotlib is installed): `output/summary.md` and `output/dashboard/`.
+  4. `DONE`.
 
 ## 4. Commands
 **Setup and control**
@@ -84,15 +87,19 @@ The lines after the first start with `NOTE`: the phase, the methodological reaso
   - Optional human tasks (contact string, `gh` login) are added to the queue.
 - `protocol check|show|freeze RUN`: validate, print or hash-freeze `protocol.json`.
 - `protocol amend RUN --reason TEXT [--set KEY=JSON ...]`: a logged change to the frozen protocol. KEY is a dotted path, for example `--set 'geography=["EU"]'` or `--set overrides.landscape.coverage_target=0.97`. `--set 'independence="degraded"'` also marks the run state.
-- `next RUN [--json]`, `status RUN [--json]`.
+- `next RUN [--json]`: the next action. A SPAWN is followed by `NOTE model: <tier> …` (the model each of its subagents should use).
+- `status RUN [--json]`: run summary, including `spend_by_phase`, `spend_by_tier` and `model_escalations`.
+- `protocol check` also prints non-blocking warnings: a broad intervention (>= `scope.broad_jobs_warning` jobs) and an unset `cost_profile`.
 - `hq list RUN`
 - `hq add RUN --type TYPE --title TEXT --why TEXT --steps TEXT --returns TEXT [--phase P] [--blocking] [--fallback TEXT]`
 - `hq done|decline RUN HT-NNN [--note TEXT]`
 - Human-task TYPE is one of account, key, payment, legal, outward-action, judgment, directive.
 
 **Assignments and merges**
-- `assign RUN --phase PHASE [--units K] [--batch N] [--revise]`: seeded assignment files.
+- `assign RUN --phase PHASE [--units K] [--batch N] [--revise] [--targeted]`: seeded assignment files.
   - PHASE: lexicon, press, landscape, probe, snowball, screen, mapping, evidence, coding-open, coding-closed, coding-reliability, supply, synthesis, redteam, sizing, writer.
+  - `--targeted` (evidence): one miner per near-miss gap card from `gaps/card-check.json`, mining only domains the card lacks.
+  - Every assignment carries a `model` block: the tier from `models.profiles[cost_profile][role]`, raised one step per escalation (`state.json` → `models`).
   - Fails with exit 3 when `budget.subagents_max` would be exceeded.
 - `merge RUN --phase PHASE`: validate agent outputs against their schemas, then fold them into the ledgers. `--retry` (evidence only) merges the current round again after rejected records were fixed; the retry report is `merge-retry-N.json`, and PRISMA counts its accepted records as `accepted_on_retry`. A unique snapshot-id prefix of 12 or more hex characters resolves to the full hash.
   - PHASE: lexicon, landscape, probe, snowball, screen, mapping, evidence, coding, supply, redteam.
@@ -131,6 +138,7 @@ The lines after the first start with `NOTE`: the phase, the methodological reaso
 - `verify RUN`: check every evidence quote against its snapshot. Only verified records count.
 - `screen-audit RUN`, `agreement RUN`, `themes RUN`, `bursts RUN`, `matrix RUN`, `gapmap RUN`, `variants RUN`, `cards check RUN`, `certainty RUN`, `size RUN`, `score RUN`, `prisma RUN`: see the matching method cards.
 - `validate RUN [--report] [--file PATH [--schema NAME]]`: check every artifact against its schema. `--report` also checks the dossier and handoff against the ledger and ranking, and writes `output/report-check.json`. `--file` checks only one file (the schema is inferred from its path); subagents use it to self-check their own output.
+- `viz RUN [--out DIR]`: `output/summary.md` (one-page plain-language verdict) and `output/dashboard/` (PNG charts, `index.html` embedding all of them, `manifest.json`). Needs matplotlib; every other command is stdlib-only. Reads only the run's files; charts whose inputs are missing are skipped with a reason.
 - `compare RUN_A RUN_B [--out FILE]`: entity Jaccard, the Webster–Kemp estimate of missed items, top-k gap matches, rank-biased overlap, and pass/fail.
 - `purge RUN [--days N]`: delete snapshot bodies older than `evidence.retention_days`. Hashes, metadata and the ledger quotes are kept.
 
@@ -158,5 +166,7 @@ RUN/
   gaps/{variants.jsonl, synth-assign.json, cards.jsonl, card-check.json, redteam/assign-NN.json,
         redteam/GAP-NNN.json, judgments.jsonl, certainty.json, sizing-assign.json, sizing-inputs.json,
         sizing.json, scores.csv, ranking.json}
-  output/{writer-assign-NN.json, dossier.md, handoff.json, watchlist.json, prisma.json, prisma.md, report-check.json}
+  output/{writer-assign-NN.json, dossier.md, handoff.json, watchlist.json, prisma.json, prisma.md, report-check.json, summary.md}
+  output/dashboard/{NN-*.png, index.html, manifest.json}
+  scratch/<assignment_id>/   (subagents' helper scripts; never read by other agents)
 ```

@@ -68,13 +68,21 @@ Ask the agent in plain words, for example "find market gaps in scheduling softwa
 - A run is a folder (`gap-runs/<slug>/`). It can be resumed in any session or tool, and every intermediate artifact is kept for audit.
 
 Deliverables:
-- discovery: `output/dossier.md`, `output/handoff.json`, `output/prisma.md`, `output/watchlist.json`
+- discovery: `output/summary.md` and `output/dashboard/index.html` (one-page verdict and charts; read these first), `output/dossier.md`, `output/handoff.json`, `output/prisma.md`, `output/watchlist.json`. The dashboard needs `pip install matplotlib`; everything else is Python standard library.
+- example: `reports/indie-dev-tools/` holds a complete real run (395 competitors, 289 verified quotes, 12 gap cards, red-teamed).
 - validation: `validation/report.md`, `validation/verdict.json`, `validation/validated-handoff.json`, Learning Cards
 
 **The human's role.** The human is the operator: accounts, keys, payments, publishing, posting, recruiting and data exports are human tasks (`hq list` shows them).
 - In `autonomous` mode, discovery runs without stopping; optional tasks fall back to recorded coverage gaps.
 - In `gated` mode, the human approves the protocol, the landscape and the shortlist.
 - Validation always waits for the human before anything outward-facing.
+
+**Cost and time.** A first full run (broad topic, every subagent on the session's Opus model) used 91 subagents, about $250 and about 4 hours. What now keeps a run cheaper:
+- **Pick a narrow topic:** one segment and at most three jobs. `protocol check` warns about broad ones.
+- **Model tiers:** subagents whose output the scripts verify (scouts, screeners, miners, coders) run on a fast, cheap model; synthesis, red team and writing run on a standard model. `cost_profile` in the protocol selects `budget`, `balanced` (default) or `quality`. A failed check escalates that role automatically.
+- **Leaner defaults:** one lexicon round, one snowball iteration, landscape stops on diminishing coverage gains, the screening audit stops once reliable, larger batches.
+- **Short subagent replies and a mid-tier orchestrator model:** the `next` loop is mechanical and resumable from the run folder.
+- **Spend reporting:** `gapscan.py status RUN` shows assignments by phase and by model tier.
 
 ## Tests
 ```bash
@@ -94,6 +102,8 @@ The end-to-end tests run a whole discovery run and a whole validation run with s
   Each case is logged as a coverage gap and reported, never worked around.
 - **The stopping test for large evidence pools needs more budget than a standard miner assignment.** Untested, truncated pools are reported in `prisma.json` as a limitation.
 - **Measuring every frequent code costs coder time.** With many rare codes, the stratified reliability sample is large: in the live run, 95 of 201 records were double-coded so that all 38 frequent codes could be measured. A random 20% sample would have measured 3.
+- **Broad topics produce thin results.** In the full live run, a topic spanning seven jobs gave a 395-entity landscape that never saturated and evidence too thin for 11 of 12 gap cards (one weak survivor after red-teaming). Narrow the topic, or run one job at a time.
+- **Fast-tier quality is guarded, not guaranteed.** Cheap models are used only where scripts check the output, and failed checks escalate the tier; the savings estimate in `docs/research-notes.md` has not yet been measured on a new run.
 - **Saturation is a lower bound.** Same-model scouts are correlated. Personas, channel rotation and the holdout probe reduce this but cannot remove it.
 - **Thresholds are partly design operationalisations.** The certainty operationalisation and the scoring weights and anchors are design defaults, documented with their sources in `assets/defaults.json` and changeable only through a logged protocol amendment.
 - **Planned next skills:** build (MVP from `validated-handoff.json`), launch / go-to-market, and monitor (re-runs from `watchlist.json`, the post-launch PMF survey).
